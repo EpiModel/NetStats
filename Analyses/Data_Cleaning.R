@@ -34,11 +34,11 @@ intermed$division <- NA
 
 # Geomatching ------------------------------------
 # Read in Rural/Urban urbanicity codes (https://www.ers.usda.gov/data-products/rural-urban-continuum-codes/)
-all_geoc <- read_excel("../../../Data/Cleaned/input/geo/ruralurbancodes2013.xls")
+all_geoc <- read_excel("Input/ruralurbancodes2013.xls")
 all_geoc <- all_geoc[, c("FIPS", "State", "County_Name", "RUCC_2013", "RUCC_Description")]
 
 # Read ZIPtoCounty data (https://www.huduser.gov/portal/datasets/usps_crosswalk.html)
-ZIPCounty <- read_xlsx("../../../Data/Cleaned/input/geo/HUD_ZIP_COUNTY_092017.xlsx")
+ZIPCounty <- read_xlsx("Input/HUD_ZIP_COUNTY_092017.xlsx")
 length(unique(ZIPCounty$ZIP)) #52,894 rows, but 39,454 unique ZIPs, others are in multiple FIPS codes
 length(unique(ZIPCounty$COUNTYFIPS)) # 3,225 unique counties
 
@@ -51,7 +51,7 @@ table(nocountymatch$STATEFIPS) # 4 geographies with no match,
 # Merge NCHS Coding
 # #(ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/OAE/urbanrural/NCHSURCodes2013.txt)
 #https://www.cdc.gov/nchs/data/oae/NCHSUrbruralFileDocumentation.pdf
-NCHS <- read_xlsx("../../../Data/Cleaned/input/geo/NCHSData.xlsx")
+NCHS <- read_xlsx("Input/NCHSData.xlsx")
 NCHS <- NCHS[, c("GEOID_CHAR", "NCHS_2013")]
 NCHS$NCHSCHAR <- rep(NA, nrow(NCHS))
 NCHS$NCHSCHAR[NCHS$NCHS_2013 == 1] <- "Large Central Metro"
@@ -64,7 +64,7 @@ merged2 <- inner_join(merged, NCHS, by = c("COUNTYFIPS" = "GEOID_CHAR")) #52,567
 nonchs <- anti_join(merged, NCHS, by = c("COUNTYFIPS" = "GEOID_CHAR")) # All PR
 
 # Merge Reg/Division code (https://www2.census.gov/geo/docs/maps-data/maps/reg_div.txt,
-regdiv <- read_xlsx("../../../Data/Cleaned/input/geo/RegDiv.xlsx")
+regdiv <- read_xlsx("Input/RegDiv.xlsx")
 merged3 <- inner_join(merged2, regdiv, by = c("STATEFIPS" = "STATEFIPS")) #52,567 rows
 anti_join(merged3, regdiv, by = c("STATEFIPS" = "STATEFIPS")) #0 rows
 
@@ -350,23 +350,23 @@ table(artnet$age.cat, useNA = "always") # 0 NA
 table(artnet$old, useNA = "always") # 0 NA
 table(artnet$region, useNA = "always") # 0 NA
 table(artnet$division, useNA = "always") # 0 NA
-table(artnet$education, useNA = "always") # 13 NA
-table(artnet$roletype, useNA = "always") # 386 NA
-table(artnet$hivtest, useNA = "always") # 25 NA
+table(artnet$education, useNA = "always") # 12 NA
+table(artnet$roletype, useNA = "always") # 377 NA
+table(artnet$hivtest, useNA = "always") # 24 NA
 
 table(amis$hiv, useNA = "always") # 47 NA
 table(amis$race.cat, useNA = "always") # 0 NA
 table(amis$age.cat, useNA = "always") # 0 NA
-table(amis$region, useNA = "always") # 922 NA
-table(amis$division, useNA = "always") # 922 NA
+table(amis$region, useNA = "always") # 102 NA
+table(amis$division, useNA = "always") # 102 NA
 table(amis$education, useNA = "always") # 171 NA
 table(amis$hivtest, useNA = "always") # 172 NA
 
 table(intermed$hiv, useNA = "always") # 16 NA
 table(intermed$race.cat, useNA = "always") # 0 NA
 table(intermed$age.cat, useNA = "always") # 0 NA
-table(intermed$region, useNA = "always") # 315 NA
-table(intermed$division, useNA = "always") # 315 NA
+table(intermed$region, useNA = "always") # 11 NA
+table(intermed$division, useNA = "always") # 11 NA
 table(intermed$education, useNA = "always") # 32 NA
 table(intermed$hivtest, useNA = "always") # 43 NA
 
@@ -520,9 +520,7 @@ artnetLong$division[artnetLong$DIVCODE == 9] <- "Pacific"
 # table(artnetLong$AGE2, useNA = "always") # 0 NA
 # table(artnetLong$age.cat, useNA = "always") # 0 NA
 # table(artnetLong$old, useNA = "always") # 0 NA
-table(artnetLong$edgeagediff, useNA = "always")
+table(artnetLong$edgeagediff, useNA = "always") #683 NA
 
 # Dyad-level variables
-
-
 
