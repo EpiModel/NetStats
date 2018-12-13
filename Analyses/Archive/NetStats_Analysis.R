@@ -1220,7 +1220,7 @@ HIVNegoo <- cbind("HIV Neg",
                        hivstatoo[1, 3]))
 
 # Output table
-table2 <- cbind(rbind(total, black, white, hispanic, other,
+table2a <- cbind(rbind(total, black, white, hispanic, other,
                  fifteen24, twentyfive34, thirtyfive44, fortyfive54, fiftyfive65,
                  West, Pacific, Mountain, Midwest, WNC, ENC,
                  South, WSC, ESC, SA, Northeast, MA, NE, LCM, LFM, Medium,
@@ -1232,10 +1232,10 @@ table2 <- cbind(rbind(total, black, white, hispanic, other,
                       Southoo, WSCoo, ESCoo, SAoo, Northeastoo, MAoo, NEoo, LCMoo, LFMoo, Mediumoo,
                       Smalloo, Microoo, Noncoreoo,
                       HIVPosoo, HIVNegoo))
-colnames(table2) <- c("Category", "Ong Either Mean", "Ong Either CI",
+colnames(table2a) <- c("Category", "Ong Either Mean", "Ong Either CI",
                        "Ong Main Mean", "Ongoing Main CI",
                        "Ong Cas Mean", "Ong Cas CI", "Category", "One-Off", "One-off CI")
-write.csv(table2, file = "Output/table2a.csv")
+write.csv(table2a, file = "Output/table2a.csv")
 
 table2b <- rbind(concurr)
 colnames(table2b) <- c("Category", "Total Mean", "Main Mean", "Cas Mean")
@@ -1501,7 +1501,7 @@ colnames(table3) <- c("Category", "N (%)", "Total Mean", "Total SD, Med",
 write.csv(table3, file = "Output/table3.csv")
 
 
-# Table 4 - Duration by partner matching --------------
+# Table 3b - Duration by partner matching --------------
 
 # Set up data frames
 extant <- artnetLong[which(artnetLong$p_ONGOING == 1 & artnetLong$p_duration < 2150 & artnetLong$ptype %in% c(1, 2)), ]
@@ -2203,17 +2203,17 @@ unmatchedage <- cbind("unmatchedage",
                             round(median(unmatchagec$p_duration, na.rm = TRUE), 1)))
 
 # Output table
-table4 <- rbind(total, blackblack, whitewhite, hisphisp, otherother, unmatchedrace,
+table3b <- rbind(total, blackblack, whitewhite, hisphisp, otherother, unmatchedrace,
                 fifteen24, twentyfive34, thirtyfive44, fortyfive54, fiftyfive65, unmatchedage,
                 negneg, pospos, unmatchedhiv)
-colnames(table4) <- c("Category", "N", "(%)", "NA N All", "NA % All","NA N Main",
+colnames(table3b) <- c("Category", "N", "(%)", "NA N All", "NA % All","NA N Main",
                        "NA % Main", "NA N Cas", "NA % Cas",
                        "Total Mean", "Total SD, Med","Main Duration Mean",
                        "Main Duration SD, Med", "Cas Duration Mean",
                       "Cas Duration SD, Med")
-write.csv(table4, file = "Output/table4.csv")
+write.csv(table3b, file = "Output/table3b.csv")
 
-# Table 5 - Mixing --------------
+# Table 4 - Mixing --------------
 total <- cbind("Total", nrow(artnetLong), nrow(artnetLong) / nrow(artnetLong),
                nrow(artnetLong[which(artnetLong$ptype == 1), ]),
                nrow(artnetLong[which(artnetLong$ptype == 1), ]) /
@@ -2463,82 +2463,30 @@ sqrtagecontin <- rbind(cbind("Sqrt Diff",
 
 
 # Output table
-table5a <- rbind(total,
+table4a <- rbind(total,
                  cbind(racemain, racecas, raceinst),
                  cbind(hivmain, hivcas, hivinst),
                  cbind(agemain, agecas, ageinst))
-colnames(table5a) <- c("Category", "Total N", "Total %", "Main N", "Main %",
+colnames(table4a) <- c("Category", "Total N", "Total %", "Main N", "Main %",
                        "Casual N", "Casual %", "Inst N", "Inst %")
-table5b <- rbind(agecontin,
+table4b <- rbind(agecontin,
                  sqrtagecontin)
-colnames(table5b) <- c("Category", "Total Mean", "Total SD", "Total Median",
+colnames(table4b) <- c("Category", "Total Mean", "Total SD", "Total Median",
                        "Main Mean", "Main SD", "Main Median",
                        "Cas Mean", "Cas SD", "Cas Median",
                        "Inst Mean", "Inst SD", "Inst Median")
 
-write.csv(table5a, file = "Output/table5a.csv")
-write.csv(table5b, file = "Output/table5b.csv")
+write.csv(table4a, file = "Output/table4a.csv")
+write.csv(table4b, file = "Output/table4b.csv")
 
-
-
-# Table 5 v2 -  Mixing by ego--------------
-# Race/ethnicity
-tot <- artnetLong %>% count(race.cat, partracecat)
-a <- table(artnet$race.cat)
-egorace <- cbind(rbind(sum(artnet$race.cat == "black"),
-                       sum(artnet$race.cat == "hispanic"),
-                       sum(artnet$race.cat == "other"),
-                       sum(artnet$race.cat == "white")),
-                 rbind(rbind(tot$n[1:5]),
-                       rbind(tot$n[6:10]),
-                       rbind(tot$n[11:15]),
-                       rbind(tot$n[16:20])))
-colnames(egorace) <- c("Ego N",
-                       "Black Part",
-                       "Hispanic Part",
-                       "Other Part",
-                       "White Part",
-                       "NA")
-rownames(egorace) <- c("Black Ego",
-                       "Hispanic Ego",
-                       "Other Ego",
-                       "White Ego")
-View(egorace)
-
-# HIV status
-tot2 <- artnetLong %>% count(hiv, partstatus)
-egohiv <- cbind(rbind(sum(artnet$hiv == 0),
-                       sum(artnet$hiv == 1)),
-                rbind(
-                  cbind(rbind(tot2$n[c(1)]),
-                       rbind(tot2$n[c(2)]),
-                       rbind(tot2$n[c(3)]),
-                       rbind(tot2$n[c(4)])),
-                cbind(rbind(tot2$n[c(5)]),
-                      rbind(tot2$n[c(6)]),
-                      rbind(tot2$n[c(7)]),
-                      rbind(tot2$n[c(8)]))))
-colnames(egohiv) <- c("Ego N",
-                       "Negative Part",
-                       "Positive Part",
-                       "Unknown Part",
-                       "NA")
-rownames(egohiv) <- c("Negative Ego",
-                       "Positive Ego")
-View(egohiv)
-
-write.csv(egorace, file = "Output/egorace.csv")
-write.csv(egohiv, file = "Output/egohiv.csv")
-
-# Table 6 -  Partnership matrix --------------
-
+# Table 5 -  Partnership matrix --------------
 matrix <- artnet2
 table(matrix$maintotdegree, matrix$castotdegree, useNA = "always")
 matrix$maintotdegree[which(artnet2$maintotdegree > 2)] <- 2
 matrix$castotdegree[which(artnet2$castotdegree > 3)] <- 3
 table(matrix$maintotdegree, matrix$castotdegree, useNA = "always")
 prop.table(table(matrix$maintotdegree, matrix$castotdegree, useNA = "always"))
-table6 <- rbind(cbind(length(which(matrix$maintotdegree == 0 & matrix$castotdegree == 0)),
+table5 <- rbind(cbind(length(which(matrix$maintotdegree == 0 & matrix$castotdegree == 0)),
                       100 * round(length(which(matrix$maintotdegree == 0 & matrix$castotdegree == 0)) / length(matrix$maintotdegree), 3),
                       length(which(matrix$maintotdegree == 0 & matrix$castotdegree == 1)),
                       100 * round(length(which(matrix$maintotdegree == 0 & matrix$castotdegree == 1)) / length(matrix$maintotdegree), 3),
@@ -2563,12 +2511,12 @@ table6 <- rbind(cbind(length(which(matrix$maintotdegree == 0 & matrix$castotdegr
                       length(which(matrix$maintotdegree == 2 & matrix$castotdegree == 3)),
                       100 * round(length(which(matrix$maintotdegree == 2 & matrix$castotdegree == 3)) / length(matrix$maintotdegree), 3)))
 
-colnames(table6) <- c("0 Casual Partners N", "0 Casual Partners %",
+colnames(table5) <- c("0 Casual Partners N", "0 Casual Partners %",
                       "1 Casual Partner N", "1 Casual Partner %",
                       "2 Casual Partners N", "2 Casual Partners %",
                       "3 Casual Partners N", "3 Casual Partners %")
-rownames(table6) <- c("0 Main Partners", "1 Main Partner", "2 Main Partners")
-write.csv(table6, file = "Output/table6.csv")
+rownames(table5) <- c("0 Main Partners", "1 Main Partner", "2 Main Partners")
+write.csv(table5, file = "Output/table5.csv")
 
 # Race/ethnicity
 tot <- artnetLong %>% count(race.cat, partracecat)
