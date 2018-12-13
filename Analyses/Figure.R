@@ -18,6 +18,90 @@ library(MASS)
 library(sandwich)
 library(data.table)
 
+# NetParams version -------------------------------------
+# acts/per week/per partnership for main and casual partnerships
+# fx of: partnership duration,
+#        age of each partner (might take sqrt of sum)
+#        race combo (in two-category set up, 3 values)
+#        HIV combo (same as race)
+#        partnership type
+#        geography main effect
+
+
+l <- select(l, ptype, p_duration, age, p_age = p_AGE, city = city2,
+            race = race.cat, p_race = p_race.cat, rai = p_RAI, iai = p_IAI,
+            acts = p_anal.acts.week) %>%
+  filter(ptype %in% 1:2) %>%
+  filter(rai == 1 | iai == 1)
+head(l, 25)
+
+table(l$age, useNA = "always")
+table(l$p_age, useNA = "always")
+l$p_age[l$p_age %in% c("", "00")] <- NA
+l$p_age <- as.numeric(l$p_age)
+
+l$comb.age <- l$age + l$p_age
+l$diff.age <- abs(l$age - l$p_age)
+
+l$race2 <- ifelse(l$race %in% c("white", "other"), 1, 0)
+l$p_race2 <- ifelse(l$p_race %in% c("white", "other"), 1, 0)
+l$race.combo <- rep(NA, nrow(l))
+l$race.combo[l$race2 == 0 & l$p_race2 == 0] <- 0
+l$race.combo[l$race2 == 0 & l$p_race2 == 1] <- 1
+l$race.combo[l$race2 == 1 & l$p_race2 == 0] <- 1
+l$race.combo[l$race2 == 1 & l$p_race2 == 1] <- 2
+table(l$race2, l$p_race2)
+table(l$race.combo)
+l <- select(l, -c(race, p_race, race2, p_race2))
+
+l$p_duration[which(l$p_duration == 0)] <- sample(1:4, length(l$p_duration[which(l$p_duration == 0)]), TRUE)
+
+head(l, 25)
+sum(is.na(l$acts))
+
+# with duration
+mod <- glm(floor(acts*52) ~ p_duration + I(p_duration^2) + as.factor(race.combo) +
+             as.factor(ptype) + comb.age + city, family = poisson(), data = l)
+summary(mod)
+
+b <- coef(mod)
+x <- expand.grid(p_duration = seq(0, 1000, 100),
+                 ptype = 1:2,
+                 race.combo = 0:2,
+                 comb.age = seq(30, 120, 30),
+                 city = "Atlanta")
+pred <- predict(mod, newdata = x, type = "response", se.fit = TRUE)
+pred <- cbind(x,
+              est = pred$fit/52,
+              lcl = (pred$fit - 1.96*pred$se.fit)/52,
+              ucl = (pred$fit + 1.96*pred$se.fit)/52)
+pred
+
+ggplot(pred, aes(p_duration, est, color = as.factor(comb.age), lty = as.factor(ptype))) +
+  geom_line() +
+  facet_wrap(~as.factor(race.combo)) +
+  scale_color_viridis_d() +
+  theme_minimal()
+
+# no duration
+
+# with duration
+mod <- glm(floor(acts*52) ~ as.factor(race.combo) +
+             as.factor(ptype) + comb.age + city, family = poisson(), data = l)
+summary(mod)
+
+b <- coef(mod)
+x <- expand.grid(ptype = 1:2,
+                 race.combo = 0:2,
+                 comb.age = seq(30, 120, 30),
+                 city = city_name)
+pred <- predict(mod, newdata = x, type = "response", se.fit = TRUE)
+pred <- cbind(x,
+              est = pred$fit/52,
+              lcl = (pred$fit - 1.96*pred$se.fit)/52,
+              ucl = (pred$fit + 1.96*pred$se.fit)/52)
+pred
+
 # Updated version of Sam's ----------------------------------------------
 
 ## All testing ##
