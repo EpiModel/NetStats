@@ -1,35 +1,104 @@
 ## ART-Net Study 2018   ##
 ## Data Cleaning Script ##
-## 2018-05-29           ##
+## 2019-01-29           ##
+
+
+# De-duplicate AMIS by ID and EMAIL
+# De-duplicate INTERMEDIATE by ID and EMAIL
+# Add IP address de-duplication?
+
 
 # Load packages ---------
 rm(list = ls())
 library(dplyr)
 library(tidyr)
+library(magrittr)
 library(readxl)
 
 # Read in datasets ---------
-# artnet <- readRDS("../../../../Products/NetStats/NetStats/artnet4shiny.rda")
+artnet <- readRDS("Cleaned/ARTNet-vars-full.rda")
+artnetLong <- readRDS("Cleaned/ARTNet-long-full.rda")
+amis.2017 <- readRDS("Cleaned/AMIS-2017.rda")
+amis.2018 <- readRDS("Cleaned/AMIS-2018.rda")
+intermed.2017 <- readRDS("Cleaned/ARTNet-intermediate-2017.rda")
+intermed.2018 <- readRDS("Cleaned/ARTNet-intermediate-2018.rda")
 
-artnet <- readRDS("Cleaned/ARTNet-vars.rda")
-artnetLong <- readRDS("Cleaned/ARTNet-long.rda")
-amis <- readRDS("Cleaned/amiscompletes.rda")
-intermed <- readRDS("Cleaned/ARTNetAMIS-intermediate.rda")
+# Create merged AMIS dataset ---------------
+# Subset to main variables
+amis1 <- amis.2017 %>%
+  select(subID, subID_CHAR, EMAIL, HISPANIC, RACEA, RACEB, RACEC, RACED, RACEE, RACEF, RACEG,
+         RACEH, AGE, RCNTRSLT, EVRPOS, HLEDUCAT, zip_combined, EVERTEST, TEST2YRS)
+amis2 <- amis.2018 %>%
+  select(subID, subIDchar, amis_EMAIL, HISPANIC, RACEA, RACEB, RACEC, RACED, RACEE, RACEF, RACEG,
+         RACEH, AGE, RCNTRSLT, EVRPOS, HLEDUCAT, zip_combined, EVERTEST, TEST2YRS) %>%
+  rename(subID_CHAR = subIDchar, EMAIL = amis_EMAIL)
+amis1$survey.year <- "2017"
+amis2$survey.year <- "2018"
+amis <- rbind(amis1, amis2) # 22382
 
-# Create NA variables -----------------
-amis$race <- NA
-amis$race.cat <- NA
-amis$hiv <- NA
-amis$age.cat <- NA
-amis$region <- NA
-amis$division <- NA
+# De-duplicate AMIS by ID
+table(duplicated(amis.2017$subID))
+table(duplicated(amis.2018$subID))
+table(amis.2017$subID %in% amis.2018$subID)
+table(amis.2018$subID %in% amis.2017$subID)
 
-intermed$race <- NA
-intermed$race.cat <- NA
-intermed$hiv <- NA
-intermed$age.cat <- NA
-intermed$region <- NA
-intermed$division <- NA
+
+# Deduplicate AMIS dataset by email
+blankemail <- amis[which(amis$EMAIL == ""), ] #13882
+notblankemail <- amis[which(amis$EMAIL != ""), ] #8500
+
+# Quantifying across-year duplicates
+email.count <- as.data.frame(table(notblankemail[, c("EMAIL")])) #7640
+email.count2 <- email.count[email.count$Freq > 1, ] # 849 duplicates
+
+# Take the first record for each duplicate
+a3 <- notblankemail[which(!duplicated(notblankemail$EMAIL, fromLast = FALSE)),] #7640
+
+# Bind blank and de-duplicated non-blanks
+amis <- rbind(blankemail, a3) #21522
+
+# Create merged Intermediate dataset (with AMIS) ---------------
+# Subset to main variables
+intermed1 <- intermed.2017 %>%
+  select(ID2017, ARTNETINTEMAIL2017) %>%
+  rename(subID = ID2017, INTEMAIL = ARTNETINTEMAIL2017)
+intermed2 <- intermed.2018 %>%
+  select(ID2018, ARTNETINTEMAIL2018) %>%
+  rename(subID = ID2018, INTEMAIL = ARTNETINTEMAIL2018)
+
+intermed1$survey.year <- "2017"
+intermed2$survey.year <- "2018"
+amis <- rbind(amis1, amis2) # 22382
+
+
+# Cross year ID issues?
+
+
+
+
+# De-duplicate AMIS by ID
+table(duplicated(intermed.2017$subID))
+table(duplicated(intermed.2018$subID))
+table(intermed.2017$subID %in% intermed.2018$subID)
+table(intermed.2018$subID %in% intermed.2017$subID)
+
+# Deduplicate AMIS dataset by email
+blankemail <- amis[which(amis$EMAIL == ""), ] #13882
+notblankemail <- amis[which(amis$EMAIL != ""), ] #8500
+
+# Quantifying across-year duplicates
+email.count <- as.data.frame(table(notblankemail[, c("EMAIL")])) #7640
+email.count2 <- email.count[email.count$Freq > 1, ] # 849 duplicates
+
+# Take the first record for each duplicate
+a3 <- notblankemail[which(!duplicated(notblankemail$EMAIL, fromLast = FALSE)),] #7640
+
+# Bind blank and de-duplicated non-blanks
+amis <- rbind(blankemail, a3) #21522
+
+
+# Join on subID_char
+left_join
 
 
 # Geomatching ------------------------------------
@@ -54,7 +123,7 @@ table(nocountymatch$STATEFIPS) # 4 geographies with no match,
 NCHS <- read_xlsx("Input/NCHSData.xlsx")
 NCHS <- NCHS[, c("GEOID_CHAR", "NCHS_2013")]
 NCHS$NCHSCHAR <- rep(NA, nrow(NCHS))
-NCHS$NCHSCHAR[NCHS$NCHS_2013 == 1] <- "Large Central Metro"
+NCHS$NCHSCHARc[NCHS$NCHS_2013 == 1] <- "Large Central Metro"
 NCHS$NCHSCHAR[NCHS$NCHS_2013 == 2] <- "Large Fringe Metro"
 NCHS$NCHSCHAR[NCHS$NCHS_2013 == 3] <- "Medium Metro"
 NCHS$NCHSCHAR[NCHS$NCHS_2013 == 4] <- "Small Metro"
