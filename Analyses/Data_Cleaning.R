@@ -2,12 +2,6 @@
 ## Data Cleaning Script ##
 ## 2019-01-29           ##
 
-
-# De-duplicate AMIS by ID and EMAIL
-# De-duplicate INTERMEDIATE by ID and EMAIL
-# Add IP address de-duplication?
-
-
 # Load packages ---------
 rm(list = ls())
 library(dplyr)
@@ -18,88 +12,8 @@ library(readxl)
 # Read in datasets ---------
 artnet <- readRDS("Cleaned/ARTNet-vars-full.rda")
 artnetLong <- readRDS("Cleaned/ARTNet-long-full.rda")
-amis.2017 <- readRDS("Cleaned/AMIS-2017.rda")
-amis.2018 <- readRDS("Cleaned/AMIS-2018.rda")
-intermed.2017 <- readRDS("Cleaned/ARTNet-intermediate-2017.rda")
-intermed.2018 <- readRDS("Cleaned/ARTNet-intermediate-2018.rda")
-
-# Create merged AMIS dataset ---------------
-# Subset to main variables
-amis1 <- amis.2017 %>%
-  select(subID, subID_CHAR, EMAIL, HISPANIC, RACEA, RACEB, RACEC, RACED, RACEE, RACEF, RACEG,
-         RACEH, AGE, RCNTRSLT, EVRPOS, HLEDUCAT, zip_combined, EVERTEST, TEST2YRS)
-amis2 <- amis.2018 %>%
-  select(subID, subIDchar, amis_EMAIL, HISPANIC, RACEA, RACEB, RACEC, RACED, RACEE, RACEF, RACEG,
-         RACEH, AGE, RCNTRSLT, EVRPOS, HLEDUCAT, zip_combined, EVERTEST, TEST2YRS) %>%
-  rename(subID_CHAR = subIDchar, EMAIL = amis_EMAIL)
-amis1$survey.year <- "2017"
-amis2$survey.year <- "2018"
-amis <- rbind(amis1, amis2) # 22382
-
-# De-duplicate AMIS by ID
-table(duplicated(amis.2017$subID))
-table(duplicated(amis.2018$subID))
-table(amis.2017$subID %in% amis.2018$subID)
-table(amis.2018$subID %in% amis.2017$subID)
-
-
-# Deduplicate AMIS dataset by email
-blankemail <- amis[which(amis$EMAIL == ""), ] #13882
-notblankemail <- amis[which(amis$EMAIL != ""), ] #8500
-
-# Quantifying across-year duplicates
-email.count <- as.data.frame(table(notblankemail[, c("EMAIL")])) #7640
-email.count2 <- email.count[email.count$Freq > 1, ] # 849 duplicates
-
-# Take the first record for each duplicate
-a3 <- notblankemail[which(!duplicated(notblankemail$EMAIL, fromLast = FALSE)),] #7640
-
-# Bind blank and de-duplicated non-blanks
-amis <- rbind(blankemail, a3) #21522
-
-# Create merged Intermediate dataset (with AMIS) ---------------
-# Subset to main variables
-intermed1 <- intermed.2017 %>%
-  select(ID2017, ARTNETINTEMAIL2017) %>%
-  rename(subID = ID2017, INTEMAIL = ARTNETINTEMAIL2017)
-intermed2 <- intermed.2018 %>%
-  select(ID2018, ARTNETINTEMAIL2018) %>%
-  rename(subID = ID2018, INTEMAIL = ARTNETINTEMAIL2018)
-
-intermed1$survey.year <- "2017"
-intermed2$survey.year <- "2018"
-amis <- rbind(amis1, amis2) # 22382
-
-
-# Cross year ID issues?
-
-
-
-
-# De-duplicate AMIS by ID
-table(duplicated(intermed.2017$subID))
-table(duplicated(intermed.2018$subID))
-table(intermed.2017$subID %in% intermed.2018$subID)
-table(intermed.2018$subID %in% intermed.2017$subID)
-
-# Deduplicate AMIS dataset by email
-blankemail <- amis[which(amis$EMAIL == ""), ] #13882
-notblankemail <- amis[which(amis$EMAIL != ""), ] #8500
-
-# Quantifying across-year duplicates
-email.count <- as.data.frame(table(notblankemail[, c("EMAIL")])) #7640
-email.count2 <- email.count[email.count$Freq > 1, ] # 849 duplicates
-
-# Take the first record for each duplicate
-a3 <- notblankemail[which(!duplicated(notblankemail$EMAIL, fromLast = FALSE)),] #7640
-
-# Bind blank and de-duplicated non-blanks
-amis <- rbind(blankemail, a3) #21522
-
-
-# Join on subID_char
-left_join
-
+amis <- readRDS("Cleaned/AMIS_Merged_NetStats.rda")
+intermed <- readRDS("Cleaned/AMIS-Intermediate_Merged_NetStats.rda")
 
 # Geomatching ------------------------------------
 # Read in Rural/Urban urbanicity codes (https://www.ers.usda.gov/data-products/rural-urban-continuum-codes/)
