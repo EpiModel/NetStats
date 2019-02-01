@@ -16,29 +16,29 @@ source("Analyses/Data_Cleaning.R", echo = FALSE)
 
 # Create mean degree variable
 l <- artnetLong
-l$ONGOING <- as.numeric(l$p_ONGOING)
+l$ONGOING <- as.numeric(l$ONGOING)
 l$ongoing2 <- ifelse(l$ONGOING %in% c(88, 99), 0, l$ONGOING)
 l$ongoing2[which(is.na(l$ONGOING))] <- 0
 l$ONGOING <- NULL
 
 # Total
 df <- l %>%
-  filter(p_RAI == 1 | p_IAI == 1 | p_ROI == 1 | p_IOI == 1) %>%
+  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>%
   # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype %in% 1:2) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
   summarise(totdegree = sum(ongoing2))
 df4 <- l %>%
-  filter(p_RAI == 1 | p_IAI == 1 | p_ROI == 1 | p_IOI == 1) %>%
-  # filter(p_RAI == 1 | p_IAI == 1) %>% # filter activity type
+  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype == 1) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
   summarise(maintotdegree = sum(ongoing2))
 df7 <- l %>%
-  filter(p_RAI == 1 | p_IAI == 1 | p_ROI == 1 | p_IOI == 1) %>%
-  # filter(p_RAI == 1 | p_IAI == 1) %>% # filter activity type
+  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype == 2) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
@@ -59,7 +59,7 @@ artnet2$oi.part[artnet2$oi.part < 0] <- 0 # 1 person with -87
 d <- artnet2
 l <- artnetLong
 d <- l %>%
-  filter(p_ROI == 1 | p_IOI == 1 | p_RAI == 1 | p_IAI == 1) %>%
+  filter(ROI == 1 | IOI == 1 | RAI == 1 | IAI == 1) %>%
   filter(ptype %in% 1:2) %>%
   group_by(AMIS_ID) %>%
   count() %>%
@@ -81,7 +81,7 @@ d$rate.oo.aioi.part
 
 # Create count variables for AI
 d2 <- l %>%
-  filter(p_RAI == 1 | p_IAI == 1) %>%
+  filter(RAI == 1 | IAI == 1) %>%
   filter(ptype %in% 1:2) %>%
   group_by(AMIS_ID) %>%
   count() %>%
@@ -104,7 +104,7 @@ d2$rate.oo.ai.part
 
 # Create count variables for OI
 d3 <- l %>%
-  filter(p_ROI == 1 | p_IOI == 1) %>%
+  filter(ROI == 1 | IOI == 1) %>%
   filter(ptype %in% 1:2) %>%
   group_by(AMIS_ID) %>%
   count() %>%
@@ -140,50 +140,50 @@ artnet2 <- left_join(artnet2, dc, by = "AMIS_ID")
 # Supp Table 1 - AI and OI Degree --------------
 # Create mean degree variable
 l <- artnetLong
-l$ONGOING <- as.numeric(l$p_ONGOING)
+l$ONGOING <- as.numeric(l$ONGOING)
 l$ongoing2 <- ifelse(l$ONGOING %in% c(88, 99), 0, l$ONGOING)
 l$ongoing2[which(is.na(l$ONGOING))] <- 0
 l$ONGOING <- NULL
 
 df2 <- l %>%
-  filter(p_RAI == 1 | p_IAI == 1) %>%
-  # filter(p_RAI == 1 | p_IAI == 1) %>% # filter activity type
+  filter(RAI == 1 | IAI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype %in% 1:2) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
   summarise(allaionlydegree = sum(ongoing2))
 df3 <- l %>%
-  filter(p_ROI == 1 | p_IOI == 1) %>%
-  # filter(p_RAI == 1 | p_IAI == 1) %>% # filter activity type
+  filter(ROI == 1 | IOI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype %in% 1:2) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
   summarise(alloionlydegree = sum(ongoing2))
 df5 <- l %>%
-  filter(p_RAI == 1 | p_IAI == 1) %>%
-  # filter(p_RAI == 1 | p_IAI == 1) %>% # filter activity type
+  filter(RAI == 1 | IAI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype == 1) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
   summarise(mainaionlydegree = sum(ongoing2))
 df6 <- l %>%
-  filter(p_ROI == 1 | p_IOI == 1) %>%
-  # filter(p_RAI == 1 | p_IAI == 1) %>% # filter activity type
+  filter(ROI == 1 | IOI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype == 1) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
   summarise(mainoionlydegree = sum(ongoing2))
 
 df8 <- l %>%
-  filter(p_RAI == 1 | p_IAI == 1) %>%
-  # filter(p_RAI == 1 | p_IAI == 1) %>% # filter activity type
+  filter(RAI == 1 | IAI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype == 2) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
   summarise(casaionlydegree = sum(ongoing2))
 df9 <- l %>%
-  filter(p_ROI == 1 | p_IOI == 1) %>%
-  # filter(p_RAI == 1 | p_IAI == 1) %>% # filter activity type
+  filter(ROI == 1 | IOI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype == 2) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
@@ -1346,7 +1346,7 @@ ageooai <- round(cbind(exp(coef(ageooai)), exp(confint(ageooai))), 3)
 
 
 # double check predictions against empirical means
-group_by(artnet2 age.cat) %>% summarize(mean(rate.oo.ai.part))
+group_by(artnet2, age.cat) %>% summarize(mean(rate.oo.ai.part))
 
 fifteen24ooai <- cbind("15-24",
                        ageooai[1, 1],
@@ -1541,7 +1541,7 @@ raceoooi <- glm(rate.oo.oi.part ~ race.cat - 1, family = "poisson", data = artne
 raceoooi <- round(cbind(exp(coef(raceoooi)), exp(confint(raceoooi))), 3)
 
 # double check predictions against empirical means
-group_by(artnet2 race.cat) %>% summarize(mean(rate.oo.oi.part))
+group_by(artnet2, race.cat) %>% summarize(mean(rate.oo.oi.part))
 
 blackoooi <- cbind("black",
                    raceoooi[1, 1],
@@ -1573,7 +1573,7 @@ ageoooi <- round(cbind(exp(coef(ageoooi)), exp(confint(ageoooi))), 3)
 
 
 # double check predictions against empirical means
-group_by(artnet2 age.cat) %>% summarize(mean(rate.oo.oi.part))
+group_by(artnet2, age.cat) %>% summarize(mean(rate.oo.oi.part))
 
 fifteen24oooi <- cbind("15-24",
                        ageoooi[1, 1],
@@ -1770,36 +1770,36 @@ colnames(stable2) <- c("Category", "AI  Mean", "AI CI", "Category", "OI Mean", "
 write.csv(stable2, file = "Output/stable2.csv")
 
 # Supp Table 3 - Duration by AI and OI --------------
-extant <- artnetLong[which(artnetLong$p_ONGOING == 1 & artnetLong$p_duration < 2150 & artnetLong$ptype %in% c(1, 2)), ]
-extant <- extant[which(extant$p_RAI == 1 | extant$p_IAI == 1 | extant$p_ROI == 1 | extant$p_IOI == 1), ]
+extant <- artnetLong[which(artnetLong$ONGOING == 1 & artnetLong$duration < 2150 & artnetLong$ptype %in% c(1, 2)), ]
+extant <- extant[which(extant$RAI == 1 | extant$IAI == 1 | extant$ROI == 1 | extant$IOI == 1), ]
 
-aimain <- extant[which((extant$p_RAI == 1 | extant$p_IAI == 1) & extant$ptype == 1), ]
-aicas <- extant[which((extant$p_RAI == 1 | extant$p_IAI == 1) & extant$ptype == 2), ]
-oimain <- extant[which((extant$p_ROI == 1 | extant$p_IOI == 1) & extant$ptype == 1), ]
-oicas <- extant[which((extant$p_ROI == 1 | extant$p_IOI == 1) & extant$ptype == 2), ]
+aimain <- extant[which((extant$RAI == 1 | extant$IAI == 1) & extant$ptype == 1), ]
+aicas <- extant[which((extant$RAI == 1 | extant$IAI == 1) & extant$ptype == 2), ]
+oimain <- extant[which((extant$ROI == 1 | extant$IOI == 1) & extant$ptype == 1), ]
+oicas <- extant[which((extant$ROI == 1 | extant$IOI == 1) & extant$ptype == 2), ]
 
 # Total number of ongoing partnerships
 total <- cbind("Total", paste0(nrow(extant), " (", 100 * nrow(extant) / nrow(extant), ")"),
 
-               round(mean(aimain$p_duration, na.rm = TRUE), 1),
-               paste0(round(sd(aimain$p_duration, na.rm = TRUE), 1),
+               round(mean(aimain$duration, na.rm = TRUE), 1),
+               paste0(round(sd(aimain$duration, na.rm = TRUE), 1),
                       ", ",
-                      round(median(aimain$p_duration, na.rm = TRUE), 1)),
+                      round(median(aimain$duration, na.rm = TRUE), 1)),
 
-               round(mean(aicas$p_duration, na.rm = TRUE), 1),
-               paste0(round(sd(aicas$p_duration, na.rm = TRUE), 1),
+               round(mean(aicas$duration, na.rm = TRUE), 1),
+               paste0(round(sd(aicas$duration, na.rm = TRUE), 1),
                       ", ",
-                      round(median(aicas$p_duration, na.rm = TRUE), 1)),
+                      round(median(aicas$duration, na.rm = TRUE), 1)),
 
-               round(mean(oimain$p_duration, na.rm = TRUE), 1),
-               paste0(round(sd(oimain$p_duration, na.rm = TRUE), 1),
+               round(mean(oimain$duration, na.rm = TRUE), 1),
+               paste0(round(sd(oimain$duration, na.rm = TRUE), 1),
                       ", ",
-                      round(median(oimain$p_duration, na.rm = TRUE), 1)),
+                      round(median(oimain$duration, na.rm = TRUE), 1)),
 
-               round(mean(oicas$p_duration, na.rm = TRUE), 1),
-               paste0(round(sd(oicas$p_duration, na.rm = TRUE), 1),
+               round(mean(oicas$duration, na.rm = TRUE), 1),
+               paste0(round(sd(oicas$duration, na.rm = TRUE), 1),
                       ", ",
-                      round(median(oicas$p_duration, na.rm = TRUE), 1)))
+                      round(median(oicas$duration, na.rm = TRUE), 1)))
 
 # Race/ethnicity
 black <- cbind("black",
@@ -1808,25 +1808,25 @@ black <- cbind("black",
                       round(100 * nrow(extant[which(extant$race.cat == "black"), ]) /
                               nrow(extant), 1), ")"),
 
-               round(mean(aimain$p_duration[which(aimain$race.cat == "black")], na.rm = TRUE), 1),
-               paste0(round(sd(aimain$p_duration[which(aimain$race.cat == "black")], na.rm = TRUE), 1),
+               round(mean(aimain$duration[which(aimain$race.cat == "black")], na.rm = TRUE), 1),
+               paste0(round(sd(aimain$duration[which(aimain$race.cat == "black")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(aimain$p_duration[which(aimain$race.cat == "black")], na.rm = TRUE), 1)),
+                      round(median(aimain$duration[which(aimain$race.cat == "black")], na.rm = TRUE), 1)),
 
-               round(mean(aicas$p_duration[which(aicas$race.cat == "black")], na.rm = TRUE), 1),
-               paste0(round(sd(aicas$p_duration[which(aicas$race.cat == "black")], na.rm = TRUE), 1),
+               round(mean(aicas$duration[which(aicas$race.cat == "black")], na.rm = TRUE), 1),
+               paste0(round(sd(aicas$duration[which(aicas$race.cat == "black")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(aicas$p_duration[which(aicas$race.cat == "black")], na.rm = TRUE), 1)),
+                      round(median(aicas$duration[which(aicas$race.cat == "black")], na.rm = TRUE), 1)),
 
-               round(mean(oimain$p_duration[which(oimain$race.cat == "black")], na.rm = TRUE), 1),
-               paste0(round(sd(oimain$p_duration[which(oimain$race.cat == "black")], na.rm = TRUE), 1),
+               round(mean(oimain$duration[which(oimain$race.cat == "black")], na.rm = TRUE), 1),
+               paste0(round(sd(oimain$duration[which(oimain$race.cat == "black")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(oimain$p_duration[which(oimain$race.cat == "black")], na.rm = TRUE), 1)),
+                      round(median(oimain$duration[which(oimain$race.cat == "black")], na.rm = TRUE), 1)),
 
-               round(mean(oicas$p_duration[which(oicas$race.cat == "black")], na.rm = TRUE), 1),
-               paste0(round(sd(oicas$p_duration[which(oicas$race.cat == "black")], na.rm = TRUE), 1),
+               round(mean(oicas$duration[which(oicas$race.cat == "black")], na.rm = TRUE), 1),
+               paste0(round(sd(oicas$duration[which(oicas$race.cat == "black")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(oicas$p_duration[which(oicas$race.cat == "black")], na.rm = TRUE), 1)))
+                      round(median(oicas$duration[which(oicas$race.cat == "black")], na.rm = TRUE), 1)))
 
 white <- cbind("white",
                paste0(nrow(extant[which(extant$race.cat == "white"), ]),
@@ -1834,25 +1834,25 @@ white <- cbind("white",
                       round(100 * nrow(extant[which(extant$race.cat == "white"), ]) /
                               nrow(extant), 1), ")"),
 
-               round(mean(aimain$p_duration[which(aimain$race.cat == "white")], na.rm = TRUE), 1),
-               paste0(round(sd(aimain$p_duration[which(aimain$race.cat == "white")], na.rm = TRUE), 1),
+               round(mean(aimain$duration[which(aimain$race.cat == "white")], na.rm = TRUE), 1),
+               paste0(round(sd(aimain$duration[which(aimain$race.cat == "white")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(aimain$p_duration[which(aimain$race.cat == "white")], na.rm = TRUE), 1)),
+                      round(median(aimain$duration[which(aimain$race.cat == "white")], na.rm = TRUE), 1)),
 
-               round(mean(aicas$p_duration[which(aicas$race.cat == "white")], na.rm = TRUE), 1),
-               paste0(round(sd(aicas$p_duration[which(aicas$race.cat == "white")], na.rm = TRUE), 1),
+               round(mean(aicas$duration[which(aicas$race.cat == "white")], na.rm = TRUE), 1),
+               paste0(round(sd(aicas$duration[which(aicas$race.cat == "white")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(aicas$p_duration[which(aicas$race.cat == "white")], na.rm = TRUE), 1)),
+                      round(median(aicas$duration[which(aicas$race.cat == "white")], na.rm = TRUE), 1)),
 
-               round(mean(oimain$p_duration[which(oimain$race.cat == "white")], na.rm = TRUE), 1),
-               paste0(round(sd(oimain$p_duration[which(oimain$race.cat == "white")], na.rm = TRUE), 1),
+               round(mean(oimain$duration[which(oimain$race.cat == "white")], na.rm = TRUE), 1),
+               paste0(round(sd(oimain$duration[which(oimain$race.cat == "white")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(oimain$p_duration[which(oimain$race.cat == "white")], na.rm = TRUE), 1)),
+                      round(median(oimain$duration[which(oimain$race.cat == "white")], na.rm = TRUE), 1)),
 
-               round(mean(oicas$p_duration[which(oicas$race.cat == "white")], na.rm = TRUE), 1),
-               paste0(round(sd(oicas$p_duration[which(oicas$race.cat == "white")], na.rm = TRUE), 1),
+               round(mean(oicas$duration[which(oicas$race.cat == "white")], na.rm = TRUE), 1),
+               paste0(round(sd(oicas$duration[which(oicas$race.cat == "white")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(oicas$p_duration[which(oicas$race.cat == "white")], na.rm = TRUE), 1)))
+                      round(median(oicas$duration[which(oicas$race.cat == "white")], na.rm = TRUE), 1)))
 
 hispanic <- cbind("hispanic",
                   paste0(nrow(extant[which(extant$race.cat == "hispanic"), ]),
@@ -1860,50 +1860,50 @@ hispanic <- cbind("hispanic",
                          round(100 * nrow(extant[which(extant$race.cat == "hispanic"), ]) /
                                  nrow(extant), 1), ")"),
 
-                  round(mean(aimain$p_duration[which(aimain$race.cat == "hispanic")], na.rm = TRUE), 1),
-                  paste0(round(sd(aimain$p_duration[which(aimain$race.cat == "hispanic")], na.rm = TRUE), 1),
+                  round(mean(aimain$duration[which(aimain$race.cat == "hispanic")], na.rm = TRUE), 1),
+                  paste0(round(sd(aimain$duration[which(aimain$race.cat == "hispanic")], na.rm = TRUE), 1),
                          ", ",
-                         round(median(aimain$p_duration[which(aimain$race.cat == "hispanic")], na.rm = TRUE), 1)),
+                         round(median(aimain$duration[which(aimain$race.cat == "hispanic")], na.rm = TRUE), 1)),
 
-                  round(mean(aicas$p_duration[which(aicas$race.cat == "hispanic")], na.rm = TRUE), 1),
-                  paste0(round(sd(aicas$p_duration[which(aicas$race.cat == "hispanic")], na.rm = TRUE), 1),
+                  round(mean(aicas$duration[which(aicas$race.cat == "hispanic")], na.rm = TRUE), 1),
+                  paste0(round(sd(aicas$duration[which(aicas$race.cat == "hispanic")], na.rm = TRUE), 1),
                          ", ",
-                         round(median(aicas$p_duration[which(aicas$race.cat == "hispanic")], na.rm = TRUE), 1)),
+                         round(median(aicas$duration[which(aicas$race.cat == "hispanic")], na.rm = TRUE), 1)),
 
-                  round(mean(oimain$p_duration[which(oimain$race.cat == "hispanic")], na.rm = TRUE), 1),
-                  paste0(round(sd(oimain$p_duration[which(oimain$race.cat == "hispanic")], na.rm = TRUE), 1),
+                  round(mean(oimain$duration[which(oimain$race.cat == "hispanic")], na.rm = TRUE), 1),
+                  paste0(round(sd(oimain$duration[which(oimain$race.cat == "hispanic")], na.rm = TRUE), 1),
                          ", ",
-                         round(median(oimain$p_duration[which(oimain$race.cat == "hispanic")], na.rm = TRUE), 1)),
+                         round(median(oimain$duration[which(oimain$race.cat == "hispanic")], na.rm = TRUE), 1)),
 
-                  round(mean(oicas$p_duration[which(oicas$race.cat == "hispanic")], na.rm = TRUE), 1),
-                  paste0(round(sd(oicas$p_duration[which(oicas$race.cat == "hispanic")], na.rm = TRUE), 1),
+                  round(mean(oicas$duration[which(oicas$race.cat == "hispanic")], na.rm = TRUE), 1),
+                  paste0(round(sd(oicas$duration[which(oicas$race.cat == "hispanic")], na.rm = TRUE), 1),
                          ", ",
-                         round(median(oicas$p_duration[which(oicas$race.cat == "hispanic")], na.rm = TRUE), 1)))
+                         round(median(oicas$duration[which(oicas$race.cat == "hispanic")], na.rm = TRUE), 1)))
 
 other <- cbind("other",
                paste0(nrow(extant[which(extant$race.cat == "other"), ]),
                       " (", round(100 * nrow(extant[which(extant$race.cat == "other"), ]) /
                                     nrow(extant), 1), ")"),
 
-               round(mean(aimain$p_duration[which(aimain$race.cat == "other")], na.rm = TRUE), 1),
-               paste0(round(sd(aimain$p_duration[which(aimain$race.cat == "other")], na.rm = TRUE), 1),
+               round(mean(aimain$duration[which(aimain$race.cat == "other")], na.rm = TRUE), 1),
+               paste0(round(sd(aimain$duration[which(aimain$race.cat == "other")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(aimain$p_duration[which(aimain$race.cat == "other")], na.rm = TRUE), 1)),
+                      round(median(aimain$duration[which(aimain$race.cat == "other")], na.rm = TRUE), 1)),
 
-               round(mean(aicas$p_duration[which(aicas$race.cat == "other")], na.rm = TRUE), 1),
-               paste0(round(sd(aicas$p_duration[which(aicas$race.cat == "other")], na.rm = TRUE), 1),
+               round(mean(aicas$duration[which(aicas$race.cat == "other")], na.rm = TRUE), 1),
+               paste0(round(sd(aicas$duration[which(aicas$race.cat == "other")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(aicas$p_duration[which(aicas$race.cat == "other")], na.rm = TRUE), 1)),
+                      round(median(aicas$duration[which(aicas$race.cat == "other")], na.rm = TRUE), 1)),
 
-               round(mean(oimain$p_duration[which(oimain$race.cat == "other")], na.rm = TRUE), 1),
-               paste0(round(sd(oimain$p_duration[which(oimain$race.cat == "other")], na.rm = TRUE), 1),
+               round(mean(oimain$duration[which(oimain$race.cat == "other")], na.rm = TRUE), 1),
+               paste0(round(sd(oimain$duration[which(oimain$race.cat == "other")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(oimain$p_duration[which(oimain$race.cat == "other")], na.rm = TRUE), 1)),
+                      round(median(oimain$duration[which(oimain$race.cat == "other")], na.rm = TRUE), 1)),
 
-               round(mean(oicas$p_duration[which(oicas$race.cat == "other")], na.rm = TRUE), 1),
-               paste0(round(sd(oicas$p_duration[which(oicas$race.cat == "other")], na.rm = TRUE), 1),
+               round(mean(oicas$duration[which(oicas$race.cat == "other")], na.rm = TRUE), 1),
+               paste0(round(sd(oicas$duration[which(oicas$race.cat == "other")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(oicas$p_duration[which(oicas$race.cat == "other")], na.rm = TRUE), 1)))
+                      round(median(oicas$duration[which(oicas$race.cat == "other")], na.rm = TRUE), 1)))
 
 
 # Age
@@ -1913,24 +1913,24 @@ fifteen24 <- cbind("15-24",
                           round(100 * nrow(extant[which(extant$age.cat == "15-24"), ]) /
                                   nrow(extant), 1), ")"),
 
-                   round(mean(aimain$p_duration[which(aimain$age.cat == "15-24")], na.rm = TRUE), 1),
-                   paste0(round(sd(aimain$p_duration[which(aimain$age.cat == "15-24")], na.rm = TRUE), 1),
+                   round(mean(aimain$duration[which(aimain$age.cat == "15-24")], na.rm = TRUE), 1),
+                   paste0(round(sd(aimain$duration[which(aimain$age.cat == "15-24")], na.rm = TRUE), 1),
                           ", ",
-                          round(median(aimain$p_duration[which(aimain$age.cat == "15-24")], na.rm = TRUE), 1)),
+                          round(median(aimain$duration[which(aimain$age.cat == "15-24")], na.rm = TRUE), 1)),
 
-                   round(mean(aicas$p_duration[which(aicas$age.cat == "15-24")], na.rm = TRUE), 1),
-                   paste0(round(sd(aicas$p_duration[which(aicas$age.cat == "15-24")], na.rm = TRUE), 1),
+                   round(mean(aicas$duration[which(aicas$age.cat == "15-24")], na.rm = TRUE), 1),
+                   paste0(round(sd(aicas$duration[which(aicas$age.cat == "15-24")], na.rm = TRUE), 1),
                           ", ",
-                          round(median(aicas$p_duration[which(aicas$age.cat == "15-24")], na.rm = TRUE), 1)),
-                   round(mean(oimain$p_duration[which(oimain$age.cat == "15-24")], na.rm = TRUE), 1),
-                   paste0(round(sd(oimain$p_duration[which(oimain$age.cat == "15-24")], na.rm = TRUE), 1),
+                          round(median(aicas$duration[which(aicas$age.cat == "15-24")], na.rm = TRUE), 1)),
+                   round(mean(oimain$duration[which(oimain$age.cat == "15-24")], na.rm = TRUE), 1),
+                   paste0(round(sd(oimain$duration[which(oimain$age.cat == "15-24")], na.rm = TRUE), 1),
                           ", ",
-                          round(median(oimain$p_duration[which(oimain$age.cat == "15-24")], na.rm = TRUE), 1)),
+                          round(median(oimain$duration[which(oimain$age.cat == "15-24")], na.rm = TRUE), 1)),
 
-                   round(mean(oicas$p_duration[which(oicas$age.cat == "15-24")], na.rm = TRUE), 1),
-                   paste0(round(sd(oicas$p_duration[which(oicas$age.cat == "15-24")], na.rm = TRUE), 1),
+                   round(mean(oicas$duration[which(oicas$age.cat == "15-24")], na.rm = TRUE), 1),
+                   paste0(round(sd(oicas$duration[which(oicas$age.cat == "15-24")], na.rm = TRUE), 1),
                           ", ",
-                          round(median(oicas$p_duration[which(oicas$age.cat == "15-24")], na.rm = TRUE), 1)))
+                          round(median(oicas$duration[which(oicas$age.cat == "15-24")], na.rm = TRUE), 1)))
 
 twentyfive34 <- cbind("25-34",
                       paste0(nrow(extant[which(extant$age.cat == "25-34"), ]),
@@ -1938,24 +1938,24 @@ twentyfive34 <- cbind("25-34",
                              round(100 * nrow(extant[which(extant$age.cat == "25-34"), ]) /
                                      nrow(extant), 1), ")"),
 
-                      round(mean(aimain$p_duration[which(aimain$age.cat == "25-34")], na.rm = TRUE), 1),
-                      paste0(round(sd(aimain$p_duration[which(aimain$age.cat == "25-34")], na.rm = TRUE), 1),
+                      round(mean(aimain$duration[which(aimain$age.cat == "25-34")], na.rm = TRUE), 1),
+                      paste0(round(sd(aimain$duration[which(aimain$age.cat == "25-34")], na.rm = TRUE), 1),
                              ", ",
-                             round(median(aimain$p_duration[which(aimain$age.cat == "25-34")], na.rm = TRUE), 1)),
+                             round(median(aimain$duration[which(aimain$age.cat == "25-34")], na.rm = TRUE), 1)),
 
-                      round(mean(aicas$p_duration[which(aicas$age.cat == "25-34")], na.rm = TRUE), 1),
-                      paste0(round(sd(aicas$p_duration[which(aicas$age.cat == "25-34")], na.rm = TRUE), 1),
+                      round(mean(aicas$duration[which(aicas$age.cat == "25-34")], na.rm = TRUE), 1),
+                      paste0(round(sd(aicas$duration[which(aicas$age.cat == "25-34")], na.rm = TRUE), 1),
                              ", ",
-                             round(median(aicas$p_duration[which(aicas$age.cat == "25-34")], na.rm = TRUE), 1)),
-                      round(mean(oimain$p_duration[which(oimain$age.cat == "25-34")], na.rm = TRUE), 1),
-                      paste0(round(sd(oimain$p_duration[which(oimain$age.cat == "25-34")], na.rm = TRUE), 1),
+                             round(median(aicas$duration[which(aicas$age.cat == "25-34")], na.rm = TRUE), 1)),
+                      round(mean(oimain$duration[which(oimain$age.cat == "25-34")], na.rm = TRUE), 1),
+                      paste0(round(sd(oimain$duration[which(oimain$age.cat == "25-34")], na.rm = TRUE), 1),
                              ", ",
-                             round(median(oimain$p_duration[which(oimain$age.cat == "25-34")], na.rm = TRUE), 1)),
+                             round(median(oimain$duration[which(oimain$age.cat == "25-34")], na.rm = TRUE), 1)),
 
-                      round(mean(oicas$p_duration[which(oicas$age.cat == "25-34")], na.rm = TRUE), 1),
-                      paste0(round(sd(oicas$p_duration[which(oicas$age.cat == "25-34")], na.rm = TRUE), 1),
+                      round(mean(oicas$duration[which(oicas$age.cat == "25-34")], na.rm = TRUE), 1),
+                      paste0(round(sd(oicas$duration[which(oicas$age.cat == "25-34")], na.rm = TRUE), 1),
                              ", ",
-                             round(median(oicas$p_duration[which(oicas$age.cat == "25-34")], na.rm = TRUE), 1)))
+                             round(median(oicas$duration[which(oicas$age.cat == "25-34")], na.rm = TRUE), 1)))
 
 thirtyfive44 <- cbind("35-44",
                       paste0(nrow(extant[which(extant$age.cat == "35-44"), ]),
@@ -1963,24 +1963,24 @@ thirtyfive44 <- cbind("35-44",
                              round(100 * nrow(extant[which(extant$age.cat == "35-44"), ]) /
                                      nrow(extant), 1), ")"),
 
-                      round(mean(aimain$p_duration[which(aimain$age.cat == "35-44")], na.rm = TRUE), 1),
-                      paste0(round(sd(aimain$p_duration[which(aimain$age.cat == "35-44")], na.rm = TRUE), 1),
+                      round(mean(aimain$duration[which(aimain$age.cat == "35-44")], na.rm = TRUE), 1),
+                      paste0(round(sd(aimain$duration[which(aimain$age.cat == "35-44")], na.rm = TRUE), 1),
                              ", ",
-                             round(median(aimain$p_duration[which(aimain$age.cat == "35-44")], na.rm = TRUE), 1)),
+                             round(median(aimain$duration[which(aimain$age.cat == "35-44")], na.rm = TRUE), 1)),
 
-                      round(mean(aicas$p_duration[which(aicas$age.cat == "35-44")], na.rm = TRUE), 1),
-                      paste0(round(sd(aicas$p_duration[which(aicas$age.cat == "35-44")], na.rm = TRUE), 1),
+                      round(mean(aicas$duration[which(aicas$age.cat == "35-44")], na.rm = TRUE), 1),
+                      paste0(round(sd(aicas$duration[which(aicas$age.cat == "35-44")], na.rm = TRUE), 1),
                              ", ",
-                             round(median(aicas$p_duration[which(aicas$age.cat == "35-44")], na.rm = TRUE), 1)),
-                      round(mean(oimain$p_duration[which(oimain$age.cat == "35-44")], na.rm = TRUE), 1),
-                      paste0(round(sd(oimain$p_duration[which(oimain$age.cat == "35-44")], na.rm = TRUE), 1),
+                             round(median(aicas$duration[which(aicas$age.cat == "35-44")], na.rm = TRUE), 1)),
+                      round(mean(oimain$duration[which(oimain$age.cat == "35-44")], na.rm = TRUE), 1),
+                      paste0(round(sd(oimain$duration[which(oimain$age.cat == "35-44")], na.rm = TRUE), 1),
                              ", ",
-                             round(median(oimain$p_duration[which(oimain$age.cat == "35-44")], na.rm = TRUE), 1)),
+                             round(median(oimain$duration[which(oimain$age.cat == "35-44")], na.rm = TRUE), 1)),
 
-                      round(mean(oicas$p_duration[which(oicas$age.cat == "35-44")], na.rm = TRUE), 1),
-                      paste0(round(sd(oicas$p_duration[which(oicas$age.cat == "35-44")], na.rm = TRUE), 1),
+                      round(mean(oicas$duration[which(oicas$age.cat == "35-44")], na.rm = TRUE), 1),
+                      paste0(round(sd(oicas$duration[which(oicas$age.cat == "35-44")], na.rm = TRUE), 1),
                              ", ",
-                             round(median(oicas$p_duration[which(oicas$age.cat == "35-44")], na.rm = TRUE), 1)))
+                             round(median(oicas$duration[which(oicas$age.cat == "35-44")], na.rm = TRUE), 1)))
 
 fortyfive54 <- cbind("45-54",
                      paste0(nrow(extant[which(extant$age.cat == "45-54"), ]),
@@ -1988,24 +1988,24 @@ fortyfive54 <- cbind("45-54",
                             round(100 * nrow(extant[which(extant$age.cat == "45-54"), ]) /
                                     nrow(extant), 1), ")"),
 
-                     round(mean(aimain$p_duration[which(aimain$age.cat == "45-54")], na.rm = TRUE), 1),
-                     paste0(round(sd(aimain$p_duration[which(aimain$age.cat == "45-54")], na.rm = TRUE), 1),
+                     round(mean(aimain$duration[which(aimain$age.cat == "45-54")], na.rm = TRUE), 1),
+                     paste0(round(sd(aimain$duration[which(aimain$age.cat == "45-54")], na.rm = TRUE), 1),
                             ", ",
-                            round(median(aimain$p_duration[which(aimain$age.cat == "45-54")], na.rm = TRUE), 1)),
+                            round(median(aimain$duration[which(aimain$age.cat == "45-54")], na.rm = TRUE), 1)),
 
-                     round(mean(aicas$p_duration[which(aicas$age.cat == "45-54")], na.rm = TRUE), 1),
-                     paste0(round(sd(aicas$p_duration[which(aicas$age.cat == "45-54")], na.rm = TRUE), 1),
+                     round(mean(aicas$duration[which(aicas$age.cat == "45-54")], na.rm = TRUE), 1),
+                     paste0(round(sd(aicas$duration[which(aicas$age.cat == "45-54")], na.rm = TRUE), 1),
                             ", ",
-                            round(median(aicas$p_duration[which(aicas$age.cat == "45-54")], na.rm = TRUE), 1)),
-                     round(mean(oimain$p_duration[which(oimain$age.cat == "45-54")], na.rm = TRUE), 1),
-                     paste0(round(sd(oimain$p_duration[which(oimain$age.cat == "45-54")], na.rm = TRUE), 1),
+                            round(median(aicas$duration[which(aicas$age.cat == "45-54")], na.rm = TRUE), 1)),
+                     round(mean(oimain$duration[which(oimain$age.cat == "45-54")], na.rm = TRUE), 1),
+                     paste0(round(sd(oimain$duration[which(oimain$age.cat == "45-54")], na.rm = TRUE), 1),
                             ", ",
-                            round(median(oimain$p_duration[which(oimain$age.cat == "45-54")], na.rm = TRUE), 1)),
+                            round(median(oimain$duration[which(oimain$age.cat == "45-54")], na.rm = TRUE), 1)),
 
-                     round(mean(oicas$p_duration[which(oicas$age.cat == "45-54")], na.rm = TRUE), 1),
-                     paste0(round(sd(oicas$p_duration[which(oicas$age.cat == "45-54")], na.rm = TRUE), 1),
+                     round(mean(oicas$duration[which(oicas$age.cat == "45-54")], na.rm = TRUE), 1),
+                     paste0(round(sd(oicas$duration[which(oicas$age.cat == "45-54")], na.rm = TRUE), 1),
                             ", ",
-                            round(median(oicas$p_duration[which(oicas$age.cat == "45-54")], na.rm = TRUE), 1)))
+                            round(median(oicas$duration[which(oicas$age.cat == "45-54")], na.rm = TRUE), 1)))
 
 
 fiftyfive65 <- cbind("55-65",
@@ -2014,24 +2014,24 @@ fiftyfive65 <- cbind("55-65",
                             round(100 * nrow(extant[which(extant$age.cat == "55-65"), ]) /
                                     nrow(extant), 1), ")"),
 
-                     round(mean(aimain$p_duration[which(aimain$age.cat == "55-65")], na.rm = TRUE), 1),
-                     paste0(round(sd(aimain$p_duration[which(aimain$age.cat == "55-65")], na.rm = TRUE), 1),
+                     round(mean(aimain$duration[which(aimain$age.cat == "55-65")], na.rm = TRUE), 1),
+                     paste0(round(sd(aimain$duration[which(aimain$age.cat == "55-65")], na.rm = TRUE), 1),
                             ", ",
-                            round(median(aimain$p_duration[which(aimain$age.cat == "55-65")], na.rm = TRUE), 1)),
+                            round(median(aimain$duration[which(aimain$age.cat == "55-65")], na.rm = TRUE), 1)),
 
-                     round(mean(aicas$p_duration[which(aicas$age.cat == "55-65")], na.rm = TRUE), 1),
-                     paste0(round(sd(aicas$p_duration[which(aicas$age.cat == "55-65")], na.rm = TRUE), 1),
+                     round(mean(aicas$duration[which(aicas$age.cat == "55-65")], na.rm = TRUE), 1),
+                     paste0(round(sd(aicas$duration[which(aicas$age.cat == "55-65")], na.rm = TRUE), 1),
                             ", ",
-                            round(median(aicas$p_duration[which(aicas$age.cat == "55-65")], na.rm = TRUE), 1)),
-                     round(mean(oimain$p_duration[which(oimain$age.cat == "55-65")], na.rm = TRUE), 1),
-                     paste0(round(sd(oimain$p_duration[which(oimain$age.cat == "55-65")], na.rm = TRUE), 1),
+                            round(median(aicas$duration[which(aicas$age.cat == "55-65")], na.rm = TRUE), 1)),
+                     round(mean(oimain$duration[which(oimain$age.cat == "55-65")], na.rm = TRUE), 1),
+                     paste0(round(sd(oimain$duration[which(oimain$age.cat == "55-65")], na.rm = TRUE), 1),
                             ", ",
-                            round(median(oimain$p_duration[which(oimain$age.cat == "55-65")], na.rm = TRUE), 1)),
+                            round(median(oimain$duration[which(oimain$age.cat == "55-65")], na.rm = TRUE), 1)),
 
-                     round(mean(oicas$p_duration[which(oicas$age.cat == "55-65")], na.rm = TRUE), 1),
-                     paste0(round(sd(oicas$p_duration[which(oicas$age.cat == "55-65")], na.rm = TRUE), 1),
+                     round(mean(oicas$duration[which(oicas$age.cat == "55-65")], na.rm = TRUE), 1),
+                     paste0(round(sd(oicas$duration[which(oicas$age.cat == "55-65")], na.rm = TRUE), 1),
                             ", ",
-                            round(median(oicas$p_duration[which(oicas$age.cat == "55-65")], na.rm = TRUE), 1)))
+                            round(median(oicas$duration[which(oicas$age.cat == "55-65")], na.rm = TRUE), 1)))
 
 # HIV Status
 HIVPos <- cbind("HIV Pos",
@@ -2040,23 +2040,23 @@ HIVPos <- cbind("HIV Pos",
                        round(100 * nrow(extant[which(extant$hiv == 1), ]) /
                                nrow(extant), 1), ")"),
 
-                round(mean(aimain$p_duration[which(aimain$hiv == 1)], na.rm = TRUE), 1),
-                paste0(round(sd(aimain$p_duration[which(aimain$hiv == 1)], na.rm = TRUE), 1),
+                round(mean(aimain$duration[which(aimain$hiv == 1)], na.rm = TRUE), 1),
+                paste0(round(sd(aimain$duration[which(aimain$hiv == 1)], na.rm = TRUE), 1),
                        ", ",
-                       round(median(aimain$p_duration[which(aimain$hiv == 1)], na.rm = TRUE), 1)),
-                round(mean(aicas$p_duration[which(aicas$hiv == 1)], na.rm = TRUE), 1),
-                paste0(round(sd(aicas$p_duration[which(aicas$hiv == 1)], na.rm = TRUE), 1),
+                       round(median(aimain$duration[which(aimain$hiv == 1)], na.rm = TRUE), 1)),
+                round(mean(aicas$duration[which(aicas$hiv == 1)], na.rm = TRUE), 1),
+                paste0(round(sd(aicas$duration[which(aicas$hiv == 1)], na.rm = TRUE), 1),
                        ", ",
-                       round(median(aicas$p_duration[which(aicas$hiv == 1)], na.rm = TRUE), 1)),
-                round(mean(oimain$p_duration[oimain$hiv == 1], na.rm = TRUE), 1),
-                paste0(round(sd(oimain$p_duration[oimain$hiv == 1], na.rm = TRUE), 1),
+                       round(median(aicas$duration[which(aicas$hiv == 1)], na.rm = TRUE), 1)),
+                round(mean(oimain$duration[oimain$hiv == 1], na.rm = TRUE), 1),
+                paste0(round(sd(oimain$duration[oimain$hiv == 1], na.rm = TRUE), 1),
                        ", ",
-                       round(median(oimain$p_duration[oimain$hiv == 1], na.rm = TRUE), 1)),
+                       round(median(oimain$duration[oimain$hiv == 1], na.rm = TRUE), 1)),
 
-                round(mean(oicas$p_duration[oicas$hiv == 1], na.rm = TRUE), 1),
-                paste0(round(sd(oicas$p_duration[oicas$hiv == 1], na.rm = TRUE), 1),
+                round(mean(oicas$duration[oicas$hiv == 1], na.rm = TRUE), 1),
+                paste0(round(sd(oicas$duration[oicas$hiv == 1], na.rm = TRUE), 1),
                        ", ",
-                       round(median(oicas$p_duration[oicas$hiv == 1], na.rm = TRUE), 1)))
+                       round(median(oicas$duration[oicas$hiv == 1], na.rm = TRUE), 1)))
 
 HIVNeg <- cbind("HIV Neg",
                 paste0(nrow(extant[which(extant$hiv == 0), ]),
@@ -2064,23 +2064,23 @@ HIVNeg <- cbind("HIV Neg",
                        round(100 * nrow(extant[which(extant$hiv == 0), ]) /
                                nrow(extant), 1), ")"),
 
-                round(mean(aimain$p_duration[which(aimain$hiv == 0)], na.rm = TRUE), 1),
-                paste0(round(sd(aimain$p_duration[which(aimain$hiv == 0)], na.rm = TRUE), 1),
+                round(mean(aimain$duration[which(aimain$hiv == 0)], na.rm = TRUE), 1),
+                paste0(round(sd(aimain$duration[which(aimain$hiv == 0)], na.rm = TRUE), 1),
                        ", ",
-                       round(median(aimain$p_duration[which(aimain$hiv == 0)], na.rm = TRUE), 1)),
-                round(mean(aicas$p_duration[which(aicas$hiv == 0)], na.rm = TRUE), 1),
-                paste0(round(sd(aicas$p_duration[which(aicas$hiv == 0)], na.rm = TRUE), 1),
+                       round(median(aimain$duration[which(aimain$hiv == 0)], na.rm = TRUE), 1)),
+                round(mean(aicas$duration[which(aicas$hiv == 0)], na.rm = TRUE), 1),
+                paste0(round(sd(aicas$duration[which(aicas$hiv == 0)], na.rm = TRUE), 1),
                        ", ",
-                       round(median(aicas$p_duration[which(aicas$hiv == 0)], na.rm = TRUE), 1)),
-                round(mean(oimain$p_duration[oimain$hiv == 0], na.rm = TRUE), 1),
-                paste0(round(sd(oimain$p_duration[oimain$hiv == 0], na.rm = TRUE), 1),
+                       round(median(aicas$duration[which(aicas$hiv == 0)], na.rm = TRUE), 1)),
+                round(mean(oimain$duration[oimain$hiv == 0], na.rm = TRUE), 1),
+                paste0(round(sd(oimain$duration[oimain$hiv == 0], na.rm = TRUE), 1),
                        ", ",
-                       round(median(oimain$p_duration[oimain$hiv == 0], na.rm = TRUE), 1)),
+                       round(median(oimain$duration[oimain$hiv == 0], na.rm = TRUE), 1)),
 
-                round(mean(oicas$p_duration[oicas$hiv == 0], na.rm = TRUE), 1),
-                paste0(round(sd(oicas$p_duration[oicas$hiv == 0], na.rm = TRUE), 1),
+                round(mean(oicas$duration[oicas$hiv == 0], na.rm = TRUE), 1),
+                paste0(round(sd(oicas$duration[oicas$hiv == 0], na.rm = TRUE), 1),
                        ", ",
-                       round(median(oicas$p_duration[oicas$hiv == 0], na.rm = TRUE), 1)))
+                       round(median(oicas$duration[oicas$hiv == 0], na.rm = TRUE), 1)))
 
 # Output table
 stable3 <- rbind(total, black, white, hispanic, other,

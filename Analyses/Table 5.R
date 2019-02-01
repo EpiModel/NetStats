@@ -16,29 +16,29 @@ source("Analyses/Data_Cleaning.R", echo = FALSE)
 
 # Create mean degree variable
 l <- artnetLong
-l$ONGOING <- as.numeric(l$p_ONGOING)
+l$ONGOING <- as.numeric(l$ONGOING)
 l$ongoing2 <- ifelse(l$ONGOING %in% c(88, 99), 0, l$ONGOING)
 l$ongoing2[which(is.na(l$ONGOING))] <- 0
 l$ONGOING <- NULL
 
 # Total
 df <- l %>%
-  filter(p_RAI == 1 | p_IAI == 1 | p_ROI == 1 | p_IOI == 1) %>%
+  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>%
   # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype %in% 1:2) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
   summarise(totdegree = sum(ongoing2))
 df4 <- l %>%
-  filter(p_RAI == 1 | p_IAI == 1 | p_ROI == 1 | p_IOI == 1) %>%
-  # filter(p_RAI == 1 | p_IAI == 1) %>% # filter activity type
+  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype == 1) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
   summarise(maintotdegree = sum(ongoing2))
 df7 <- l %>%
-  filter(p_RAI == 1 | p_IAI == 1 | p_ROI == 1 | p_IOI == 1) %>%
-  # filter(p_RAI == 1 | p_IAI == 1) %>% # filter activity type
+  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
   filter(ptype == 2) %>%
   # filter(ptype %in% 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%

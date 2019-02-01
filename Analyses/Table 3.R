@@ -16,37 +16,39 @@ source("Analyses/Data_Cleaning.R", echo = FALSE)
 
 # Table 3 - Duration of ongoing partnerships --------------
 
+#TODO: Imputed or given duration?
+
 # Set up data frames
-extant <- artnetLong[which(artnetLong$p_ONGOING == 1 & artnetLong$p_duration < 2150 & artnetLong$ptype %in% c(1, 2)), ]
+extant <- artnetLong[which(artnetLong$ONGOING == 1 & artnetLong$duration < 2150 & artnetLong$ptype %in% c(1, 2)), ]
 
 # Subset to those active
-extant <- extant[which(extant$p_RAI == 1 | extant$p_IAI == 1 | extant$p_ROI == 1 | extant$p_IOI == 1), ]
+extant <- extant[which(extant$RAI == 1 | extant$IAI == 1 | extant$ROI == 1 | extant$IOI == 1), ]
 
 # Number of rows with no reported activity
-nrow(extant[which(extant$p_RAI == 0 & extant$p_IAI == 0 & extant$p_ROI == 0 & extant$p_IOI == 0), ])
+nrow(extant[which(extant$RAI == 0 & extant$IAI == 0 & extant$ROI == 0 & extant$IOI == 0), ])
 
-bothmain <- extant[which((extant$p_RAI == 1 | extant$p_IAI == 1 | extant$p_ROI == 1 | extant$p_IOI == 1) & extant$ptype == 1), ]
-bothcas <- extant[which((extant$p_RAI == 1 | extant$p_IAI == 1 | extant$p_ROI == 1 | extant$p_IOI == 1) & extant$ptype == 2), ]
+bothmain <- extant[which((extant$RAI == 1 | extant$IAI == 1 | extant$ROI == 1 | extant$IOI == 1) & extant$ptype == 1), ]
+bothcas <- extant[which((extant$RAI == 1 | extant$IAI == 1 | extant$ROI == 1 | extant$IOI == 1) & extant$ptype == 2), ]
 
 
 # Total number of ongoing partnerships
 total <- cbind("Total", paste0(nrow(extant), " (", 100 * nrow(extant) / nrow(extant), ")"),
 
-               round(mean(extant$p_duration, na.rm = TRUE), 1),
-               paste0(round(sd(extant$p_duration, na.rm = TRUE), 1),
+               round(mean(extant$duration, na.rm = TRUE), 1),
+               paste0(round(sd(extant$duration, na.rm = TRUE), 1),
                       ", ",
-                      round(median(extant$p_duration, na.rm = TRUE), 1)),
+                      round(median(extant$duration, na.rm = TRUE), 1)),
 
                # Calculate mean, 95% CI
-               round(mean(bothmain$p_duration, na.rm = TRUE), 1),
-               paste0(round(sd(bothmain$p_duration, na.rm = TRUE), 1),
+               round(mean(bothmain$duration, na.rm = TRUE), 1),
+               paste0(round(sd(bothmain$duration, na.rm = TRUE), 1),
                       ", ",
-                      round(median(bothmain$p_duration, na.rm = TRUE), 1)),
+                      round(median(bothmain$duration, na.rm = TRUE), 1)),
 
-               round(mean(bothcas$p_duration, na.rm = TRUE), 1),
-               paste0(round(sd(bothcas$p_duration, na.rm = TRUE), 1),
+               round(mean(bothcas$duration, na.rm = TRUE), 1),
+               paste0(round(sd(bothcas$duration, na.rm = TRUE), 1),
                       ", ",
-                      round(median(bothcas$p_duration, na.rm = TRUE), 1)))
+                      round(median(bothcas$duration, na.rm = TRUE), 1)))
 
 # Race/ethnicity
 black <- cbind("black",
@@ -55,20 +57,20 @@ black <- cbind("black",
                       round(100 * nrow(extant[which(extant$race.cat == "black"), ]) /
                               nrow(extant), 1), ")"),
 
-               round(mean(extant$p_duration[which(extant$race.cat == "black")], na.rm = TRUE), 1),
-               paste0(round(sd(extant$p_duration[which(extant$race.cat == "black")], na.rm = TRUE), 1),
+               round(mean(extant$duration[which(extant$race.cat == "black")], na.rm = TRUE), 1),
+               paste0(round(sd(extant$duration[which(extant$race.cat == "black")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(extant$p_duration[which(extant$race.cat == "black")], na.rm = TRUE), 1)),
+                      round(median(extant$duration[which(extant$race.cat == "black")], na.rm = TRUE), 1)),
 
-               round(mean(bothmain$p_duration[bothmain$race.cat == "black"], na.rm = TRUE), 1),
-               paste0(round(sd(bothmain$p_duration[bothmain$race.cat == "black"], na.rm = TRUE), 1),
+               round(mean(bothmain$duration[bothmain$race.cat == "black"], na.rm = TRUE), 1),
+               paste0(round(sd(bothmain$duration[bothmain$race.cat == "black"], na.rm = TRUE), 1),
                       ", ",
-                      round(median(bothmain$p_duration[bothmain$race.cat == "black"], na.rm = TRUE), 1)),
+                      round(median(bothmain$duration[bothmain$race.cat == "black"], na.rm = TRUE), 1)),
 
-               round(mean(bothcas$p_duration[bothcas$race.cat == "black"], na.rm = TRUE), 1),
-               paste0(round(sd(bothcas$p_duration[bothcas$race.cat == "black"], na.rm = TRUE), 1),
+               round(mean(bothcas$duration[bothcas$race.cat == "black"], na.rm = TRUE), 1),
+               paste0(round(sd(bothcas$duration[bothcas$race.cat == "black"], na.rm = TRUE), 1),
                       ", ",
-                      round(median(bothcas$p_duration[bothcas$race.cat == "black"], na.rm = TRUE), 1)))
+                      round(median(bothcas$duration[bothcas$race.cat == "black"], na.rm = TRUE), 1)))
 
 
 white <- cbind("white",
@@ -76,56 +78,56 @@ white <- cbind("white",
                       " (",
                       round(100 * nrow(extant[which(extant$race.cat == "white"), ]) /
                               nrow(extant), 1), ")"),
-               round(mean(extant$p_duration[which(extant$race.cat == "white")], na.rm = TRUE), 1),
-               paste0(round(sd(extant$p_duration[which(extant$race.cat == "white")], na.rm = TRUE), 1),
+               round(mean(extant$duration[which(extant$race.cat == "white")], na.rm = TRUE), 1),
+               paste0(round(sd(extant$duration[which(extant$race.cat == "white")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(extant$p_duration[which(extant$race.cat == "white")], na.rm = TRUE), 1)),
-               round(mean(bothmain$p_duration[bothmain$race.cat == "white"], na.rm = TRUE), 1),
-               paste0(round(sd(bothmain$p_duration[bothmain$race.cat == "white"], na.rm = TRUE), 1),
+                      round(median(extant$duration[which(extant$race.cat == "white")], na.rm = TRUE), 1)),
+               round(mean(bothmain$duration[bothmain$race.cat == "white"], na.rm = TRUE), 1),
+               paste0(round(sd(bothmain$duration[bothmain$race.cat == "white"], na.rm = TRUE), 1),
                       ", ",
-                      round(median(bothmain$p_duration[bothmain$race.cat == "white"], na.rm = TRUE), 1)),
+                      round(median(bothmain$duration[bothmain$race.cat == "white"], na.rm = TRUE), 1)),
 
-               round(mean(bothcas$p_duration[bothcas$race.cat == "white"], na.rm = TRUE), 1),
-               paste0(round(sd(bothcas$p_duration[bothcas$race.cat == "white"], na.rm = TRUE), 1),
+               round(mean(bothcas$duration[bothcas$race.cat == "white"], na.rm = TRUE), 1),
+               paste0(round(sd(bothcas$duration[bothcas$race.cat == "white"], na.rm = TRUE), 1),
                       ", ",
-                      round(median(bothcas$p_duration[bothcas$race.cat == "white"], na.rm = TRUE), 1)))
+                      round(median(bothcas$duration[bothcas$race.cat == "white"], na.rm = TRUE), 1)))
 
 hispanic <- cbind("hispanic",
                   paste0(nrow(extant[which(extant$race.cat == "hispanic"), ]),
                          " (",
                          round(100 * nrow(extant[which(extant$race.cat == "hispanic"), ]) /
                                  nrow(extant), 1), ")"),
-                  round(mean(extant$p_duration[which(extant$race.cat == "hispanic")], na.rm = TRUE), 1),
-                  paste0(round(sd(extant$p_duration[which(extant$race.cat == "hispanic")], na.rm = TRUE), 1),
+                  round(mean(extant$duration[which(extant$race.cat == "hispanic")], na.rm = TRUE), 1),
+                  paste0(round(sd(extant$duration[which(extant$race.cat == "hispanic")], na.rm = TRUE), 1),
                          ", ",
-                         round(median(extant$p_duration[which(extant$race.cat == "hispanic")], na.rm = TRUE), 1)),
-                  round(mean(bothmain$p_duration[bothmain$race.cat == "hispanic"], na.rm = TRUE), 1),
-                  paste0(round(sd(bothmain$p_duration[bothmain$race.cat == "hispanic"], na.rm = TRUE), 1),
+                         round(median(extant$duration[which(extant$race.cat == "hispanic")], na.rm = TRUE), 1)),
+                  round(mean(bothmain$duration[bothmain$race.cat == "hispanic"], na.rm = TRUE), 1),
+                  paste0(round(sd(bothmain$duration[bothmain$race.cat == "hispanic"], na.rm = TRUE), 1),
                          ", ",
-                         round(median(bothmain$p_duration[bothmain$race.cat == "hispanic"], na.rm = TRUE), 1)),
+                         round(median(bothmain$duration[bothmain$race.cat == "hispanic"], na.rm = TRUE), 1)),
 
-                  round(mean(bothcas$p_duration[bothcas$race.cat == "hispanic"], na.rm = TRUE), 1),
-                  paste0(round(sd(bothcas$p_duration[bothcas$race.cat == "hispanic"], na.rm = TRUE), 1),
+                  round(mean(bothcas$duration[bothcas$race.cat == "hispanic"], na.rm = TRUE), 1),
+                  paste0(round(sd(bothcas$duration[bothcas$race.cat == "hispanic"], na.rm = TRUE), 1),
                          ", ",
-                         round(median(bothcas$p_duration[bothcas$race.cat == "hispanic"], na.rm = TRUE), 1)))
+                         round(median(bothcas$duration[bothcas$race.cat == "hispanic"], na.rm = TRUE), 1)))
 
 other <- cbind("other",
                paste0(nrow(extant[which(extant$race.cat == "other"), ]),
                       " (", round(100 * nrow(extant[which(extant$race.cat == "other"), ]) /
                                     nrow(extant), 1), ")"),
-               round(mean(extant$p_duration[which(extant$race.cat == "other")], na.rm = TRUE), 1),
-               paste0(round(sd(extant$p_duration[which(extant$race.cat == "other")], na.rm = TRUE), 1),
+               round(mean(extant$duration[which(extant$race.cat == "other")], na.rm = TRUE), 1),
+               paste0(round(sd(extant$duration[which(extant$race.cat == "other")], na.rm = TRUE), 1),
                       ", ",
-                      round(median(extant$p_duration[which(extant$race.cat == "other")], na.rm = TRUE), 1)),
-               round(mean(bothmain$p_duration[bothmain$race.cat == "other"], na.rm = TRUE), 1),
-               paste0(round(sd(bothmain$p_duration[bothmain$race.cat == "other"], na.rm = TRUE), 1),
+                      round(median(extant$duration[which(extant$race.cat == "other")], na.rm = TRUE), 1)),
+               round(mean(bothmain$duration[bothmain$race.cat == "other"], na.rm = TRUE), 1),
+               paste0(round(sd(bothmain$duration[bothmain$race.cat == "other"], na.rm = TRUE), 1),
                       ", ",
-                      round(median(bothmain$p_duration[bothmain$race.cat == "other"], na.rm = TRUE), 1)),
+                      round(median(bothmain$duration[bothmain$race.cat == "other"], na.rm = TRUE), 1)),
 
-               round(mean(bothcas$p_duration[bothcas$race.cat == "other"], na.rm = TRUE), 1),
-               paste0(round(sd(bothcas$p_duration[bothcas$race.cat == "other"], na.rm = TRUE), 1),
+               round(mean(bothcas$duration[bothcas$race.cat == "other"], na.rm = TRUE), 1),
+               paste0(round(sd(bothcas$duration[bothcas$race.cat == "other"], na.rm = TRUE), 1),
                       ", ",
-                      round(median(bothcas$p_duration[bothcas$race.cat == "other"], na.rm = TRUE), 1)))
+                      round(median(bothcas$duration[bothcas$race.cat == "other"], na.rm = TRUE), 1)))
 
 
 # Age
@@ -134,76 +136,76 @@ fifteen24 <- cbind("15-24",
                           " (",
                           round(100 * nrow(extant[which(extant$age.cat == "15-24"), ]) /
                                   nrow(extant), 1), ")"),
-                   round(mean(extant$p_duration[which(extant$age.cat == "15-24")], na.rm = TRUE), 1),
-                   paste0(round(sd(extant$p_duration[which(extant$age.cat == "15-24")], na.rm = TRUE), 1),
+                   round(mean(extant$duration[which(extant$age.cat == "15-24")], na.rm = TRUE), 1),
+                   paste0(round(sd(extant$duration[which(extant$age.cat == "15-24")], na.rm = TRUE), 1),
                           ", ",
-                          round(median(extant$p_duration[which(extant$age.cat == "15-24")], na.rm = TRUE), 1)),
-                   round(mean(bothmain$p_duration[bothmain$age.cat == "15-24"], na.rm = TRUE), 1),
-                   paste0(round(sd(bothmain$p_duration[bothmain$age.cat == "15-24"], na.rm = TRUE), 1),
+                          round(median(extant$duration[which(extant$age.cat == "15-24")], na.rm = TRUE), 1)),
+                   round(mean(bothmain$duration[bothmain$age.cat == "15-24"], na.rm = TRUE), 1),
+                   paste0(round(sd(bothmain$duration[bothmain$age.cat == "15-24"], na.rm = TRUE), 1),
                           ", ",
-                          round(median(bothmain$p_duration[bothmain$age.cat == "15-24"], na.rm = TRUE), 1)),
+                          round(median(bothmain$duration[bothmain$age.cat == "15-24"], na.rm = TRUE), 1)),
 
-                   round(mean(bothcas$p_duration[bothcas$age.cat == "15-24"], na.rm = TRUE), 1),
-                   paste0(round(sd(bothcas$p_duration[bothcas$age.cat == "15-24"], na.rm = TRUE), 1),
+                   round(mean(bothcas$duration[bothcas$age.cat == "15-24"], na.rm = TRUE), 1),
+                   paste0(round(sd(bothcas$duration[bothcas$age.cat == "15-24"], na.rm = TRUE), 1),
                           ", ",
-                          round(median(bothcas$p_duration[bothcas$age.cat == "15-24"], na.rm = TRUE), 1)))
+                          round(median(bothcas$duration[bothcas$age.cat == "15-24"], na.rm = TRUE), 1)))
 
 twentyfive34 <- cbind("25-34",
                       paste0(nrow(extant[which(extant$age.cat == "25-34"), ]),
                              " (",
                              round(100 * nrow(extant[which(extant$age.cat == "25-34"), ]) /
                                      nrow(extant), 1), ")"),
-                      round(mean(extant$p_duration[which(extant$age.cat == "25-34")], na.rm = TRUE), 1),
-                      paste0(round(sd(extant$p_duration[which(extant$age.cat == "25-34")], na.rm = TRUE), 1),
+                      round(mean(extant$duration[which(extant$age.cat == "25-34")], na.rm = TRUE), 1),
+                      paste0(round(sd(extant$duration[which(extant$age.cat == "25-34")], na.rm = TRUE), 1),
                              ", ",
-                             round(median(extant$p_duration[which(extant$age.cat == "25-34")], na.rm = TRUE), 1)),
-                      round(mean(bothmain$p_duration[bothmain$age.cat == "25-34"], na.rm = TRUE), 1),
-                      paste0(round(sd(bothmain$p_duration[bothmain$age.cat == "25-34"], na.rm = TRUE), 1),
+                             round(median(extant$duration[which(extant$age.cat == "25-34")], na.rm = TRUE), 1)),
+                      round(mean(bothmain$duration[bothmain$age.cat == "25-34"], na.rm = TRUE), 1),
+                      paste0(round(sd(bothmain$duration[bothmain$age.cat == "25-34"], na.rm = TRUE), 1),
                              ", ",
-                             round(median(bothmain$p_duration[bothmain$age.cat == "25-34"], na.rm = TRUE), 1)),
+                             round(median(bothmain$duration[bothmain$age.cat == "25-34"], na.rm = TRUE), 1)),
 
-                      round(mean(bothcas$p_duration[bothcas$age.cat == "25-34"], na.rm = TRUE), 1),
-                      paste0(round(sd(bothcas$p_duration[bothcas$age.cat == "25-34"], na.rm = TRUE), 1),
+                      round(mean(bothcas$duration[bothcas$age.cat == "25-34"], na.rm = TRUE), 1),
+                      paste0(round(sd(bothcas$duration[bothcas$age.cat == "25-34"], na.rm = TRUE), 1),
                              ", ",
-                             round(median(bothcas$p_duration[bothcas$age.cat == "25-34"], na.rm = TRUE), 1)))
+                             round(median(bothcas$duration[bothcas$age.cat == "25-34"], na.rm = TRUE), 1)))
 
 thirtyfive44 <- cbind("35-44",
                       paste0(nrow(extant[which(extant$age.cat == "35-44"), ]),
                              " (",
                              round(100 * nrow(extant[which(extant$age.cat == "35-44"), ]) /
                                      nrow(extant), 1), ")"),
-                      round(mean(extant$p_duration[which(extant$age.cat == "35-44")], na.rm = TRUE), 1),
-                      paste0(round(sd(extant$p_duration[which(extant$age.cat == "35-44")], na.rm = TRUE), 1),
+                      round(mean(extant$duration[which(extant$age.cat == "35-44")], na.rm = TRUE), 1),
+                      paste0(round(sd(extant$duration[which(extant$age.cat == "35-44")], na.rm = TRUE), 1),
                              ", ",
-                             round(median(extant$p_duration[which(extant$age.cat == "35-44")], na.rm = TRUE), 1)),
-                      round(mean(bothmain$p_duration[bothmain$age.cat == "35-44"], na.rm = TRUE), 1),
-                      paste0(round(sd(bothmain$p_duration[bothmain$age.cat == "35-44"], na.rm = TRUE), 1),
+                             round(median(extant$duration[which(extant$age.cat == "35-44")], na.rm = TRUE), 1)),
+                      round(mean(bothmain$duration[bothmain$age.cat == "35-44"], na.rm = TRUE), 1),
+                      paste0(round(sd(bothmain$duration[bothmain$age.cat == "35-44"], na.rm = TRUE), 1),
                              ", ",
-                             round(median(bothmain$p_duration[bothmain$age.cat == "35-44"], na.rm = TRUE), 1)),
+                             round(median(bothmain$duration[bothmain$age.cat == "35-44"], na.rm = TRUE), 1)),
 
-                      round(mean(bothcas$p_duration[bothcas$age.cat == "35-44"], na.rm = TRUE), 1),
-                      paste0(round(sd(bothcas$p_duration[bothcas$age.cat == "35-44"], na.rm = TRUE), 1),
+                      round(mean(bothcas$duration[bothcas$age.cat == "35-44"], na.rm = TRUE), 1),
+                      paste0(round(sd(bothcas$duration[bothcas$age.cat == "35-44"], na.rm = TRUE), 1),
                              ", ",
-                             round(median(bothcas$p_duration[bothcas$age.cat == "35-44"], na.rm = TRUE), 1)))
+                             round(median(bothcas$duration[bothcas$age.cat == "35-44"], na.rm = TRUE), 1)))
 
 fortyfive54 <- cbind("45-54",
                      paste0(nrow(extant[which(extant$age.cat == "45-54"), ]),
                             " (",
                             round(100 * nrow(extant[which(extant$age.cat == "45-54"), ]) /
                                     nrow(extant), 1), ")"),
-                     round(mean(extant$p_duration[which(extant$age.cat == "45-54")], na.rm = TRUE), 1),
-                     paste0(round(sd(extant$p_duration[which(extant$age.cat == "45-54")], na.rm = TRUE), 1),
+                     round(mean(extant$duration[which(extant$age.cat == "45-54")], na.rm = TRUE), 1),
+                     paste0(round(sd(extant$duration[which(extant$age.cat == "45-54")], na.rm = TRUE), 1),
                             ", ",
-                            round(median(extant$p_duration[which(extant$age.cat == "45-54")], na.rm = TRUE), 1)),
-                     round(mean(bothmain$p_duration[bothmain$age.cat == "45-54"], na.rm = TRUE), 1),
-                     paste0(round(sd(bothmain$p_duration[bothmain$age.cat == "45-54"], na.rm = TRUE), 1),
+                            round(median(extant$duration[which(extant$age.cat == "45-54")], na.rm = TRUE), 1)),
+                     round(mean(bothmain$duration[bothmain$age.cat == "45-54"], na.rm = TRUE), 1),
+                     paste0(round(sd(bothmain$duration[bothmain$age.cat == "45-54"], na.rm = TRUE), 1),
                             ", ",
-                            round(median(bothmain$p_duration[bothmain$age.cat == "45-54"], na.rm = TRUE), 1)),
+                            round(median(bothmain$duration[bothmain$age.cat == "45-54"], na.rm = TRUE), 1)),
 
-                     round(mean(bothcas$p_duration[bothcas$age.cat == "45-54"], na.rm = TRUE), 1),
-                     paste0(round(sd(bothcas$p_duration[bothcas$age.cat == "45-54"], na.rm = TRUE), 1),
+                     round(mean(bothcas$duration[bothcas$age.cat == "45-54"], na.rm = TRUE), 1),
+                     paste0(round(sd(bothcas$duration[bothcas$age.cat == "45-54"], na.rm = TRUE), 1),
                             ", ",
-                            round(median(bothcas$p_duration[bothcas$age.cat == "45-54"], na.rm = TRUE), 1)))
+                            round(median(bothcas$duration[bothcas$age.cat == "45-54"], na.rm = TRUE), 1)))
 
 
 fiftyfive65 <- cbind("55-65",
@@ -211,19 +213,19 @@ fiftyfive65 <- cbind("55-65",
                             " (",
                             round(100 * nrow(extant[which(extant$age.cat == "55-65"), ]) /
                                     nrow(extant), 1), ")"),
-                     round(mean(extant$p_duration[which(extant$age.cat == "55-65")], na.rm = TRUE), 1),
-                     paste0(round(sd(extant$p_duration[which(extant$age.cat == "55-65")], na.rm = TRUE), 1),
+                     round(mean(extant$duration[which(extant$age.cat == "55-65")], na.rm = TRUE), 1),
+                     paste0(round(sd(extant$duration[which(extant$age.cat == "55-65")], na.rm = TRUE), 1),
                             ", ",
-                            round(median(extant$p_duration[which(extant$age.cat == "55-65")], na.rm = TRUE), 1)),
-                     round(mean(bothmain$p_duration[bothmain$age.cat == "55-65"], na.rm = TRUE), 1),
-                     paste0(round(sd(bothmain$p_duration[bothmain$age.cat == "55-65"], na.rm = TRUE), 1),
+                            round(median(extant$duration[which(extant$age.cat == "55-65")], na.rm = TRUE), 1)),
+                     round(mean(bothmain$duration[bothmain$age.cat == "55-65"], na.rm = TRUE), 1),
+                     paste0(round(sd(bothmain$duration[bothmain$age.cat == "55-65"], na.rm = TRUE), 1),
                             ", ",
-                            round(median(bothmain$p_duration[bothmain$age.cat == "55-65"], na.rm = TRUE), 1)),
+                            round(median(bothmain$duration[bothmain$age.cat == "55-65"], na.rm = TRUE), 1)),
 
-                     round(mean(bothcas$p_duration[bothcas$age.cat == "55-65"], na.rm = TRUE), 1),
-                     paste0(round(sd(bothcas$p_duration[bothcas$age.cat == "55-65"], na.rm = TRUE), 1),
+                     round(mean(bothcas$duration[bothcas$age.cat == "55-65"], na.rm = TRUE), 1),
+                     paste0(round(sd(bothcas$duration[bothcas$age.cat == "55-65"], na.rm = TRUE), 1),
                             ", ",
-                            round(median(bothcas$p_duration[bothcas$age.cat == "55-65"], na.rm = TRUE), 1)))
+                            round(median(bothcas$duration[bothcas$age.cat == "55-65"], na.rm = TRUE), 1)))
 
 # HIV Status
 HIVPos <- cbind("HIV Pos",
@@ -231,43 +233,43 @@ HIVPos <- cbind("HIV Pos",
                        " (",
                        round(100 * nrow(extant[which(extant$hiv == 1), ]) /
                                nrow(extant), 1), ")"),
-                round(mean(extant$p_duration[which(extant$hiv == 1)], na.rm = TRUE), 1),
-                paste0(round(sd(extant$p_duration[which(extant$hiv == 1)], na.rm = TRUE), 1),
+                round(mean(extant$duration[which(extant$hiv == 1)], na.rm = TRUE), 1),
+                paste0(round(sd(extant$duration[which(extant$hiv == 1)], na.rm = TRUE), 1),
                        ", ",
-                       round(median(extant$p_duration[which(extant$hiv == 1)], na.rm = TRUE), 1)),
-                round(mean(bothmain$p_duration[bothmain$hiv == 1], na.rm = TRUE), 1),
-                paste0(round(sd(bothmain$p_duration[bothmain$hiv == 1], na.rm = TRUE), 1),
+                       round(median(extant$duration[which(extant$hiv == 1)], na.rm = TRUE), 1)),
+                round(mean(bothmain$duration[bothmain$hiv == 1], na.rm = TRUE), 1),
+                paste0(round(sd(bothmain$duration[bothmain$hiv == 1], na.rm = TRUE), 1),
                        ", ",
-                       round(median(bothmain$p_duration[bothmain$hiv == 1], na.rm = TRUE), 1)),
+                       round(median(bothmain$duration[bothmain$hiv == 1], na.rm = TRUE), 1)),
 
-                round(mean(bothcas$p_duration[bothcas$hiv == 1], na.rm = TRUE), 1),
-                paste0(round(sd(bothcas$p_duration[bothcas$hiv == 1], na.rm = TRUE), 1),
+                round(mean(bothcas$duration[bothcas$hiv == 1], na.rm = TRUE), 1),
+                paste0(round(sd(bothcas$duration[bothcas$hiv == 1], na.rm = TRUE), 1),
                        ", ",
-                       round(median(bothcas$p_duration[bothcas$hiv == 1], na.rm = TRUE), 1)))
+                       round(median(bothcas$duration[bothcas$hiv == 1], na.rm = TRUE), 1)))
 
 HIVNeg <- cbind("HIV Neg",
                 paste0(nrow(extant[which(extant$hiv == 0), ]),
                        " (",
                        round(100 * nrow(extant[which(extant$hiv == 0), ]) /
                                nrow(extant), 1), ")"),
-                round(mean(extant$p_duration[which(extant$hiv == 0)], na.rm = TRUE), 1),
-                paste0(round(sd(extant$p_duration[which(extant$hiv == 0)], na.rm = TRUE), 1),
+                round(mean(extant$duration[which(extant$hiv == 0)], na.rm = TRUE), 1),
+                paste0(round(sd(extant$duration[which(extant$hiv == 0)], na.rm = TRUE), 1),
                        ", ",
-                       round(median(extant$p_duration[which(extant$hiv == 0)], na.rm = TRUE), 1)),
-                round(mean(bothmain$p_duration[bothmain$hiv == 0], na.rm = TRUE), 1),
-                paste0(round(sd(bothmain$p_duration[bothmain$hiv == 0], na.rm = TRUE), 1),
+                       round(median(extant$duration[which(extant$hiv == 0)], na.rm = TRUE), 1)),
+                round(mean(bothmain$duration[bothmain$hiv == 0], na.rm = TRUE), 1),
+                paste0(round(sd(bothmain$duration[bothmain$hiv == 0], na.rm = TRUE), 1),
                        ", ",
-                       round(median(bothmain$p_duration[bothmain$hiv == 0], na.rm = TRUE), 1)),
+                       round(median(bothmain$duration[bothmain$hiv == 0], na.rm = TRUE), 1)),
 
-                round(mean(bothcas$p_duration[bothcas$hiv == 0], na.rm = TRUE), 1),
-                paste0(round(sd(bothcas$p_duration[bothcas$hiv == 0], na.rm = TRUE), 1),
+                round(mean(bothcas$duration[bothcas$hiv == 0], na.rm = TRUE), 1),
+                paste0(round(sd(bothcas$duration[bothcas$hiv == 0], na.rm = TRUE), 1),
                        ", ",
-                       round(median(bothcas$p_duration[bothcas$hiv == 0], na.rm = TRUE), 1)))
+                       round(median(bothcas$duration[bothcas$hiv == 0], na.rm = TRUE), 1)))
 
 # Output table
 table3 <- rbind(total, black, white, hispanic, other,
                 fifteen24, twentyfive34, thirtyfive44, fortyfive54, fiftyfive65,
-                HIVPos, HIVNeg)
+                HIVNeg, HIVPos)
 colnames(table3) <- c("Category", "N (%)", "Total Mean", "Total SD, Med",
                       "Main Degree Mean", "Main Degree SD, Med", "Cas Degree Mean",
                       "Cas Degree SD, Med")
@@ -450,22 +452,22 @@ total <- cbind("Total",
                paste0( 100 * nrow(extant) / nrow(extant), ")"),
                NA, NA, NA, NA, NA, NA,
                # All
-               round(mean(extant$p_duration, na.rm = TRUE), 1),
-               paste0(round(sd(extant$p_duration, na.rm = TRUE), 1),
+               round(mean(extant$duration, na.rm = TRUE), 1),
+               paste0(round(sd(extant$duration, na.rm = TRUE), 1),
                       ", ",
-                      round(median(extant$p_duration, na.rm = TRUE), 1)),
+                      round(median(extant$duration, na.rm = TRUE), 1)),
 
                # Main
-               round(mean(bothmain$p_duration, na.rm = TRUE), 1),
-               paste0(round(sd(bothmain$p_duration, na.rm = TRUE), 1),
+               round(mean(bothmain$duration, na.rm = TRUE), 1),
+               paste0(round(sd(bothmain$duration, na.rm = TRUE), 1),
                       ", ",
-                      round(median(bothmain$p_duration, na.rm = TRUE), 1)),
+                      round(median(bothmain$duration, na.rm = TRUE), 1)),
 
                # Cas
-               round(mean(bothcas$p_duration, na.rm = TRUE), 1),
-               paste0(round(sd(bothcas$p_duration, na.rm = TRUE), 1),
+               round(mean(bothcas$duration, na.rm = TRUE), 1),
+               paste0(round(sd(bothcas$duration, na.rm = TRUE), 1),
                       ", ",
-                      round(median(bothcas$p_duration, na.rm = TRUE), 1)))
+                      round(median(bothcas$duration, na.rm = TRUE), 1)))
 
 # Race/ethnicity
 blackblack <- cbind("blackblack",
@@ -487,22 +489,22 @@ blackblack <- cbind("blackblack",
                               nrow(bothcas), 1), ")"),
 
                     # All
-                    round(mean(bb$p_duration, na.rm = TRUE), 1),
-                    paste0(round(sd(bb$p_duration, na.rm = TRUE), 1),
+                    round(mean(bb$duration, na.rm = TRUE), 1),
+                    paste0(round(sd(bb$duration, na.rm = TRUE), 1),
                            ", ",
-                           round(median(bb$p_duration, na.rm = TRUE), 1)),
+                           round(median(bb$duration, na.rm = TRUE), 1)),
 
                     # Main
-                    round(mean(bbm$p_duration, na.rm = TRUE), 1),
-                    paste0(round(sd(bbm$p_duration, na.rm = TRUE), 1),
+                    round(mean(bbm$duration, na.rm = TRUE), 1),
+                    paste0(round(sd(bbm$duration, na.rm = TRUE), 1),
                            ", ",
-                           round(median(bbm$p_duration, na.rm = TRUE), 1)),
+                           round(median(bbm$duration, na.rm = TRUE), 1)),
 
                     # Cas
-                    round(mean(bbc$p_duration, na.rm = TRUE), 1),
-                    paste0(round(sd(bbc$p_duration, na.rm = TRUE), 1),
+                    round(mean(bbc$duration, na.rm = TRUE), 1),
+                    paste0(round(sd(bbc$duration, na.rm = TRUE), 1),
                            ", ",
-                           round(median(bbc$p_duration, na.rm = TRUE), 1)))
+                           round(median(bbc$duration, na.rm = TRUE), 1)))
 
 
 whitewhite <- cbind("whitewhite",
@@ -523,22 +525,22 @@ whitewhite <- cbind("whitewhite",
                       round(100 * nrow(noracec) /
                               nrow(bothcas), 1), ")"),
                     # All
-                    round(mean(ww$p_duration, na.rm = TRUE), 1),
-                    paste0(round(sd(ww$p_duration, na.rm = TRUE), 1),
+                    round(mean(ww$duration, na.rm = TRUE), 1),
+                    paste0(round(sd(ww$duration, na.rm = TRUE), 1),
                            ", ",
-                           round(median(ww$p_duration, na.rm = TRUE), 1)),
+                           round(median(ww$duration, na.rm = TRUE), 1)),
 
                     # Main
-                    round(mean(wwm$p_duration, na.rm = TRUE), 1),
-                    paste0(round(sd(wwm$p_duration, na.rm = TRUE), 1),
+                    round(mean(wwm$duration, na.rm = TRUE), 1),
+                    paste0(round(sd(wwm$duration, na.rm = TRUE), 1),
                            ", ",
-                           round(median(wwm$p_duration, na.rm = TRUE), 1)),
+                           round(median(wwm$duration, na.rm = TRUE), 1)),
 
                     # Cas
-                    round(mean(wwc$p_duration, na.rm = TRUE), 1),
-                    paste0(round(sd(wwc$p_duration, na.rm = TRUE), 1),
+                    round(mean(wwc$duration, na.rm = TRUE), 1),
+                    paste0(round(sd(wwc$duration, na.rm = TRUE), 1),
                            ", ",
-                           round(median(wwc$p_duration, na.rm = TRUE), 1)))
+                           round(median(wwc$duration, na.rm = TRUE), 1)))
 
 hisphisp <- cbind("hisphisp",
                   paste0(nrow(hh)),
@@ -558,22 +560,22 @@ hisphisp <- cbind("hisphisp",
                     round(100 * nrow(noracec) /
                             nrow(bothcas), 1), ")"),
                   # All
-                  round(mean(hh$p_duration, na.rm = TRUE), 1),
-                  paste0(round(sd(hh$p_duration, na.rm = TRUE), 1),
+                  round(mean(hh$duration, na.rm = TRUE), 1),
+                  paste0(round(sd(hh$duration, na.rm = TRUE), 1),
                          ", ",
-                         round(median(hh$p_duration, na.rm = TRUE), 1)),
+                         round(median(hh$duration, na.rm = TRUE), 1)),
 
                   # Main
-                  round(mean(hhm$p_duration, na.rm = TRUE), 1),
-                  paste0(round(sd(hhm$p_duration, na.rm = TRUE), 1),
+                  round(mean(hhm$duration, na.rm = TRUE), 1),
+                  paste0(round(sd(hhm$duration, na.rm = TRUE), 1),
                          ", ",
-                         round(median(hhm$p_duration, na.rm = TRUE), 1)),
+                         round(median(hhm$duration, na.rm = TRUE), 1)),
 
                   # Cas
-                  round(mean(hhc$p_duration, na.rm = TRUE), 1),
-                  paste0(round(sd(hhc$p_duration, na.rm = TRUE), 1),
+                  round(mean(hhc$duration, na.rm = TRUE), 1),
+                  paste0(round(sd(hhc$duration, na.rm = TRUE), 1),
                          ", ",
-                         round(median(hhc$p_duration, na.rm = TRUE), 1)))
+                         round(median(hhc$duration, na.rm = TRUE), 1)))
 
 otherother <- cbind("otherother",
                     paste0(nrow(oo)),
@@ -593,22 +595,22 @@ otherother <- cbind("otherother",
                       round(100 * nrow(noracec) /
                               nrow(bothcas), 1), ")"),
                     # All
-                    round(mean(oo$p_duration, na.rm = TRUE), 1),
-                    paste0(round(sd(oo$p_duration, na.rm = TRUE), 1),
+                    round(mean(oo$duration, na.rm = TRUE), 1),
+                    paste0(round(sd(oo$duration, na.rm = TRUE), 1),
                            ", ",
-                           round(median(oo$p_duration, na.rm = TRUE), 1)),
+                           round(median(oo$duration, na.rm = TRUE), 1)),
 
                     # Main
-                    round(mean(oom$p_duration, na.rm = TRUE), 1),
-                    paste0(round(sd(oom$p_duration, na.rm = TRUE), 1),
+                    round(mean(oom$duration, na.rm = TRUE), 1),
+                    paste0(round(sd(oom$duration, na.rm = TRUE), 1),
                            ", ",
-                           round(median(oom$p_duration, na.rm = TRUE), 1)),
+                           round(median(oom$duration, na.rm = TRUE), 1)),
 
                     # Cas
-                    round(mean(ooc$p_duration, na.rm = TRUE), 1),
-                    paste0(round(sd(ooc$p_duration, na.rm = TRUE), 1),
+                    round(mean(ooc$duration, na.rm = TRUE), 1),
+                    paste0(round(sd(ooc$duration, na.rm = TRUE), 1),
                            ", ",
-                           round(median(ooc$p_duration, na.rm = TRUE), 1)))
+                           round(median(ooc$duration, na.rm = TRUE), 1)))
 unmatchedrace <- cbind("unmatchedrace",
                        paste0(nrow(unmatchrace)),
                        paste0(
@@ -627,22 +629,22 @@ unmatchedrace <- cbind("unmatchedrace",
                          round(100 * nrow(noracec) /
                                  nrow(bothcas), 1), ")"),
                        # All
-                       round(mean(unmatchrace$p_duration, na.rm = TRUE), 1),
-                       paste0(round(sd(unmatchrace$p_duration, na.rm = TRUE), 1),
+                       round(mean(unmatchrace$duration, na.rm = TRUE), 1),
+                       paste0(round(sd(unmatchrace$duration, na.rm = TRUE), 1),
                               ", ",
-                              round(median(unmatchrace$p_duration, na.rm = TRUE), 1)),
+                              round(median(unmatchrace$duration, na.rm = TRUE), 1)),
 
                        # Main
-                       round(mean(unmatchracem$p_duration, na.rm = TRUE), 1),
-                       paste0(round(sd(unmatchracem$p_duration, na.rm = TRUE), 1),
+                       round(mean(unmatchracem$duration, na.rm = TRUE), 1),
+                       paste0(round(sd(unmatchracem$duration, na.rm = TRUE), 1),
                               ", ",
-                              round(median(unmatchracem$p_duration, na.rm = TRUE), 1)),
+                              round(median(unmatchracem$duration, na.rm = TRUE), 1)),
 
                        # Cas
-                       round(mean(unmatchracec$p_duration, na.rm = TRUE), 1),
-                       paste0(round(sd(unmatchracec$p_duration, na.rm = TRUE), 1),
+                       round(mean(unmatchracec$duration, na.rm = TRUE), 1),
+                       paste0(round(sd(unmatchracec$duration, na.rm = TRUE), 1),
                               ", ",
-                              round(median(unmatchracec$p_duration, na.rm = TRUE), 1)))
+                              round(median(unmatchracec$duration, na.rm = TRUE), 1)))
 
 
 
@@ -665,22 +667,22 @@ negneg <- cbind("negneg",
                   round(100 * nrow(nohivc) /
                           nrow(bothcas), 1), ")"),
                 # All
-                round(mean(nn$p_duration, na.rm = TRUE), 1),
-                paste0(round(sd(nn$p_duration, na.rm = TRUE), 1),
+                round(mean(nn$duration, na.rm = TRUE), 1),
+                paste0(round(sd(nn$duration, na.rm = TRUE), 1),
                        ", ",
-                       round(median(nn$p_duration, na.rm = TRUE), 1)),
+                       round(median(nn$duration, na.rm = TRUE), 1)),
 
                 # Main
-                round(mean(nnm$p_duration, na.rm = TRUE), 1),
-                paste0(round(sd(nnm$p_duration, na.rm = TRUE), 1),
+                round(mean(nnm$duration, na.rm = TRUE), 1),
+                paste0(round(sd(nnm$duration, na.rm = TRUE), 1),
                        ", ",
-                       round(median(nnm$p_duration, na.rm = TRUE), 1)),
+                       round(median(nnm$duration, na.rm = TRUE), 1)),
 
                 # Cas
-                round(mean(nnc$p_duration, na.rm = TRUE), 1),
-                paste0(round(sd(nnc$p_duration, na.rm = TRUE), 1),
+                round(mean(nnc$duration, na.rm = TRUE), 1),
+                paste0(round(sd(nnc$duration, na.rm = TRUE), 1),
                        ", ",
-                       round(median(nnc$p_duration, na.rm = TRUE), 1)))
+                       round(median(nnc$duration, na.rm = TRUE), 1)))
 
 pospos <- cbind("pospos",
                 paste0(nrow(pp)),
@@ -700,22 +702,22 @@ pospos <- cbind("pospos",
                   round(100 * nrow(nohivc) /
                           nrow(bothcas), 1), ")"),
                 # All
-                round(mean(pp$p_duration, na.rm = TRUE), 1),
-                paste0(round(sd(pp$p_duration, na.rm = TRUE), 1),
+                round(mean(pp$duration, na.rm = TRUE), 1),
+                paste0(round(sd(pp$duration, na.rm = TRUE), 1),
                        ", ",
-                       round(median(pp$p_duration, na.rm = TRUE), 1)),
+                       round(median(pp$duration, na.rm = TRUE), 1)),
 
                 # Main
-                round(mean(ppm$p_duration, na.rm = TRUE), 1),
-                paste0(round(sd(ppm$p_duration, na.rm = TRUE), 1),
+                round(mean(ppm$duration, na.rm = TRUE), 1),
+                paste0(round(sd(ppm$duration, na.rm = TRUE), 1),
                        ", ",
-                       round(median(ppm$p_duration, na.rm = TRUE), 1)),
+                       round(median(ppm$duration, na.rm = TRUE), 1)),
 
                 # Cas
-                round(mean(ppc$p_duration, na.rm = TRUE), 1),
-                paste0(round(sd(ppc$p_duration, na.rm = TRUE), 1),
+                round(mean(ppc$duration, na.rm = TRUE), 1),
+                paste0(round(sd(ppc$duration, na.rm = TRUE), 1),
                        ", ",
-                       round(median(ppc$p_duration, na.rm = TRUE), 1)))
+                       round(median(ppc$duration, na.rm = TRUE), 1)))
 unmatchedhiv <- cbind("unmatchhiv",
                       paste0(nrow(unmatchhiv)),
                       paste0(
@@ -734,22 +736,22 @@ unmatchedhiv <- cbind("unmatchhiv",
                         round(100 * nrow(nohivc) /
                                 nrow(bothcas), 1), ")"),
                       # All
-                      round(mean(unmatchhiv$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(unmatchhiv$p_duration, na.rm = TRUE), 1),
+                      round(mean(unmatchhiv$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(unmatchhiv$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(unmatchhiv$p_duration, na.rm = TRUE), 1)),
+                             round(median(unmatchhiv$duration, na.rm = TRUE), 1)),
 
                       # Main
-                      round(mean(unmatchhivm$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(unmatchhivm$p_duration, na.rm = TRUE), 1),
+                      round(mean(unmatchhivm$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(unmatchhivm$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(unmatchhivm$p_duration, na.rm = TRUE), 1)),
+                             round(median(unmatchhivm$duration, na.rm = TRUE), 1)),
 
                       # Cas
-                      round(mean(unmatchhivc$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(unmatchhivc$p_duration, na.rm = TRUE), 1),
+                      round(mean(unmatchhivc$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(unmatchhivc$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(unmatchhivc$p_duration, na.rm = TRUE), 1)))
+                             round(median(unmatchhivc$duration, na.rm = TRUE), 1)))
 
 # Age
 fifteen24 <- cbind("15-24",
@@ -770,22 +772,22 @@ fifteen24 <- cbind("15-24",
                      round(100 * nrow(noagec) /
                              nrow(bothcas), 1), ")"),
                    # All
-                   round(mean(fifteen24$p_duration, na.rm = TRUE), 1),
-                   paste0(round(sd(fifteen24$p_duration, na.rm = TRUE), 1),
+                   round(mean(fifteen24$duration, na.rm = TRUE), 1),
+                   paste0(round(sd(fifteen24$duration, na.rm = TRUE), 1),
                           ", ",
-                          round(median(fifteen24$p_duration, na.rm = TRUE), 1)),
+                          round(median(fifteen24$duration, na.rm = TRUE), 1)),
 
                    # Main
-                   round(mean(fifteen24m$p_duration, na.rm = TRUE), 1),
-                   paste0(round(sd(fifteen24m$p_duration, na.rm = TRUE), 1),
+                   round(mean(fifteen24m$duration, na.rm = TRUE), 1),
+                   paste0(round(sd(fifteen24m$duration, na.rm = TRUE), 1),
                           ", ",
-                          round(median(fifteen24m$p_duration, na.rm = TRUE), 1)),
+                          round(median(fifteen24m$duration, na.rm = TRUE), 1)),
 
                    # Cas
-                   round(mean(fifteen24c$p_duration, na.rm = TRUE), 1),
-                   paste0(round(sd(fifteen24c$p_duration, na.rm = TRUE), 1),
+                   round(mean(fifteen24c$duration, na.rm = TRUE), 1),
+                   paste0(round(sd(fifteen24c$duration, na.rm = TRUE), 1),
                           ", ",
-                          round(median(fifteen24c$p_duration, na.rm = TRUE), 1)))
+                          round(median(fifteen24c$duration, na.rm = TRUE), 1)))
 
 twentyfive34 <- cbind("25-34",
                       paste0(nrow(twentyfive34)),
@@ -805,22 +807,22 @@ twentyfive34 <- cbind("25-34",
                         round(100 * nrow(noagec) /
                                 nrow(bothcas), 1), ")"),
                       # All
-                      round(mean(twentyfive34$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(twentyfive34$p_duration, na.rm = TRUE), 1),
+                      round(mean(twentyfive34$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(twentyfive34$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(twentyfive34$p_duration, na.rm = TRUE), 1)),
+                             round(median(twentyfive34$duration, na.rm = TRUE), 1)),
 
                       # Main
-                      round(mean(twentyfive34m$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(twentyfive34m$p_duration, na.rm = TRUE), 1),
+                      round(mean(twentyfive34m$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(twentyfive34m$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(twentyfive34m$p_duration, na.rm = TRUE), 1)),
+                             round(median(twentyfive34m$duration, na.rm = TRUE), 1)),
 
                       # Cas
-                      round(mean(twentyfive34c$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(twentyfive34c$p_duration, na.rm = TRUE), 1),
+                      round(mean(twentyfive34c$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(twentyfive34c$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(twentyfive34c$p_duration, na.rm = TRUE), 1)))
+                             round(median(twentyfive34c$duration, na.rm = TRUE), 1)))
 
 thirtyfive44 <- cbind("35-44",
                       paste0(nrow(thirtyfive44)),
@@ -840,22 +842,22 @@ thirtyfive44 <- cbind("35-44",
                         round(100 * nrow(noagec) /
                                 nrow(bothcas), 1), ")"),
                       # All
-                      round(mean(thirtyfive44$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(thirtyfive44$p_duration, na.rm = TRUE), 1),
+                      round(mean(thirtyfive44$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(thirtyfive44$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(thirtyfive44$p_duration, na.rm = TRUE), 1)),
+                             round(median(thirtyfive44$duration, na.rm = TRUE), 1)),
 
                       # Main
-                      round(mean(thirtyfive44m$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(thirtyfive44m$p_duration, na.rm = TRUE), 1),
+                      round(mean(thirtyfive44m$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(thirtyfive44m$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(thirtyfive44m$p_duration, na.rm = TRUE), 1)),
+                             round(median(thirtyfive44m$duration, na.rm = TRUE), 1)),
 
                       # Cas
-                      round(mean(thirtyfive44c$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(thirtyfive44c$p_duration, na.rm = TRUE), 1),
+                      round(mean(thirtyfive44c$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(thirtyfive44c$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(thirtyfive44c$p_duration, na.rm = TRUE), 1)))
+                             round(median(thirtyfive44c$duration, na.rm = TRUE), 1)))
 
 fortyfive54 <- cbind("45-54",
                      paste0(nrow(fortyfive54)),
@@ -875,22 +877,22 @@ fortyfive54 <- cbind("45-54",
                        round(100 * nrow(noagec) /
                                nrow(bothcas), 1), ")"),
                      # All
-                     round(mean(fortyfive54$p_duration, na.rm = TRUE), 1),
-                     paste0(round(sd(fortyfive54$p_duration, na.rm = TRUE), 1),
+                     round(mean(fortyfive54$duration, na.rm = TRUE), 1),
+                     paste0(round(sd(fortyfive54$duration, na.rm = TRUE), 1),
                             ", ",
-                            round(median(fortyfive54$p_duration, na.rm = TRUE), 1)),
+                            round(median(fortyfive54$duration, na.rm = TRUE), 1)),
 
                      # Main
-                     round(mean(fortyfive54m$p_duration, na.rm = TRUE), 1),
-                     paste0(round(sd(fortyfive54m$p_duration, na.rm = TRUE), 1),
+                     round(mean(fortyfive54m$duration, na.rm = TRUE), 1),
+                     paste0(round(sd(fortyfive54m$duration, na.rm = TRUE), 1),
                             ", ",
-                            round(median(fortyfive54m$p_duration, na.rm = TRUE), 1)),
+                            round(median(fortyfive54m$duration, na.rm = TRUE), 1)),
 
                      # Cas
-                     round(mean(fortyfive54c$p_duration, na.rm = TRUE), 1),
-                     paste0(round(sd(fortyfive54c$p_duration, na.rm = TRUE), 1),
+                     round(mean(fortyfive54c$duration, na.rm = TRUE), 1),
+                     paste0(round(sd(fortyfive54c$duration, na.rm = TRUE), 1),
                             ", ",
-                            round(median(fortyfive54c$p_duration, na.rm = TRUE), 1)))
+                            round(median(fortyfive54c$duration, na.rm = TRUE), 1)))
 
 
 fiftyfive65 <- cbind("55-65",
@@ -911,22 +913,22 @@ fiftyfive65 <- cbind("55-65",
                        round(100 * nrow(noagec) /
                                nrow(bothcas), 1), ")"),
                      # All
-                     round(mean(fiftyfive65$p_duration, na.rm = TRUE), 1),
-                     paste0(round(sd(fiftyfive65$p_duration, na.rm = TRUE), 1),
+                     round(mean(fiftyfive65$duration, na.rm = TRUE), 1),
+                     paste0(round(sd(fiftyfive65$duration, na.rm = TRUE), 1),
                             ", ",
-                            round(median(fiftyfive65$p_duration, na.rm = TRUE), 1)),
+                            round(median(fiftyfive65$duration, na.rm = TRUE), 1)),
 
                      # Main
-                     round(mean(fiftyfive65m$p_duration, na.rm = TRUE), 1),
-                     paste0(round(sd(fiftyfive65m$p_duration, na.rm = TRUE), 1),
+                     round(mean(fiftyfive65m$duration, na.rm = TRUE), 1),
+                     paste0(round(sd(fiftyfive65m$duration, na.rm = TRUE), 1),
                             ", ",
-                            round(median(fiftyfive65m$p_duration, na.rm = TRUE), 1)),
+                            round(median(fiftyfive65m$duration, na.rm = TRUE), 1)),
 
                      # Cas
-                     round(mean(fiftyfive65c$p_duration, na.rm = TRUE), 1),
-                     paste0(round(sd(fiftyfive65c$p_duration, na.rm = TRUE), 1),
+                     round(mean(fiftyfive65c$duration, na.rm = TRUE), 1),
+                     paste0(round(sd(fiftyfive65c$duration, na.rm = TRUE), 1),
                             ", ",
-                            round(median(fiftyfive65c$p_duration, na.rm = TRUE), 1)))
+                            round(median(fiftyfive65c$duration, na.rm = TRUE), 1)))
 
 unmatchedage <- cbind("unmatchedage",
                       paste0(nrow(unmatchage)),
@@ -946,22 +948,22 @@ unmatchedage <- cbind("unmatchedage",
                         round(100 * nrow(noagec) /
                                 nrow(bothcas), 1), ")"),
                       # All
-                      round(mean(unmatchage$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(unmatchage$p_duration, na.rm = TRUE), 1),
+                      round(mean(unmatchage$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(unmatchage$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(unmatchage$p_duration, na.rm = TRUE), 1)),
+                             round(median(unmatchage$duration, na.rm = TRUE), 1)),
 
                       # Main
-                      round(mean(unmatchagem$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(unmatchagem$p_duration, na.rm = TRUE), 1),
+                      round(mean(unmatchagem$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(unmatchagem$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(unmatchagem$p_duration, na.rm = TRUE), 1)),
+                             round(median(unmatchagem$duration, na.rm = TRUE), 1)),
 
                       # Cas
-                      round(mean(unmatchagec$p_duration, na.rm = TRUE), 1),
-                      paste0(round(sd(unmatchagec$p_duration, na.rm = TRUE), 1),
+                      round(mean(unmatchagec$duration, na.rm = TRUE), 1),
+                      paste0(round(sd(unmatchagec$duration, na.rm = TRUE), 1),
                              ", ",
-                             round(median(unmatchagec$p_duration, na.rm = TRUE), 1)))
+                             round(median(unmatchagec$duration, na.rm = TRUE), 1)))
 
 # Output table
 table3b <- rbind(total, blackblack, whitewhite, hisphisp, otherother, unmatchedrace,

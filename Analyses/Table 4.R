@@ -35,7 +35,7 @@ inst <- artnetLong[which(artnetLong$ptype == 3), ]
 tot <- artnetLong %>% count(race.cat, partracecat)
 a <- main %>% count(race.cat, partracecat)
 # Black-black, black-hisp, black-other, black-white, hisp-hisp, hisp-other,
-# hisp-white, other-other
+# hisp-white, other-other, other-white, white-white
 racemain <- cbind(cbind(c("Black-Black", "Black-Hisp", "Black-Other", "Black-White",
                           "Hisp-Hisp", "Hisp-Other", "Hisp-White", "Other-Other",
                           "Other-White", "White-White", NA)),
