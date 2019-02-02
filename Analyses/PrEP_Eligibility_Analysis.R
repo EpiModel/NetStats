@@ -2,6 +2,11 @@
 ## PrEP Analysis Script ##
 ## 2018-09-18           ##
 
+# TO-DO:
+# Calculate non-sexually active MSM estimate? put in intermediate and
+# Revise conclusions to be among sexually active MSM?
+
+
 # Package and setup -----------------------
 rm(list = ls())
 library(dplyr)
@@ -29,10 +34,13 @@ artnet2$prepind_sti <- rep(0, nrow(artnet))
 artnet2$prepind_any <- rep(0, nrow(artnet))
 
 # Denominator: not known to be positive
-sum(artnet$hiv == 0) # 1951
+sum(artnet$hiv == 0)
 
 # artnetLong$part6mo <- table(difftime(artnetLong$SUB_DATE, artnetLong$p_end.date) > 182)
 
+# Revise age category coding
+artnet2$age.cat[which(artnet2$age < 18)] <- "15-17"
+artnet2$age.cat[which(artnet2$age >= 18 & artnet2$age < 25)] <- "18-24"
 
 # CDC Guidelines  ---------
 # Adult man
@@ -117,27 +125,32 @@ respondents <- rbind(nrow(artnet2), length(which(artnet2$race.cat == "white")),
                      length(which(artnet2$region == "Midwest")),
                      length(which(artnet2$region == "South")),
                      length(which(artnet2$region == "West")),
-                     length(which(artnet2$age.cat == "15-24")),
+                     length(which(artnet2$age.cat == "15-17")),
+                     length(which(artnet2$age.cat == "18-24")),
                      length(which(artnet2$age.cat == "25-34")),
                      length(which(artnet2$age.cat == "35-44")),
                      length(which(artnet2$age.cat == "45-54")),
                      length(which(artnet2$age.cat == "55-65")),
-                     length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white")),
+                     length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white")),
+                     length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white")),
                      length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white")),
                      length(which(artnet2$age.cat == "35-44" & artnet2$race.cat == "white")),
                      length(which(artnet2$age.cat == "45-54" & artnet2$race.cat == "white")),
                      length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white")),
-                     length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black")),
+                     length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black")),
+                     length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black")),
                      length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black")),
                      length(which(artnet2$age.cat == "35-44" & artnet2$race.cat == "black")),
                      length(which(artnet2$age.cat == "45-54" & artnet2$race.cat == "black")),
                      length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black")),
-                     length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic")),
+                     length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic")),
+                     length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic")),
                      length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic")),
                      length(which(artnet2$age.cat == "35-44" & artnet2$race.cat == "hispanic")),
                      length(which(artnet2$age.cat == "45-54" & artnet2$race.cat == "hispanic")),
                      length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic")),
-                     length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other")),
+                     length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other")),
+                     length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other")),
                      length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other")),
                      length(which(artnet2$age.cat == "35-44" & artnet2$race.cat == "other")),
                      length(which(artnet2$age.cat == "45-54" & artnet2$race.cat == "other")),
@@ -152,12 +165,15 @@ adultmen <- rbind(length(which(artnet2$prep_adult == 1)),
                   length(which(artnet2$region == "Midwest" & artnet2$prep_adult == 1)),
                   length(which(artnet2$region == "South" & artnet2$prep_adult == 1)),
                   length(which(artnet2$region == "West" & artnet2$prep_adult == 1)),
-                     length(which(artnet2$age.cat == "15-24" & artnet2$prep_adult == 1)),
+                     length(which(artnet2$age.cat == "15-17" & artnet2$prep_adult == 1)),
+                     length(which(artnet2$age.cat == "18-24" & artnet2$prep_adult == 1)),
                      length(which(artnet2$age.cat == "25-34" & artnet2$prep_adult == 1)),
                      length(which(artnet2$age.cat == "35-44" & artnet2$prep_adult == 1)),
                      length(which(artnet2$age.cat == "45-54" & artnet2$prep_adult == 1)),
                      length(which(artnet2$age.cat == "55-65" & artnet2$prep_adult == 1)),
-                     length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white" &
+                     length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
+                                    artnet2$prep_adult == 1)),
+                     length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white" &
                                     artnet2$prep_adult == 1)),
                      length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white" &
                                     artnet2$prep_adult == 1)),
@@ -167,7 +183,9 @@ adultmen <- rbind(length(which(artnet2$prep_adult == 1)),
                                     artnet2$prep_adult == 1)),
                      length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white" &
                                     artnet2$prep_adult == 1)),
-                     length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black" &
+                     length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black" &
+                                    artnet2$prep_adult == 1)),
+                     length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black" &
                                     artnet2$prep_adult == 1)),
                      length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black" &
                                     artnet2$prep_adult == 1)),
@@ -177,7 +195,9 @@ adultmen <- rbind(length(which(artnet2$prep_adult == 1)),
                                     artnet2$prep_adult == 1)),
                      length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black" &
                                     artnet2$prep_adult == 1)),
-                     length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic" &
+                     length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic" &
+                                    artnet2$prep_adult == 1)),
+                     length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic" &
                                     artnet2$prep_adult == 1)),
                      length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic" &
                                     artnet2$prep_adult == 1)),
@@ -187,7 +207,9 @@ adultmen <- rbind(length(which(artnet2$prep_adult == 1)),
                                     artnet2$prep_adult == 1)),
                      length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic" &
                                     artnet2$prep_adult == 1)),
-                     length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other" &
+                     length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other" &
+                                    artnet2$prep_adult == 1)),
+                     length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other" &
                                     artnet2$prep_adult == 1)),
                      length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other" &
                                     artnet2$prep_adult == 1)),
@@ -207,12 +229,15 @@ hivneg <- rbind(length(which(artnet2$prep_hiv == 1)),
                 length(which(artnet2$region == "Midwest" & artnet2$prep_hiv == 1)),
                 length(which(artnet2$region == "South" & artnet2$prep_hiv == 1)),
                 length(which(artnet2$region == "West" & artnet2$prep_hiv == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$prep_hiv == 1)),
+                  length(which(artnet2$age.cat == "15-17" & artnet2$prep_hiv == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$prep_hiv == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$prep_hiv == 1)),
                   length(which(artnet2$age.cat == "35-44" & artnet2$prep_hiv == 1)),
                   length(which(artnet2$age.cat == "45-54" & artnet2$prep_hiv == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$prep_hiv == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
+                                 artnet2$prep_hiv == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white" &
                                  artnet2$prep_hiv == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white" &
                                  artnet2$prep_hiv == 1)),
@@ -222,7 +247,9 @@ hivneg <- rbind(length(which(artnet2$prep_hiv == 1)),
                                  artnet2$prep_hiv == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white" &
                                  artnet2$prep_hiv == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black" &
+                                 artnet2$prep_hiv == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black" &
                                  artnet2$prep_hiv == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black" &
                                  artnet2$prep_hiv == 1)),
@@ -232,7 +259,9 @@ hivneg <- rbind(length(which(artnet2$prep_hiv == 1)),
                                  artnet2$prep_hiv == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black" &
                                  artnet2$prep_hiv == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic" &
+                                 artnet2$prep_hiv == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_hiv == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_hiv == 1)),
@@ -242,7 +271,9 @@ hivneg <- rbind(length(which(artnet2$prep_hiv == 1)),
                                  artnet2$prep_hiv == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_hiv == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other" &
+                                 artnet2$prep_hiv == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other" &
                                  artnet2$prep_hiv == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other" &
                                  artnet2$prep_hiv == 1)),
@@ -262,12 +293,15 @@ past6mos <- rbind(length(which(artnet2$prep_part6mo == 1)),
                   length(which(artnet2$region == "Midwest" & artnet2$prep_part6mo == 1)),
                   length(which(artnet2$region == "South" & artnet2$prep_part6mo == 1)),
                   length(which(artnet2$region == "West" & artnet2$prep_part6mo == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$prep_part6mo == 1)),
+                  length(which(artnet2$age.cat == "15-17" & artnet2$prep_part6mo == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$prep_part6mo == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$prep_part6mo == 1)),
                   length(which(artnet2$age.cat == "35-44" & artnet2$prep_part6mo == 1)),
                   length(which(artnet2$age.cat == "45-54" & artnet2$prep_part6mo == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$prep_part6mo == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
+                                 artnet2$prep_part6mo == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white" &
                                  artnet2$prep_part6mo == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white" &
                                  artnet2$prep_part6mo == 1)),
@@ -277,7 +311,9 @@ past6mos <- rbind(length(which(artnet2$prep_part6mo == 1)),
                                  artnet2$prep_part6mo == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white" &
                                  artnet2$prep_part6mo == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black" &
+                                 artnet2$prep_part6mo == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black" &
                                  artnet2$prep_part6mo == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black" &
                                  artnet2$prep_part6mo == 1)),
@@ -287,7 +323,9 @@ past6mos <- rbind(length(which(artnet2$prep_part6mo == 1)),
                                  artnet2$prep_part6mo == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black" &
                                  artnet2$prep_part6mo == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic" &
+                                 artnet2$prep_part6mo == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_part6mo == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_part6mo == 1)),
@@ -297,7 +335,9 @@ past6mos <- rbind(length(which(artnet2$prep_part6mo == 1)),
                                  artnet2$prep_part6mo == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_part6mo == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other" &
+                                 artnet2$prep_part6mo == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other" &
                                  artnet2$prep_part6mo == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other" &
                                  artnet2$prep_part6mo == 1)),
@@ -317,12 +357,15 @@ nonmonog <- rbind(length(which(artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$region == "Midwest" & artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$region == "South" & artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$region == "West" & artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$prep_nonmonog == 1)),
+                  length(which(artnet2$age.cat == "15-17" & artnet2$prep_nonmonog == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "35-44" & artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "45-54" & artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
+                                 artnet2$prep_nonmonog == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white" &
                                  artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white" &
                                  artnet2$prep_nonmonog == 1)),
@@ -332,7 +375,9 @@ nonmonog <- rbind(length(which(artnet2$prep_nonmonog == 1)),
                                  artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white" &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black" &
+                                 artnet2$prep_nonmonog == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black" &
                                  artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black" &
                                  artnet2$prep_nonmonog == 1)),
@@ -342,7 +387,9 @@ nonmonog <- rbind(length(which(artnet2$prep_nonmonog == 1)),
                                  artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black" &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic" &
+                                 artnet2$prep_nonmonog == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_nonmonog == 1)),
@@ -352,7 +399,9 @@ nonmonog <- rbind(length(which(artnet2$prep_nonmonog == 1)),
                                  artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other" &
+                                 artnet2$prep_nonmonog == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other" &
                                  artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other" &
                                  artnet2$prep_nonmonog == 1)),
@@ -388,7 +437,10 @@ behav1to4 <- rbind(length(which(artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 
                   length(which(artnet2$region == "West" & artnet2$prep_adult == 1 &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$prep_adult == 1 &
+                                 artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
+                                 artnet2$prep_nonmonog == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$prep_adult == 1 &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$prep_adult == 1 &
@@ -403,7 +455,10 @@ behav1to4 <- rbind(length(which(artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 
                   length(which(artnet2$age.cat == "55-65" & artnet2$prep_adult == 1 &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
+                                 artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 &
+                                 artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white" &
                                  artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 &
                                  artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white" &
@@ -418,7 +473,10 @@ behav1to4 <- rbind(length(which(artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white" &
                                  artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 &
                                  artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black" &
+                                 artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 &
+                                 artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black" &
                                  artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 &
                                  artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black" &
@@ -433,7 +491,10 @@ behav1to4 <- rbind(length(which(artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black" &
                                  artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 &
                                  artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic" &
+                                 artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 &
+                                 artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 &
                                  artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic" &
@@ -448,7 +509,10 @@ behav1to4 <- rbind(length(which(artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_adult == 1 & artnet2$prep_hiv == 1 &
                                  artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other" &
+                                 artnet2$prep_adult == 1 &  artnet2$prep_hiv == 1 &
+                                 artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other" &
                                  artnet2$prep_adult == 1 &  artnet2$prep_hiv == 1 &
                                  artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other" &
@@ -473,12 +537,15 @@ CAI <- rbind(length(which(artnet2$prep_uai == 1)),
              length(which(artnet2$region == "Midwest" & artnet2$prep_uai == 1)),
              length(which(artnet2$region == "South" & artnet2$prep_uai == 1)),
              length(which(artnet2$region == "West" & artnet2$prep_uai == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$prep_uai == 1)),
+                  length(which(artnet2$age.cat == "15-17" & artnet2$prep_uai == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "35-44" & artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "45-54" & artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$prep_uai == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
+                                 artnet2$prep_uai == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white" &
                                  artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white" &
                                  artnet2$prep_uai == 1)),
@@ -488,8 +555,10 @@ CAI <- rbind(length(which(artnet2$prep_uai == 1)),
                                  artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white" &
                                  artnet2$prep_uai == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black" &
                                  artnet2$prep_uai == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black" &
+                                artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black" &
                                  artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "35-44" & artnet2$race.cat == "black" &
@@ -498,7 +567,9 @@ CAI <- rbind(length(which(artnet2$prep_uai == 1)),
                                  artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black" &
                                  artnet2$prep_uai == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic" &
+                                 artnet2$prep_uai == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_uai == 1)),
@@ -508,7 +579,9 @@ CAI <- rbind(length(which(artnet2$prep_uai == 1)),
                                  artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_uai == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other" &
+                                 artnet2$prep_uai == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other" &
                                  artnet2$prep_uai == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other" &
                                  artnet2$prep_uai == 1)),
@@ -528,12 +601,15 @@ sti <- rbind(length(which(artnet2$prep_sti == 1)),
              length(which(artnet2$region == "Midwest" & artnet2$prep_sti == 1)),
              length(which(artnet2$region == "South" & artnet2$prep_sti == 1)),
              length(which(artnet2$region == "West" & artnet2$prep_sti == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$prep_sti == 1)),
+                  length(which(artnet2$age.cat == "15-17" & artnet2$prep_sti == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "35-44" & artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "45-54" & artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$prep_sti == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
+                                 artnet2$prep_sti == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white" &
                                  artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white" &
                                  artnet2$prep_sti == 1)),
@@ -543,7 +619,9 @@ sti <- rbind(length(which(artnet2$prep_sti == 1)),
                                  artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white" &
                                  artnet2$prep_sti == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black" &
+                                 artnet2$prep_sti == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black" &
                                  artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black" &
                                  artnet2$prep_sti == 1)),
@@ -553,7 +631,9 @@ sti <- rbind(length(which(artnet2$prep_sti == 1)),
                                  artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black" &
                                  artnet2$prep_sti == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic" &
+                                 artnet2$prep_sti == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_sti == 1)),
@@ -563,8 +643,10 @@ sti <- rbind(length(which(artnet2$prep_sti == 1)),
                                  artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic" &
                                  artnet2$prep_sti == 1)),
-                  length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other" &
+                  length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other" &
                                  artnet2$prep_sti == 1)),
+                  length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other" &
+                                artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other" &
                                  artnet2$prep_sti == 1)),
                   length(which(artnet2$age.cat == "35-44" & artnet2$race.cat == "other" &
@@ -583,12 +665,15 @@ commoncai <- rbind(length(which(artnet2$prepind_uai == 1)),
                    length(which(artnet2$region == "Midwest" & artnet2$prepind_uai == 1)),
                    length(which(artnet2$region == "South" & artnet2$prepind_uai == 1)),
                    length(which(artnet2$region == "West" & artnet2$prepind_uai == 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$prepind_uai == 1)),
+                   length(which(artnet2$age.cat == "15-17" & artnet2$prepind_uai == 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$prepind_uai == 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$prepind_uai == 1)),
                    length(which(artnet2$age.cat == "35-44" & artnet2$prepind_uai == 1)),
                    length(which(artnet2$age.cat == "45-54" & artnet2$prepind_uai == 1)),
                    length(which(artnet2$age.cat == "55-65" & artnet2$prepind_uai == 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
+                                  artnet2$prepind_uai == 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white" &
                                   artnet2$prepind_uai == 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white" &
                                   artnet2$prepind_uai == 1)),
@@ -598,7 +683,9 @@ commoncai <- rbind(length(which(artnet2$prepind_uai == 1)),
                                   artnet2$prepind_uai == 1)),
                    length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white" &
                                   artnet2$prepind_uai == 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black" &
+                                  artnet2$prepind_uai == 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black" &
                                   artnet2$prepind_uai == 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black" &
                                   artnet2$prepind_uai == 1)),
@@ -608,7 +695,9 @@ commoncai <- rbind(length(which(artnet2$prepind_uai == 1)),
                                   artnet2$prepind_uai == 1)),
                    length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black" &
                                   artnet2$prepind_uai == 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic" &
+                                  artnet2$prepind_uai == 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic" &
                                   artnet2$prepind_uai == 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic" &
                                   artnet2$prepind_uai == 1)),
@@ -618,7 +707,9 @@ commoncai <- rbind(length(which(artnet2$prepind_uai == 1)),
                                   artnet2$prepind_uai == 1)),
                    length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic" &
                                   artnet2$prepind_uai == 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other" &
+                                  artnet2$prepind_uai == 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other" &
                                   artnet2$prepind_uai == 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other" &
                                   artnet2$prepind_uai == 1)),
@@ -638,12 +729,15 @@ commonsti <- rbind(length(which(artnet2$prepind_sti == 1)),
                    length(which(artnet2$region == "Midwest" & artnet2$prepind_sti == 1)),
                    length(which(artnet2$region == "South" & artnet2$prepind_sti == 1)),
                    length(which(artnet2$region == "West" & artnet2$prepind_sti == 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$prepind_sti == 1)),
+                   length(which(artnet2$age.cat == "15-17" & artnet2$prepind_sti == 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$prepind_sti == 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$prepind_sti == 1)),
                    length(which(artnet2$age.cat == "35-44" & artnet2$prepind_sti == 1)),
                    length(which(artnet2$age.cat == "45-54" & artnet2$prepind_sti == 1)),
                    length(which(artnet2$age.cat == "55-65" & artnet2$prepind_sti == 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
+                                  artnet2$prepind_sti == 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white" &
                                   artnet2$prepind_sti == 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white" &
                                   artnet2$prepind_sti == 1)),
@@ -653,7 +747,9 @@ commonsti <- rbind(length(which(artnet2$prepind_sti == 1)),
                                   artnet2$prepind_sti == 1)),
                    length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white" &
                                   artnet2$prepind_sti == 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black" &
+                                  artnet2$prepind_sti == 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black" &
                                   artnet2$prepind_sti == 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black" &
                                   artnet2$prepind_sti == 1)),
@@ -663,7 +759,9 @@ commonsti <- rbind(length(which(artnet2$prepind_sti == 1)),
                                   artnet2$prepind_sti == 1)),
                    length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black" &
                                   artnet2$prepind_sti == 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic" &
+                                  artnet2$prepind_sti == 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic" &
                                   artnet2$prepind_sti == 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic" &
                                   artnet2$prepind_sti == 1)),
@@ -673,7 +771,9 @@ commonsti <- rbind(length(which(artnet2$prepind_sti == 1)),
                                   artnet2$prepind_sti == 1)),
                    length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic" &
                                   artnet2$prepind_sti == 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other" &
+                                  artnet2$prepind_sti == 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other" &
                                   artnet2$prepind_sti == 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other" &
                                   artnet2$prepind_sti == 1)),
@@ -693,12 +793,15 @@ commonany <- rbind(length(which(artnet2$prepind_any == 1)),
                 length(which(artnet2$region == "Midwest" & artnet2$prepind_any == 1)),
                 length(which(artnet2$region == "South" & artnet2$prepind_any == 1)),
                 length(which(artnet2$region == "West" & artnet2$prepind_any == 1)),
-                length(which(artnet2$age.cat == "15-24" & artnet2$prepind_any == 1)),
+                length(which(artnet2$age.cat == "15-17" & artnet2$prepind_any == 1)),
+                length(which(artnet2$age.cat == "18-24" & artnet2$prepind_any == 1)),
                 length(which(artnet2$age.cat == "25-34" & artnet2$prepind_any == 1)),
                 length(which(artnet2$age.cat == "35-44" & artnet2$prepind_any == 1)),
                 length(which(artnet2$age.cat == "45-54" & artnet2$prepind_any == 1)),
                 length(which(artnet2$age.cat == "55-65" & artnet2$prepind_any == 1)),
-                length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white" &
+                length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
+                               artnet2$prepind_any == 1)),
+                length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white" &
                                artnet2$prepind_any == 1)),
                 length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white" &
                                artnet2$prepind_any == 1)),
@@ -708,7 +811,9 @@ commonany <- rbind(length(which(artnet2$prepind_any == 1)),
                                artnet2$prepind_any == 1)),
                 length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white" &
                                artnet2$prepind_any == 1)),
-                length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black" &
+                length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black" &
+                               artnet2$prepind_any == 1)),
+                length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black" &
                                artnet2$prepind_any == 1)),
                 length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black" &
                                artnet2$prepind_any == 1)),
@@ -718,7 +823,9 @@ commonany <- rbind(length(which(artnet2$prepind_any == 1)),
                                artnet2$prepind_any == 1)),
                 length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black" &
                                artnet2$prepind_any == 1)),
-                length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic" &
+                length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic" &
+                               artnet2$prepind_any == 1)),
+                length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic" &
                                artnet2$prepind_any == 1)),
                 length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic" &
                                artnet2$prepind_any == 1)),
@@ -728,7 +835,9 @@ commonany <- rbind(length(which(artnet2$prepind_any == 1)),
                                artnet2$prepind_any == 1)),
                 length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic" &
                                artnet2$prepind_any == 1)),
-                length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other" &
+                length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other" &
+                               artnet2$prepind_any == 1)),
+                length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other" &
                                artnet2$prepind_any == 1)),
                 length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other" &
                                artnet2$prepind_any == 1)),
@@ -757,7 +866,9 @@ dawndenom <- rbind(length(which(artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 
                                   artnet2$prep_adult == 1 & artnet2$ai.part >= 1)),
                    length(which(artnet2$region == "West" & artnet2$prep_hiv == 1 &
                                   artnet2$prep_adult == 1 & artnet2$ai.part >= 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$prep_hiv == 1 &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$prep_hiv == 1 &
+                                  artnet2$prep_adult == 1 & artnet2$ai.part >= 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$prep_hiv == 1 &
                                   artnet2$prep_adult == 1 & artnet2$ai.part >= 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$prep_hiv == 1 &
                                   artnet2$prep_adult == 1 & artnet2$ai.part >= 1)),
@@ -767,7 +878,10 @@ dawndenom <- rbind(length(which(artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 
                                   artnet2$prep_adult == 1 & artnet2$ai.part >= 1)),
                    length(which(artnet2$age.cat == "55-65" & artnet2$prep_hiv == 1 &
                                   artnet2$prep_adult == 1 & artnet2$ai.part >= 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "white" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
+                                  artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 &
+                                  artnet2$ai.part >= 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "white" &
                                   artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 &
                                   artnet2$ai.part >= 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "white" &
@@ -782,7 +896,10 @@ dawndenom <- rbind(length(which(artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 
                    length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "white" &
                                   artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 &
                                   artnet2$ai.part >= 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "black" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "black" &
+                                  artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 &
+                                  artnet2$ai.part >= 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "black" &
                                   artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 &
                                   artnet2$ai.part >= 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "black" &
@@ -797,7 +914,10 @@ dawndenom <- rbind(length(which(artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 
                    length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "black" &
                                   artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 &
                                   artnet2$ai.part >= 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "hispanic" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "hispanic" &
+                                  artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 &
+                                  artnet2$ai.part >= 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "hispanic" &
                                   artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 &
                                   artnet2$ai.part >= 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "hispanic" &
@@ -812,7 +932,10 @@ dawndenom <- rbind(length(which(artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 
                    length(which(artnet2$age.cat == "55-65" & artnet2$race.cat == "hispanic" &
                                   artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 &
                                   artnet2$ai.part >= 1)),
-                   length(which(artnet2$age.cat == "15-24" & artnet2$race.cat == "other" &
+                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "other" &
+                                  artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 &
+                                  artnet2$ai.part >= 1)),
+                   length(which(artnet2$age.cat == "18-24" & artnet2$race.cat == "other" &
                                   artnet2$prep_hiv == 1 & artnet2$prep_adult == 1 &
                                   artnet2$ai.part >= 1)),
                    length(which(artnet2$age.cat == "25-34" & artnet2$race.cat == "other" &
@@ -837,10 +960,10 @@ colnames(Indications) <- c("Respondents", "1 - Adult Men", "2 - HIV-negative",
                        "1-4 + CAI", "1-4 + STI", "1-4 + Any", "Dawn denom")
 rownames(Indications) <- c("All", "White", "Black", "Hisp", "Other",
                            "Northeast", "Midwest", "South", "West",
-                           "15-24", "25-34", "35-44", "45-54", "55-65",
-                           "W 15-24", "W 25-34", "W 35-44", "W 45-54", "W 55-65",
-                           "B 15-24", "B 25-34", "B 35-44", "B 45-54", "B 55-65",
-                           "H 15-24", "H 25-34", "H 35-44", "H 45-54", "H 55-65",
-                           "O 15-24", "O 25-34", "O 35-44", "O 45-54", "O 55-65")
+                           "15-17", "18-24", "25-34", "35-44", "45-54", "55-65",
+                           "W 15-17", "W 18-24", "W 25-34", "W 35-44", "W 45-54", "W 55-65",
+                           "B 15-17", "B 18-24", "B 25-34", "B 35-44", "B 45-54", "B 55-65",
+                           "H 15-17", "H 18-24", "H 25-34", "H 35-44", "H 45-54", "H 55-65",
+                           "O 15-17", "O 18-24", "O 25-34", "O 35-44", "O 45-54", "O 55-65")
 
 write.csv(Indications, file = "Output/PrEPElig.csv")
