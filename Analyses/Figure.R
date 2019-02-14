@@ -104,6 +104,19 @@ pred
 
 # Updated version of Sam's ----------------------------------------------
 
+# Other version
+# 2 panel plot
+# Y axis: mean degree
+# X axis: Age (continuous, 15-65)
+# Lines: HIV status of ego
+# Model: Age x sqrt(Age)
+
+# Y axis: duration
+# X axis: Age (continuous, 15-65)
+# Lines: HIV status of ego
+# Model: Age x sqrt(Age)
+
+
 ## All testing ##
 
 # Y axis: Degree (0-5)

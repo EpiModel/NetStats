@@ -415,46 +415,46 @@ nonmonog <- rbind(length(which(artnet2$prep_nonmonog == 1)),
                                  artnet2$prep_nonmonog == 1)))
 behav2to4 <- rbind(length(which(artnet2$prep_hiv == 1 &
                                  artnet2$prep_part6mo & artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$race.cat == "white" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$race.cat == "white"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$race.cat == "black" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$race.cat == "black"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$race.cat == "hispanic" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$race.cat == "hispanic"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$race.cat == "other" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$race.cat == "other"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$region == "Northeast" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$region == "Northeast"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$region == "Midwest" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$region == "Midwest"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$region == "South" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$region == "South"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$region == "West" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$region == "West"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "15-17" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$age.cat == "15-17"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "18-24" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$age.cat == "18-24"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "25-34" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$age.cat == "25-34"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "35-44" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$age.cat == "35-44"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "45-54" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$age.cat == "45-54"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
-                  length(which(artnet2$age.cat == "55-65" & artnet2$prep_adult == 1 &
+                  length(which(artnet2$age.cat == "55-65"  &
                                  artnet2$prep_hiv == 1 & artnet2$prep_part6mo &
                                  artnet2$prep_nonmonog == 1)),
                   length(which(artnet2$age.cat == "15-17" & artnet2$race.cat == "white" &
