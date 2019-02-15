@@ -4,12 +4,15 @@
 
 # Load packages ---------
 rm(list = ls())
-library(dplyr)
-library(tidyr)
-library(magrittr)
-library(readxl)
+library("dplyr")
+library("tidyr")
+library("magrittr")
+library("readxl")
+library("ARTnetData")
 
 # Read in datasets ---------
+#artnet <- ARTnet.wide
+#artnetLong <- ARTnet.long
 artnet <- readRDS("Cleaned/ARTNet-Merged-Vars.rda")
 artnetLong <- readRDS("Cleaned/ARTNet-Merged-Long.rda")
 amis <- readRDS("Cleaned/AMIS_Merged_NetStats.rda")

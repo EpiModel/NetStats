@@ -115,7 +115,7 @@ prepeligv212mo <- intersect(prepeligv1, twelvemonthids) # men, negative, and act
 prepeligv26mo <- intersect(prepeligv1, sixmonthids) # men, negative, and active in last 6 months # equiv to CDC denominator
 
 # Using 12 months now
-prepeligv3 <- intersect(prepeligv212mo, partners) # men, negative, active in last 6 months, non-monog # USPHS base
+prepeligv3 <- intersect(prepeligv26mo, partners) # men, negative, active in last 6 months, non-monog # USPHS base
 prepeligv4 <- intersect(prepeligv3, cai) # men, negative, active in last 6 months, non-monog, CAI
 prepeligv5 <- intersect(prepeligv3, recentsti) # men, negative, active in last 6 months, non-monog, STI
 prepeligv6 <- intersect(prepeligv3, c(cai, recentsti)) # men, negative, active in last 6 months, non-monog, CAI or STI

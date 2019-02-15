@@ -1,4 +1,7 @@
 ## Analysis Wrapper
+## Install ART-Net Data Package
+remotes::install_github("EpiModel/ARTnetData", ref = "e1e22f8")
+
 ## Demographic characteristics
 source("Analyses/Table 1.R", echo = TRUE)
 
