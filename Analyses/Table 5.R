@@ -49,6 +49,11 @@ artnet2 <- left_join(artnet, df, by = "AMIS_ID")
 artnet2 <- left_join(artnet2, df4, by = "AMIS_ID")
 artnet2 <- left_join(artnet2, df7, by = "AMIS_ID")
 
+# If missing degree values, then set to 0
+artnet2$totdegree <- ifelse(is.na(artnet2$totdegree), 0, artnet2$totdegree)
+artnet2$maintotdegree <- ifelse(is.na(artnet2$maintotdegree), 0, artnet2$maintotdegree)
+artnet2$castotdegree <- ifelse(is.na(artnet2$castotdegree), 0, artnet2$castotdegree)
+
 # Table 5 -  Partnership matrix --------------
 matrix <- artnet2
 table(matrix$maintotdegree, matrix$castotdegree, useNA = "always")
