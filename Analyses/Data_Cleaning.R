@@ -11,10 +11,10 @@ library("readxl")
 library("ARTnetData")
 
 # Read in datasets ---------
-#artnet <- ARTnet.wide
-#artnetLong <- ARTnet.long
-artnet <- readRDS("Cleaned/ARTNet-Merged-Vars.rda")
-artnetLong <- readRDS("Cleaned/ARTNet-Merged-Long.rda")
+artnet <- ARTnet.wide
+artnetLong <- ARTnet.long
+# artnet <- readRDS("Cleaned/ARTNet-Merged-Vars.rda")
+# artnetLong <- readRDS("Cleaned/ARTNet-Merged-Long.rda")
 amis <- readRDS("Cleaned/AMIS_Merged_NetStats.rda")
 intermed <- readRDS("Cleaned/AMIS-Intermediate_Merged_NetStats.rda")
 

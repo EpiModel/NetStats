@@ -29,17 +29,13 @@ l$ONGOING <- NULL
 
 # Total
 df <- l %>%
-  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>%
-  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
-  filter(ptype %in% 1:2) %>%
-  # filter(ptype %in% 1) %>% # filter partnership type
+  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>% # filter activity type
+  filter(ptype %in% 1:2) %>% # filter partnership type
   group_by(AMIS_ID) %>%
   summarise(totdegree = sum(ongoing2))
 df4 <- l %>%
-  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>%
-  # filter(p_RAI == 1 | p_IAI == 1) %>% # filter activity type
-  filter(ptype == 1) %>%
-  # filter(ptype %in% 1) %>% # filter partnership type
+  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>% # filter activity type
+  filter(ptype == 1) %>% # filter partnership type
   group_by(AMIS_ID) %>%
   summarise(maintotdegree = sum(ongoing2))
 df7 <- l %>%
