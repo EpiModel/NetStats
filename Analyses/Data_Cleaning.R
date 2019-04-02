@@ -8,13 +8,13 @@ library("dplyr")
 library("tidyr")
 library("magrittr")
 library("readxl")
-library("ARTnetData")
+#library("ARTnetData")
 
 # Read in datasets ---------
-artnet <- ARTnet.wide
-artnetLong <- ARTnet.long
-# artnet <- readRDS("Cleaned/ARTNet-Merged-Vars.rda")
-# artnetLong <- readRDS("Cleaned/ARTNet-Merged-Long.rda")
+# artnet <- ARTnet.wide
+# artnetLong <- ARTnet.long
+artnet <- readRDS("Cleaned/ARTNet-Merged-Vars.rda")
+artnetLong <- readRDS("Cleaned/ARTNet-Merged-Long.rda")
 amis <- readRDS("Cleaned/AMIS_Merged_NetStats.rda")
 intermed <- readRDS("Cleaned/AMIS-Intermediate_Merged_NetStats.rda")
 
@@ -456,8 +456,8 @@ artnetLong$partages[artnetLong$age.cat == "55-65" & artnetLong$partage.cat == "5
 # Race of partner
 # Updated from new ART-Net Cleaned repo
 artnetLong$parthisp <- rep(NA, nrow(artnetLong))
-artnetLong$parthisp <- ifelse(artnetLong$p_hispan == 1, 1, 0)
-table(artnetLong$parthisp)
+artnetLong$parthisp <- ifelse(artnetLong$p_hispan == 1, 1, 0) # Note 843 NA Values
+table(artnetLong$parthisp, useNA = "always")
 
 artnetLong$partrace <- rep(NA, nrow(artnetLong))
 artnetLong$partrace[artnetLong$p_race2 %in% c("mult", "ai/an", "asian", "nh/pi", "other")] <- "other"

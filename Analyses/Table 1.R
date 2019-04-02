@@ -102,47 +102,45 @@ regart <- cbind(cbind(c(a$region[4], adiv$division[6], adiv$division[4],
                 )))
 b <- intermed %>% count(region)
 bdiv <- intermed %>% count(division)
-regint <- cbind(cbind(c(b$n[4], bdiv$n[6], bdiv$n[4],
-                        b$n[1], bdiv$n[8], bdiv$n[1],
-                        b$n[3], bdiv$n[9], bdiv$n[2],
-                        bdiv$n[7],
-                        b$n[2], bdiv$n[3], bdiv$n[5], bdiv$n[10])),
-                cbind(rbind(100 * b$n[4] / sum(b$n[1],b$n[2], b$n[3], b$n[4]),
-                            100 * bdiv$n[6] / sum(bdiv$n[1:9]),
-                            100 * bdiv$n[4] / sum(bdiv$n[1:9]),
-                            100 * b$n[1] / sum(b$n[1],b$n[2], b$n[3], b$n[4]),
-                            100 * bdiv$n[8] / sum(bdiv$n[1:9]),
-                            100 * bdiv$n[1] / sum(bdiv$n[1:9]),
-                            100 * b$n[3] / sum(b$n[1],b$n[2], b$n[3], b$n[4]),
-                            100 * bdiv$n[9] / sum(bdiv$n[1:9]),
-                            100 * bdiv$n[2] / sum(bdiv$n[1:9]),
-                            100 * bdiv$n[7] / sum(bdiv$n[1:9]),
-                            100 * b$n[2] / sum(b$n[1],b$n[2], b$n[3], b$n[4]),
-                            100 * bdiv$n[3] / sum(bdiv$n[1:9]),
-                            100 * bdiv$n[5] / sum(bdiv$n[1:9]),
-                            100 * bdiv$n[10] / sum(bdiv$n)
+regint <- cbind(cbind(c(b$n[5], bdiv$n[7], bdiv$n[5],
+                        b$n[2], bdiv$n[9], bdiv$n[2],
+                        b$n[4], bdiv$n[10], bdiv$n[3], bdiv$n[8],
+                        b$n[3], bdiv$n[4], bdiv$n[6], bdiv$n[1])),
+                cbind(rbind(100 * b$n[5] / sum(b$n[2], b$n[3], b$n[4], b$n[5]),
+                            100 * bdiv$n[7] / sum(bdiv$n[2:10]),
+                            100 * bdiv$n[5] / sum(bdiv$n[2:10]),
+                            100 * b$n[2] / sum(b$n[2], b$n[3], b$n[4], b$n[5]),
+                            100 * bdiv$n[9] / sum(bdiv$n[2:10]),
+                            100 * bdiv$n[2] / sum(bdiv$n[2:10]),
+                            100 * b$n[4] / sum(b$n[2], b$n[3], b$n[4], b$n[5]),
+                            100 * bdiv$n[10] / sum(bdiv$n[2:10]),
+                            100 * bdiv$n[3] / sum(bdiv$n[2:10]),
+                            100 * bdiv$n[8] / sum(bdiv$n[2:10]),
+                            100 * b$n[3] / sum(b$n[2], b$n[3], b$n[4], b$n[5]),
+                            100 * bdiv$n[4] / sum(bdiv$n[2:10]),
+                            100 * bdiv$n[6] / sum(bdiv$n[2:10]),
+                            100 * bdiv$n[1] / sum(bdiv$n)
                 )))
 c <- amis %>% count(region)
 cdiv <- amis %>% count(division)
-regamis <- cbind(cbind(c(c$n[4], cdiv$n[6], cdiv$n[4],
-                         c$n[1], cdiv$n[8], cdiv$n[1],
-                         c$n[3], cdiv$n[9], cdiv$n[2],
-                         cdiv$n[7],
-                         c$n[2], cdiv$n[3], cdiv$n[5], cdiv$n[10])),
-                 cbind(rbind(100 * c$n[4] / sum(c$n[1],c$n[2], c$n[3], c$n[4]),
-                             100 * cdiv$n[6] / sum(cdiv$n[1:9]),
-                             100 * cdiv$n[4] / sum(cdiv$n[1:9]),
-                             100 * c$n[1] / sum(c$n[1],c$n[2], c$n[3], c$n[4]),
-                             100 * cdiv$n[8] / sum(cdiv$n[1:9]),
-                             100 * cdiv$n[1] / sum(cdiv$n[1:9]),
-                             100 * c$n[3] / sum(c$n[1],c$n[2], c$n[3], c$n[4]),
-                             100 * cdiv$n[9] / sum(cdiv$n[1:9]),
-                             100 * cdiv$n[2] / sum(cdiv$n[1:9]),
-                             100 * cdiv$n[7] / sum(cdiv$n[1:9]),
-                             100 * c$n[2] / sum(c$n[1],c$n[2], c$n[3], c$n[4]),
-                             100 * cdiv$n[3] / sum(cdiv$n[1:9]),
-                             100 * cdiv$n[5] / sum(cdiv$n[1:9]),
-                             100 * cdiv$n[10] / sum(cdiv$n)
+regamis <- cbind(cbind(c(c$n[5], cdiv$n[7], cdiv$n[5],
+                         c$n[2], cdiv$n[9], cdiv$n[2],
+                         c$n[4], cdiv$n[10], cdiv$n[3], cdiv$n[8],
+                         c$n[3], cdiv$n[4], cdiv$n[6], cdiv$n[1])),
+                 cbind(rbind(100 * c$n[5] / sum(c$n[2], c$n[3], c$n[4], c$n[5]),
+                             100 * cdiv$n[7] / sum(cdiv$n[2:10]),
+                             100 * cdiv$n[5] / sum(cdiv$n[2:10]),
+                             100 * c$n[2] / sum(c$n[2], c$n[3], c$n[4], c$n[5]),
+                             100 * cdiv$n[9] / sum(cdiv$n[2:10]),
+                             100 * cdiv$n[2] / sum(cdiv$n[2:10]),
+                             100 * c$n[4] / sum(c$n[2], c$n[3], c$n[4], c$n[5]),
+                             100 * cdiv$n[10] / sum(cdiv$n[2:10]),
+                             100 * cdiv$n[3] / sum(cdiv$n[2:10]),
+                             100 * cdiv$n[8] / sum(cdiv$n[2:10]),
+                             100 * c$n[3] / sum(c$n[2], c$n[3], c$n[4], c$n[5]),
+                             100 * cdiv$n[4] / sum(cdiv$n[2:10]),
+                             100 * cdiv$n[6] / sum(cdiv$n[2:10]),
+                             100 * cdiv$n[1] / sum(cdiv$n)
                  )))
 
 # Urbanicity
@@ -180,12 +178,12 @@ urbanamis <- cbind(cbind(c(c$n[1:7])),
 
 # Sexual role
 a <- artnet %>% count(roletype)
-roleart <- cbind(cbind(c(a$roletype[1], a$roletype[3], a$roletype[2], a$roletype[4])),
-                 cbind(c(a$n[1], a$n[3], a$n[2], a$n[4])),
-                 cbind(rbind((100 * a$n[1] / sum(a$n[1:3])),
-                             (100 * a$n[3] / sum(a$n[1:3])),
-                             (100 * a$n[2] / sum(a$n[1:3])),
-                             (100 * a$n[4] / sum(a$n)))))
+roleart <- cbind(cbind(c(a$roletype[3], a$roletype[2], a$roletype[4], a$roletype[1])),
+                 cbind(c(a$n[3], a$n[2], a$n[4], a$n[1])),
+                 cbind(rbind((100 * a$n[3] / sum(a$n[2:4])),
+                             (100 * a$n[2] / sum(a$n[2:4])),
+                             (100 * a$n[4] / sum(a$n[2:4])),
+                             (100 * a$n[1] / sum(a$n)))))
 
 roleint <- matrix(NA, 4, 2)
 
@@ -193,30 +191,30 @@ roleamis <- matrix(NA, 4, 2)
 
 # Education
 a <- artnet %>% count(education)
-educart <- cbind(cbind(c(a$education[3], a$education[2], a$education[4],
-                         a$education[1], a$education[5]),
-                       cbind(c(a$n[3], a$n[2], a$n[4], a$n[1], a$n[5])),
-                       cbind(rbind((100 * a$n[3] / sum(a$n[1:4])),
-                                   (100 * a$n[2] / sum(a$n[1:4])),
-                                   (100 * a$n[4] / sum(a$n[1:4])),
-                                   (100 * a$n[1] / sum(a$n[1:4])),
+educart <- cbind(cbind(c(a$education[4], a$education[3], a$education[5],
+                         a$education[2], a$education[1]),
+                       cbind(c(a$n[4], a$n[3], a$n[5], a$n[2], a$n[1])),
+                       cbind(rbind((100 * a$n[4] / sum(a$n[2:5])),
+                                   (100 * a$n[3] / sum(a$n[2:5])),
+                                   (100 * a$n[5] / sum(a$n[2:5])),
+                                   (100 * a$n[2] / sum(a$n[2:5])),
                                    NA))))
 
 b <- intermed %>% count(education)
-educint <- cbind(cbind(c(b$n[3], b$n[2], b$n[4], b$n[1], b$n[5])),
-                 cbind(rbind((100 * b$n[3] / sum(b$n[1:4])),
-                             (100 * b$n[2] / sum(b$n[1:4])),
-                             (100 * b$n[4] / sum(b$n[1:4])),
-                             (100 * b$n[1] / sum(b$n[1:4])),
-                             (100 * b$n[5] / sum(b$n)))))
+educint <- cbind(cbind(c(b$n[4], b$n[3], b$n[5], b$n[2], b$n[1])),
+                 cbind(rbind((100 * b$n[4] / sum(b$n[2:5])),
+                             (100 * b$n[3] / sum(b$n[2:5])),
+                             (100 * b$n[5] / sum(b$n[2:5])),
+                             (100 * b$n[2] / sum(b$n[2:5])),
+                             (100 * b$n[1] / sum(b$n)))))
 
 c <- amis %>% count(education)
-educamis <- cbind(cbind(c(c$n[3], c$n[2], c$n[4], c$n[1], c$n[5])),
-                  cbind(rbind((100 * c$n[3] / sum(c$n[1:4])),
-                              (100 * c$n[2] / sum(c$n[1:4])),
-                              (100 * c$n[4] / sum(c$n[1:4])),
-                              (100 * c$n[1] / sum(c$n[1:4])),
-                              (100 * c$n[5] / sum(c$n)))))
+educamis <- cbind(cbind(c(c$n[4], c$n[3], c$n[5], c$n[2], c$n[1])),
+                  cbind(rbind((100 * c$n[4] / sum(c$n[2:5])),
+                              (100 * c$n[3] / sum(c$n[2:5])),
+                              (100 * c$n[5] / sum(c$n[2:5])),
+                              (100 * c$n[2] / sum(c$n[2:5])),
+                              (100 * c$n[1] / sum(c$n)))))
 
 # HIV Status
 a <- artnet %>% count(hiv)
@@ -240,23 +238,23 @@ statamis <- cbind(cbind(c(c$n[1], c$n[2], c$n[3])),
 
 # HIV Testing
 a <- artnet %>% count(hivtest)
-testart <- cbind(cbind(c(a$hivtest[1], a$hivtest[2], a$hivtest[3])),
-                 cbind(c(a$n[1:3])),
-                 cbind(rbind((100 * a$n[1] / sum(a$n[1:2])),
-                             (100 * a$n[2] / sum(a$n[1:2])),
-                             (100 * a$n[3] / sum(a$n)))))
+testart <- cbind(cbind(c(a$hivtest[2], a$hivtest[3], a$hivtest[1])),
+                 cbind(c(a$n[c(2, 3, 1)])),
+                 cbind(rbind((100 * a$n[2] / sum(a$n[2:3])),
+                             (100 * a$n[3] / sum(a$n[2:3])),
+                             (100 * a$n[1] / sum(a$n)))))
 
 b <- intermed %>% count(hivtest)
-testint <- cbind(cbind(c(b$n[1:3])),
-                 cbind(rbind((100 * b$n[1] / sum(b$n[1:2])),
-                             (100 * b$n[2] / sum(b$n[1:2])),
-                             (100 * b$n[3] / sum(b$n)))))
+testint <- cbind(cbind(c(b$n[c(2, 3, 1)])),
+                 cbind(rbind((100 * b$n[2] / sum(b$n[2:3])),
+                             (100 * b$n[3] / sum(b$n[2:3])),
+                             (100 * b$n[1] / sum(b$n)))))
 
 c <- amis %>% count(hivtest)
-testamis <- cbind(cbind(c(c$n[1:3])),
-                  cbind(rbind((100 * c$n[1] / sum(c$n[1:2])),
-                              (100 * c$n[2] / sum(c$n[1:2])),
-                              (100 * c$n[3] / sum(c$n)))))
+testamis <- cbind(cbind(c(c$n[c(2, 3, 1)])),
+                  cbind(rbind((100 * c$n[2] / sum(c$n[2:3])),
+                              (100 * c$n[3] / sum(c$n[2:3])),
+                              (100 * c$n[1] / sum(c$n)))))
 
 # Number of tests in last 2 years
 numtestsart <- rbind(cbind("Tests",

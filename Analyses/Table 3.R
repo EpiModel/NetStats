@@ -966,9 +966,11 @@ unmatchedage <- cbind("unmatchedage",
                              round(median(unmatchagec$duration, na.rm = TRUE), 1)))
 
 # Output table
-table3b <- rbind(total, blackblack, whitewhite, hisphisp, otherother, unmatchedrace,
-                fifteen24, twentyfive34, thirtyfive44, fortyfive54, fiftyfive65, unmatchedage,
-                negneg, pospos, unmatchedhiv)
+table3b <- rbind(total, blackblack, whitewhite, hisphisp,
+                 otherother, unmatchedrace,
+                 fifteen24, twentyfive34, thirtyfive44,
+                 fortyfive54, fiftyfive65, unmatchedage,
+                 negneg, pospos, unmatchedhiv)
 colnames(table3b) <- c("Category", "N", "(%)", "NA N All", "NA % All","NA N Main",
                       "NA % Main", "NA N Cas", "NA % Cas",
                       "Total Mean", "Total SD, Med","Main Duration Mean",
