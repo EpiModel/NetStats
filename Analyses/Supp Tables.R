@@ -2085,7 +2085,7 @@ HIVNeg <- cbind("HIV Neg",
 # Output table
 stable3 <- rbind(total, black, white, hispanic, other,
                  fifteen24, twentyfive34, thirtyfive44, fortyfive54, fiftyfive65,
-                 HIVPos, HIVNeg)
+                 HIVNeg, HIVPos)
 colnames(stable3) <- c("Category", "N (%)", "AI Main Mean", "AI Main SD, Med",
                        "AI Cas Mean", "AI Cas SD, Med", "OI Main Mean", "OI Main SD, Med",
                        "OI Cas Mean", "OI Cas SD, Med")
