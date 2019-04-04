@@ -11,10 +11,10 @@ library("readxl")
 library("ARTnetData")
 
 # Read in datasets ---------
-artnet <- ARTnet.wide
-artnetLong <- ARTnet.long
-# artnet <- readRDS("Cleaned/ARTNet-Merged-Vars.rda")
-# artnetLong <- readRDS("Cleaned/ARTNet-Merged-Long.rda")
+# artnet <- ARTnet.wide
+# artnetLong <- ARTnet.long
+artnet <- readRDS("Cleaned/ARTNet-Merged-Vars.rda")
+artnetLong <- readRDS("Cleaned/ARTNet-Merged-Long.rda")
 amis <- readRDS("Cleaned/AMIS_Merged_NetStats.rda")
 intermed <- readRDS("Cleaned/AMIS-Intermediate_Merged_NetStats.rda")
 
@@ -204,6 +204,11 @@ artnet$hivtest <- rep(NA, nrow(artnet))
 artnet$hivtest[artnet$EVERTEST == 1] <- "Have Tested"
 artnet$hivtest[artnet$EVERTEST == 0] <- "Have Never Tested"
 
+# Rename 3-category HIV to HIV (What about NA values?)
+artnet$hivstatus[artnet$hiv3 == 0] <- "Negative"
+artnet$hivstatus[artnet$hiv3 == 1] <- "Positive"
+artnet$hivstatus[artnet$hiv3 == 2] <- "Unknown"
+
 # Sexual Role
 artnet$roletype  <- rep(NA, nrow(artnet))
 recept <- which(artnet$PART1RAI == 1 | artnet$PART2RAI == 1 |
@@ -245,9 +250,13 @@ intermed$race.cat[intermed$hispan == 0 & intermed$race == "white"] <- "white"
 table(intermed$race.cat)
 
 ## HIV Status - Can be edited
-intermed$hiv <- 0
-intermed$hiv[intermed$RCNTRSLT %in% c(7, 9)] <- NA
-intermed$hiv[intermed$RCNTRSLT == 2 | intermed$EVRPOS == 1] <- 1
+## Note, using AMIS EVERTEST variable here
+## ## HIV - 3-category
+## 0 = neg, 1 = pos, 2 = unk
+intermed$hiv <- "Negative"
+intermed$hiv[intermed$RCNTRSLT %in% c(3, 4, 7, 9)] <- "Unknown"
+intermed$hiv[is.nan(intermed$RCNTRSLT) | is.nan(intermed$EVERTEST) | intermed$EVERTEST %in% c(0, 7, 9)] <- "Unknown"
+intermed$hiv[intermed$RCNTRSLT == 2 | intermed$EVRPOS == 1] <- "Positive"
 table(intermed$hiv)
 
 ## Age cat
@@ -309,9 +318,13 @@ amis$race.cat[amis$hispan == 0 & amis$race == "white"] <- "white"
 table(amis$race.cat)
 
 ## HIV Status - Can be edited
-amis$hiv <- 0
-amis$hiv[amis$RCNTRSLT %in% c(7, 9)] <- NA
-amis$hiv[amis$RCNTRSLT == 2 | amis$EVRPOS == 1] <- 1
+## Note, using AMIS EVERTEST variable here
+## ## HIV - 3-category
+## 0 = neg, 1 = pos, 2 = unk
+amis$hiv <- "Negative"
+amis$hiv[amis$RCNTRSLT %in% c(3, 4, 7, 9)] <- "Unknown"
+amis$hiv[is.nan(amis$RCNTRSLT) | is.nan(amis$EVERTEST) | amis$EVERTEST %in% c(0, 7, 9)] <- "Unknown"
+amis$hiv[amis$RCNTRSLT == 2 | amis$EVRPOS == 1] <- "Positive"
 table(amis$hiv)
 
 ## Age cat

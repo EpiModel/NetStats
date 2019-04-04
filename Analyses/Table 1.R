@@ -217,24 +217,27 @@ educamis <- cbind(cbind(c(c$n[4], c$n[3], c$n[5], c$n[2], c$n[1])),
                               (100 * c$n[1] / sum(c$n)))))
 
 # HIV Status
-a <- artnet %>% count(hiv)
-statart <- cbind(cbind(c("Negative", "Positive", NA)),
+a <- artnet %>% count(hivstatus)
+statart <- cbind(cbind(c("Negative", "Positive", "Unknown", NA)),
                  cbind(c(a$n[1], a$n[2], a$n[3])),
-                 cbind(rbind((100 * a$n[1] / sum(a$n[1:2])),
-                             (100 * a$n[2] / sum(a$n[1:2])),
-                             (100 * a$n[3] / sum(a$n)))))
+                 cbind(rbind((100 * a$n[1] / sum(a$n[1:3])),
+                             (100 * a$n[2] / sum(a$n[1:3])),
+                             (100 * a$n[3] / sum(a$n[1:3])),
+                             (100 * a$n[4] / sum(a$n)))))
 
 b <- intermed %>% count(hiv)
-statint <- cbind(cbind(c(b$n[1], b$n[2], b$n[3])),
-                 cbind(rbind((100 * b$n[1] / sum(b$n[1:2])),
-                             (100 * b$n[2] / sum(b$n[1:2])),
-                             (100 * b$n[3] / sum(b$n)))))
+statint <- cbind(cbind(c(b$n[1], b$n[2], b$n[3]), b$n[4]),
+                 cbind(rbind((100 * b$n[1] / sum(b$n[1:3])),
+                             (100 * b$n[2] / sum(b$n[1:3])),
+                             (100 * b$n[3] / sum(b$n[1:3])),
+                             (100 * b$n[4] / sum(b$n)))))
 
 c <- amis %>% count(hiv)
 statamis <- cbind(cbind(c(c$n[1], c$n[2], c$n[3])),
-                  cbind(rbind((100 * c$n[1] / sum(c$n[1:2])),
-                              (100 * c$n[2] / sum(c$n[1:2])),
-                              (100 * c$n[3] / sum(c$n)))))
+                  cbind(rbind((100 * c$n[1] / sum(c$n[1:3])),
+                              (100 * c$n[2] / sum(c$n[1:3])),
+                              (100 * c$n[3] / sum(c$n[1:3])),
+                              (100 * c$n[4] / sum(c$n)))))
 
 # HIV Testing
 a <- artnet %>% count(hivtest)
