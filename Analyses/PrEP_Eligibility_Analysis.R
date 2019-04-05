@@ -96,7 +96,7 @@ df <- artnetLong %>%
   # filter(AMIS_ID %in% prepeligv3) %>%
   filter(difftime(SUB_DATE, end.date) <= 182) %>%
   filter(anal.acts.week > 0) %>%
-  filter(cp.acts < anal.acts.week) %>% # Changed to CP acts
+  filter(anal.acts.week.cp < anal.acts.week) %>% # Changed to CP acts
   group_by(AMIS_ID)
 cai <- as.numeric(unique(df$AMIS_ID)) #739 men who meet other criteria
 artnet2$prep_uai[which(artnet2$AMIS_ID %in% cai)] <- 1
