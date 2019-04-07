@@ -567,6 +567,19 @@ group_by(artnet2, hiv) %>% summarize(mean(maintotdegree))
 group_by(artnet2, hiv) %>% summarize(mean(castotdegree))
 
 HIVPos <- cbind("HIV Pos",
+                hivstatv2[2, 1],
+                paste0(hivstatv2[2, 2],
+                       " - ",
+                       hivstatv2[2, 3]),
+                hivstatmainv2[2, 1],
+                paste0(hivstatmainv2[2, 2],
+                       " - ",
+                       hivstatmainv2[2, 3]),
+                hivstatcasv2[2, 1],
+                paste0(hivstatcasv2[2, 2],
+                       " - ",
+                       hivstatcasv2[2, 3]))
+HIVNeg <- cbind("HIV Neg",
                 hivstatv2[1, 1],
                 paste0(hivstatv2[1, 2],
                        " - ",
@@ -579,19 +592,19 @@ HIVPos <- cbind("HIV Pos",
                 paste0(hivstatcasv2[1, 2],
                        " - ",
                        hivstatcasv2[1, 3]))
-HIVNeg <- cbind("HIV Neg",
-                hivstat[1, 1],
-                paste0(hivstat[1, 2],
+HIVUnk <- cbind("HIV Unk",
+                hivstatv2[3, 1],
+                paste0(hivstatv2[3, 2],
                        " - ",
-                       hivstat[1, 3]),
-                hivstatmain[1, 1],
-                paste0(hivstatmain[1, 2],
+                       hivstatv2[3, 3]),
+                hivstatmainv2[3, 1],
+                paste0(hivstatmainv2[3, 2],
                        " - ",
-                       hivstatmain[1, 3]),
-                hivstatcas[1, 1],
-                paste0(hivstatcas[1, 2],
+                       hivstatmainv2[3, 3]),
+                hivstatcasv2[3, 1],
+                paste0(hivstatcasv2[3, 2],
                        " - ",
-                       hivstatcas[1, 3]))
+                       hivstatcasv2[3, 3]))
 
 # Other types of statistics
 # % of egos Concurrent
@@ -912,32 +925,36 @@ hivstatv2oo <- glm(rate.oo.aioi.part ~ hiv - 1, family = "poisson", data = d)
 hivstatv2oo <- round(cbind(exp(coef(hivstatv2oo)), rbind(exp(confint(hivstatv2oo)))), 3)
 
 # double check predictions against empirical means
-group_by(d, hiv) %>% summarize(mean(rate.oo.aioi.part))
+group_by(d, hiv) %>% summarize(mean(rate.oo.aioi.part, na.rm = TRUE))
 
 HIVPosoo <- cbind("HIV Pos",
+                  hivstatv2oo[2, 1],
+                  paste0(hivstatv2oo[2, 2],
+                         " - ",
+                         hivstatv2oo[2, 3]))
+HIVNegoo <- cbind("HIV Neg",
                   hivstatv2oo[1, 1],
                   paste0(hivstatv2oo[1, 2],
                          " - ",
                          hivstatv2oo[1, 3]))
-HIVNegoo <- cbind("HIV Neg",
-                  hivstatoo[1, 1],
-                  paste0(hivstatoo[1, 2],
+HIVUnkoo <- cbind("HIV Unk",
+                  hivstatv2oo[3, 1],
+                  paste0(hivstatv2oo[3, 2],
                          " - ",
-                         hivstatoo[1, 3]))
-
+                         hivstatv2oo[3, 3]))
 # Output table
 table2a <- cbind(rbind(total, black, white, hispanic, other,
                       fifteen24, twentyfive34, thirtyfive44, fortyfive54, fiftyfive65,
                       West, Pacific, Mountain, Midwest, WNC, ENC,
                       South, WSC, ESC, SA, Northeast, MA, NE, LCM, LFM, Medium,
                       Small, Micro, Noncore,
-                      HIVPos, HIVNeg),
+                      HIVNeg, HIVPos, HIVUnk),
                 rbind(totaloo, blackoo, whiteoo, hispanicoo, otheroo,
                       fifteen24oo, twentyfive34oo, thirtyfive44oo, fortyfive54oo, fiftyfive65oo,
                       Westoo, Pacificoo, Mountainoo, Midwestoo, WNCoo, ENCoo,
                       Southoo, WSCoo, ESCoo, SAoo, Northeastoo, MAoo, NEoo, LCMoo, LFMoo, Mediumoo,
                       Smalloo, Microoo, Noncoreoo,
-                      HIVPosoo, HIVNegoo))
+                      HIVNegoo, HIVPosoo, HIVUnkoo))
 colnames(table2a) <- c("Category", "Ong Either Mean", "Ong Either CI",
                       "Ong Main Mean", "Ongoing Main CI",
                       "Ong Cas Mean", "Ong Cas CI", "Category", "One-Off", "One-off CI")

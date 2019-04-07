@@ -205,9 +205,9 @@ artnet$hivtest[artnet$EVERTEST == 1] <- "Have Tested"
 artnet$hivtest[artnet$EVERTEST == 0] <- "Have Never Tested"
 
 # Rename 3-category HIV to HIV (What about NA values?)
-artnet$hivstatus[artnet$hiv3 == 0] <- "Negative"
-artnet$hivstatus[artnet$hiv3 == 1] <- "Positive"
-artnet$hivstatus[artnet$hiv3 == 2] <- "Unknown"
+artnet$hiv[artnet$hiv3 == 0] <- "Negative"
+artnet$hiv[artnet$hiv3 == 1] <- "Positive"
+artnet$hiv[artnet$hiv3 == 2] <- "Unknown"
 
 # Sexual Role
 artnet$roletype  <- rep(NA, nrow(artnet))
@@ -399,6 +399,11 @@ table(intermed$hivtest, useNA = "always") # 110 NA
 # Clean ART-Net Long ------------
 
 # HIV status
+# Rename 3-category HIV to HIV (What about NA values?)
+artnetLong$hiv[artnetLong$hiv3 == 0] <- "Negative"
+artnetLong$hiv[artnetLong$hiv3 == 1] <- "Positive"
+artnetLong$hiv[artnetLong$hiv3 == 2] <- "Unknown"
+
 # Updated
 artnetLong$partstatus <- rep(NA, nrow(artnetLong))
 artnetLong$partstatus[artnetLong$p_hiv == 2] <- "Unknown"
@@ -406,12 +411,15 @@ artnetLong$partstatus[artnetLong$p_hiv == 1] <- "Positive"
 artnetLong$partstatus[artnetLong$p_hiv == 0] <- "Negative"
 
 artnetLong$partstatuses <- rep(NA, nrow(artnetLong))
-artnetLong$partstatuses[artnetLong$hiv == 0 & artnetLong$p_hiv == 0] <- "Negative - Negative"
-artnetLong$partstatuses[(artnetLong$hiv == 0 & artnetLong$p_hiv == 1) |
-                                (artnetLong$hiv == 1 & artnetLong$p_hiv == 0)] <- "Negative - Positive"
-artnetLong$partstatuses[artnetLong$hiv == 0 & artnetLong$p_hiv == 2] <- "Negative - Unknown"
-artnetLong$partstatuses[artnetLong$hiv == 1 & artnetLong$p_hiv == 1] <- "Positive - Positive"
-artnetLong$partstatuses[artnetLong$hiv == 1 & artnetLong$p_hiv == 2] <- "Positive - Unknown"
+artnetLong$partstatuses[which(artnetLong$hiv == "Negative" & artnetLong$partstatus == "Negative")] <- "Negative - Negative"
+artnetLong$partstatuses[(artnetLong$hiv == "Negative" & artnetLong$partstatus == "Positive") |
+                                (artnetLong$hiv == "Positive" & artnetLong$partstatus == "Negative")] <- "Negative - Positive"
+artnetLong$partstatuses[(artnetLong$hiv == "Negative" & artnetLong$partstatus == "Unknown") |
+                          (artnetLong$hiv == "Unknown" & artnetLong$partstatus == "Negative")] <- "Negative - Unknown"
+artnetLong$partstatuses[artnetLong$hiv == "Positive" & artnetLong$partstatus == "Positive"] <- "Positive - Positive"
+artnetLong$partstatuses[(artnetLong$hiv == "Positive" & artnetLong$partstatus == "Unknown") |
+                          (artnetLong$hiv == "Unknown" & artnetLong$partstatus == "Positive")] <- "Positive - Unknown"
+artnetLong$partstatuses[(artnetLong$hiv == "Unknown" & artnetLong$partstatus == "Unknown")] <- "Unknown - Unknown"
 table(artnetLong$partstatuses, useNA = "always")
 
 # Age category (ego)

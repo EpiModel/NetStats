@@ -229,47 +229,65 @@ fiftyfive65 <- cbind("55-65",
 
 # HIV Status
 HIVPos <- cbind("HIV Pos",
-                paste0(nrow(extant[which(extant$hiv == 1), ]),
+                paste0(nrow(extant[which(extant$hiv == "Positive"), ]),
                        " (",
-                       round(100 * nrow(extant[which(extant$hiv == 1), ]) /
+                       round(100 * nrow(extant[which(extant$hiv == "Positive"), ]) /
                                nrow(extant), 1), ")"),
-                round(mean(extant$duration[which(extant$hiv == 1)], na.rm = TRUE), 1),
-                paste0(round(sd(extant$duration[which(extant$hiv == 1)], na.rm = TRUE), 1),
+                round(mean(extant$duration[which(extant$hiv == "Positive")], na.rm = TRUE), 1),
+                paste0(round(sd(extant$duration[which(extant$hiv == "Positive")], na.rm = TRUE), 1),
                        ", ",
-                       round(median(extant$duration[which(extant$hiv == 1)], na.rm = TRUE), 1)),
-                round(mean(bothmain$duration[bothmain$hiv == 1], na.rm = TRUE), 1),
-                paste0(round(sd(bothmain$duration[bothmain$hiv == 1], na.rm = TRUE), 1),
+                       round(median(extant$duration[which(extant$hiv == "Positive")], na.rm = TRUE), 1)),
+                round(mean(bothmain$duration[bothmain$hiv == "Positive"], na.rm = TRUE), 1),
+                paste0(round(sd(bothmain$duration[bothmain$hiv == "Positive"], na.rm = TRUE), 1),
                        ", ",
-                       round(median(bothmain$duration[bothmain$hiv == 1], na.rm = TRUE), 1)),
+                       round(median(bothmain$duration[bothmain$hiv == "Positive"], na.rm = TRUE), 1)),
 
-                round(mean(bothcas$duration[bothcas$hiv == 1], na.rm = TRUE), 1),
-                paste0(round(sd(bothcas$duration[bothcas$hiv == 1], na.rm = TRUE), 1),
+                round(mean(bothcas$duration[bothcas$hiv == "Positive"], na.rm = TRUE), 1),
+                paste0(round(sd(bothcas$duration[bothcas$hiv == "Positive"], na.rm = TRUE), 1),
                        ", ",
-                       round(median(bothcas$duration[bothcas$hiv == 1], na.rm = TRUE), 1)))
+                       round(median(bothcas$duration[bothcas$hiv == "Positive"], na.rm = TRUE), 1)))
 
 HIVNeg <- cbind("HIV Neg",
-                paste0(nrow(extant[which(extant$hiv == 0), ]),
+                paste0(nrow(extant[which(extant$hiv == "Negative"), ]),
                        " (",
-                       round(100 * nrow(extant[which(extant$hiv == 0), ]) /
+                       round(100 * nrow(extant[which(extant$hiv == "Negative"), ]) /
                                nrow(extant), 1), ")"),
-                round(mean(extant$duration[which(extant$hiv == 0)], na.rm = TRUE), 1),
-                paste0(round(sd(extant$duration[which(extant$hiv == 0)], na.rm = TRUE), 1),
+                round(mean(extant$duration[which(extant$hiv == "Negative")], na.rm = TRUE), 1),
+                paste0(round(sd(extant$duration[which(extant$hiv == "Negative")], na.rm = TRUE), 1),
                        ", ",
-                       round(median(extant$duration[which(extant$hiv == 0)], na.rm = TRUE), 1)),
-                round(mean(bothmain$duration[bothmain$hiv == 0], na.rm = TRUE), 1),
-                paste0(round(sd(bothmain$duration[bothmain$hiv == 0], na.rm = TRUE), 1),
+                       round(median(extant$duration[which(extant$hiv == "Negative")], na.rm = TRUE), 1)),
+                round(mean(bothmain$duration[bothmain$hiv == "Negative"], na.rm = TRUE), 1),
+                paste0(round(sd(bothmain$duration[bothmain$hiv == "Negative"], na.rm = TRUE), 1),
                        ", ",
-                       round(median(bothmain$duration[bothmain$hiv == 0], na.rm = TRUE), 1)),
+                       round(median(bothmain$duration[bothmain$hiv == "Negative"], na.rm = TRUE), 1)),
 
-                round(mean(bothcas$duration[bothcas$hiv == 0], na.rm = TRUE), 1),
-                paste0(round(sd(bothcas$duration[bothcas$hiv == 0], na.rm = TRUE), 1),
+                round(mean(bothcas$duration[bothcas$hiv == "Negative"], na.rm = TRUE), 1),
+                paste0(round(sd(bothcas$duration[bothcas$hiv == "Negative"], na.rm = TRUE), 1),
                        ", ",
-                       round(median(bothcas$duration[bothcas$hiv == 0], na.rm = TRUE), 1)))
+                       round(median(bothcas$duration[bothcas$hiv == "Negative"], na.rm = TRUE), 1)))
+HIVUnk <- cbind("HIV Unk",
+                paste0(nrow(extant[which(extant$hiv == "Unknown"), ]),
+                       " (",
+                       round(100 * nrow(extant[which(extant$hiv == "Unknown"), ]) /
+                               nrow(extant), 1), ")"),
+                round(mean(extant$duration[which(extant$hiv == "Unknown")], na.rm = TRUE), 1),
+                paste0(round(sd(extant$duration[which(extant$hiv == "Unknown")], na.rm = TRUE), 1),
+                       ", ",
+                       round(median(extant$duration[which(extant$hiv == "Unknown")], na.rm = TRUE), 1)),
+                round(mean(bothmain$duration[bothmain$hiv == "Unknown"], na.rm = TRUE), 1),
+                paste0(round(sd(bothmain$duration[bothmain$hiv == "Unknown"], na.rm = TRUE), 1),
+                       ", ",
+                       round(median(bothmain$duration[bothmain$hiv == "Unknown"], na.rm = TRUE), 1)),
+
+                round(mean(bothcas$duration[bothcas$hiv == "Unknown"], na.rm = TRUE), 1),
+                paste0(round(sd(bothcas$duration[bothcas$hiv == "Unknown"], na.rm = TRUE), 1),
+                       ", ",
+                       round(median(bothcas$duration[bothcas$hiv == "Unknown"], na.rm = TRUE), 1)))
 
 # Output table
 table3 <- rbind(total, black, white, hispanic, other,
                 fifteen24, twentyfive34, thirtyfive44, fortyfive54, fiftyfive65,
-                HIVNeg, HIVPos)
+                HIVNeg, HIVPos, HIVUnk)
 colnames(table3) <- c("Category", "N (%)", "Total Mean", "Total SD, Med",
                       "Main Degree Mean", "Main Degree SD, Med", "Cas Degree Mean",
                       "Cas Degree SD, Med")
@@ -338,46 +356,52 @@ unmatchracec <- bothcas[unmatchracec, ]
 
 # HIV
 # All
-allhiv <- which(!(is.na(extant$hiv)))
-nn <- which(extant$hiv == 0 & extant$partstatus == "Negative")
-pp <- which(extant$hiv == 1 & extant$partstatus == "Positive")
-matched <- c(nn, pp)
+allhiv <- which(!(is.na(extant$hiv3)))
+nn <- which(extant$hiv == "Negative" & extant$partstatus == "Negative")
+pp <- which(extant$hiv == "Positive" & extant$partstatus == "Positive")
+uu <- which(extant$hiv == "Unknown" & extant$partstatus == "Unknown")
+matched <- c(nn, pp, uu)
 nohiv <- which(is.na(extant$partstatus))
 givenhiv <- setdiff(allhiv, nohiv)
 unmatchhiv <- setdiff(givenhiv, matched)
 
 nn <- extant[nn, ]
 pp <- extant[pp, ]
+uu <- extant[uu, ]
 nohiv <- extant[nohiv, ]
 givenhiv <- extant[givenhiv, ]
 unmatchhiv <- extant[unmatchhiv, ]
 
 #Main
-allhivm <- which(!(is.na(bothmain$hiv)))
-nnm <- which(bothmain$hiv == 0 & bothmain$partstatus == "Negative")
-ppm <- which(bothmain$hiv == 1 & bothmain$partstatus == "Positive")
-matchedm <- c(nn, pp)
+allhivm <- which(!(is.na(bothmain$hiv3)))
+nnm <- which(bothmain$hiv == "Negative" & bothmain$partstatus == "Negative")
+ppm <- which(bothmain$hiv == "Positive" & bothmain$partstatus == "Positive")
+uum <- which(bothmain$hiv == "Unknown" & bothmain$partstatus == "Unknown")
+matchedm <- c(nnm, ppm, uum)
 nohivm <- which(is.na(bothmain$partstatus))
 givenhivm <- setdiff(allhivm, nohivm)
 unmatchhivm <- setdiff(givenhivm, matchedm)
 
 nnm <- bothmain[nnm, ]
 ppm <- bothmain[ppm, ]
+uum <- bothmain[uum, ]
 nohivm <- bothmain[nohivm, ]
 givenhivm <- bothmain[givenhivm, ]
 unmatchhivm <- bothmain[unmatchhivm, ]
 
 #Cas
-allhivc <- which(!(is.na(bothcas$hiv)))
-nnc <- which(bothcas$hiv == 0 & bothcas$partstatus == "Negative")
-ppc <- which(bothcas$hiv == 1 & bothcas$partstatus == "Positive")
-matchedc <- c(nnc, ppc)
+allhivc <- which(!(is.na(bothcas$hiv3)))
+nnc <- which(bothcas$hiv == "Negative" & bothcas$partstatus == "Negative")
+ppc <- which(bothcas$hiv == "Positive" & bothcas$partstatus == "Positive")
+uuc <- which(bothcas$hiv == "Unknown" & bothcas$partstatus == "Unknown")
+matchedc <- c(nnc, ppc, uuc)
 nohivc <- which(is.na(bothcas$partstatus))
 givenhivc <- setdiff(allhivc, nohivc)
 unmatchhivc <- setdiff(givenhivc, matchedc)
 
 nnc <- bothcas[nnc, ]
 ppc <- bothcas[ppc, ]
+uuc <- bothcas[uuc, ]
 nohivc <- bothcas[nohivc, ]
 givenhivc <- bothcas[givenhivc, ]
 unmatchhivc <- bothcas[unmatchhivc, ]
@@ -718,6 +742,40 @@ pospos <- cbind("pospos",
                 paste0(round(sd(ppc$duration, na.rm = TRUE), 1),
                        ", ",
                        round(median(ppc$duration, na.rm = TRUE), 1)))
+unkunk <- cbind("unkunk",
+                paste0(nrow(uu)),
+                paste0(
+                  round(100 * nrow(uu) /
+                          nrow(givenhiv), 1), ")"),
+                paste0(nrow(nohiv)),
+                paste0(
+                  round(100 * nrow(nohiv) /
+                          nrow(extant), 1), ")"),
+                paste0(nrow(nohivm)),
+                paste0(
+                  round(100 * nrow(nohivm) /
+                          nrow(bothmain), 1), ")"),
+                paste0(nrow(nohivc)),
+                paste0(
+                  round(100 * nrow(nohivc) /
+                          nrow(bothcas), 1), ")"),
+                # All
+                round(mean(uu$duration, na.rm = TRUE), 1),
+                paste0(round(sd(uu$duration, na.rm = TRUE), 1),
+                       ", ",
+                       round(median(uu$duration, na.rm = TRUE), 1)),
+
+                # Main
+                round(mean(uum$duration, na.rm = TRUE), 1),
+                paste0(round(sd(uum$duration, na.rm = TRUE), 1),
+                       ", ",
+                       round(median(uum$duration, na.rm = TRUE), 1)),
+
+                # Cas
+                round(mean(uuc$duration, na.rm = TRUE), 1),
+                paste0(round(sd(uuc$duration, na.rm = TRUE), 1),
+                       ", ",
+                       round(median(uuc$duration, na.rm = TRUE), 1)))
 unmatchedhiv <- cbind("unmatchhiv",
                       paste0(nrow(unmatchhiv)),
                       paste0(
@@ -970,7 +1028,7 @@ table3b <- rbind(total, blackblack, whitewhite, hisphisp,
                  otherother, unmatchedrace,
                  fifteen24, twentyfive34, thirtyfive44,
                  fortyfive54, fiftyfive65, unmatchedage,
-                 negneg, pospos, unmatchedhiv)
+                 negneg, pospos, unkunk, unmatchedhiv)
 colnames(table3b) <- c("Category", "N", "(%)", "NA N All", "NA % All","NA N Main",
                       "NA % Main", "NA N Cas", "NA % Cas",
                       "Total Mean", "Total SD, Med","Main Duration Mean",

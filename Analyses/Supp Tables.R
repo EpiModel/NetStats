@@ -1202,6 +1202,31 @@ group_by(artnet3, hiv) %>% summarize(mean(casoionlydegree))
 
 
 HIVPos <- cbind("HIV Pos",
+                hivstatallaiv2[2, 1],
+                paste0(hivstatallaiv2[2, 2],
+                       " - ",
+                       hivstatallaiv2[2, 3]),
+                hivstatalloiv2[2, 1],
+                paste0(hivstatalloiv2[2, 2],
+                       " - ",
+                       hivstatalloiv2[2, 3]),
+                hivstatmainaiv2[2, 1],
+                paste0(hivstatmainaiv2[2, 2],
+                       " - ",
+                       hivstatmainaiv2[2, 3]),
+                hivstatmainoiv2[2, 1],
+                paste0(hivstatmainoiv2[2, 2],
+                       " - ",
+                       hivstatmainoiv2[2, 3]),
+                hivstatcasaiv2[2, 1],
+                paste0(hivstatcasaiv2[2, 2],
+                       " - ",
+                       hivstatcasaiv2[2, 3]),
+                hivstatcasoiv2[2, 1],
+                paste0(hivstatcasoiv2[2, 2],
+                       " - ",
+                       hivstatcasoiv2[2, 3]))
+HIVNeg <- cbind("HIV Neg",
                 hivstatallaiv2[1, 1],
                 paste0(hivstatallaiv2[1, 2],
                        " - ",
@@ -1226,32 +1251,32 @@ HIVPos <- cbind("HIV Pos",
                 paste0(hivstatcasoiv2[1, 2],
                        " - ",
                        hivstatcasoiv2[1, 3]))
-HIVNeg <- cbind("HIV Neg",
-                hivstatallai[1, 1],
-                paste0(hivstatallai[1, 2],
-                       " - ",
-                       hivstatallai[1, 3]),
-                hivstatalloi[1, 1],
-                paste0(hivstatalloi[1, 2],
-                       " - ",
-                       hivstatalloi[1, 3]),
-                hivstatmainai[1, 1],
-                paste0(hivstatmainai[1, 2],
-                       " - ",
-                       hivstatmainai[1, 3]),
-                hivstatmainoi[1, 1],
-                paste0(hivstatmainoi[1, 2],
-                       " - ",
-                       hivstatmainoi[1, 3]),
-                hivstatcasai[1, 1],
-                paste0(hivstatcasai[1, 2],
-                       " - ",
-                       hivstatcasai[1, 3]),
-                hivstatcasoi[1, 1],
-                paste0(hivstatcasoi[1, 2],
-                       " - ",
-                       hivstatcasoi[1, 3]))
 
+HIVUnk <- cbind("HIV Unk",
+                hivstatallaiv2[3, 1],
+                paste0(hivstatallaiv2[3, 2],
+                       " - ",
+                       hivstatallaiv2[3, 3]),
+                hivstatalloiv2[3, 1],
+                paste0(hivstatalloiv2[3, 2],
+                       " - ",
+                       hivstatalloiv2[3, 3]),
+                hivstatmainaiv2[3, 1],
+                paste0(hivstatmainaiv2[3, 2],
+                       " - ",
+                       hivstatmainaiv2[3, 3]),
+                hivstatmainoiv2[3, 1],
+                paste0(hivstatmainoiv2[3, 2],
+                       " - ",
+                       hivstatmainoiv2[3, 3]),
+                hivstatcasaiv2[3, 1],
+                paste0(hivstatcasaiv2[3, 2],
+                       " - ",
+                       hivstatcasaiv2[3, 3]),
+                hivstatcasoiv2[3, 1],
+                paste0(hivstatcasoiv2[3, 2],
+                       " - ",
+                       hivstatcasoiv2[3, 3]))
 # Other types of statistics
 # % of egos Concurrent
 concurr <- cbind("Concurr",
@@ -1281,7 +1306,7 @@ stable1a <- rbind(total, black, white, hispanic, other,
                   West, Pacific, Mountain, Midwest, WNC, ENC,
                   South, WSC, ESC, SA, Northeast, MA, NE, LCM, LFM, Medium,
                   Small, Micro, Noncore,
-                  HIVPos, HIVNeg)
+                  HIVNeg, HIVPos, HIVUnk)
 colnames(stable1a) <- c("Category",
                         "All AI Mean", "All AI CI",
                         "All OI Mean", "All OI CI",
@@ -1516,15 +1541,20 @@ hivstatv2ooai <- round(cbind(exp(coef(hivstatv2ooai)), rbind(exp(confint(hivstat
 group_by(artnet2, hiv) %>% summarize(mean(rate.oo.ai.part))
 
 HIVPosooai <- cbind("HIV Pos",
+                    hivstatv2ooai[2, 1],
+                    paste0(hivstatv2ooai[2, 2],
+                           " - ",
+                           hivstatv2ooai[2, 3]))
+HIVNegooai <- cbind("HIV Neg",
                     hivstatv2ooai[1, 1],
                     paste0(hivstatv2ooai[1, 2],
                            " - ",
                            hivstatv2ooai[1, 3]))
-HIVNegooai <- cbind("HIV Neg",
-                    hivstatooai[1, 1],
-                    paste0(hivstatooai[1, 2],
+HIVUnkooai <- cbind("HIV Neg",
+                    hivstatv2ooai[3, 1],
+                    paste0(hivstatv2ooai[3, 2],
                            " - ",
-                           hivstatooai[1, 3]))
+                           hivstatv2ooai[3, 3]))
 
 #### OI only ------
 totaloooi <- glm(rate.oo.oi.part ~ 1, family = "poisson", data = artnet2)
@@ -1740,18 +1770,23 @@ hivstatv2oooi <- glm(rate.oo.oi.part ~ hiv - 1, family = "poisson", data = artne
 hivstatv2oooi <- round(cbind(exp(coef(hivstatv2oooi)), rbind(exp(confint(hivstatv2oooi)))), 3)
 
 # double check predictions against empirical means
-group_by(artnet2, hiv) %>% summarize(mean(rate.oo.oi.part))
+group_by(artnet2, hiv) %>% summarize(mean(rate.oo.oi.part, na.rm = TRUE))
 
 HIVPosoooi <- cbind("HIV Pos",
+                    hivstatv2oooi[2, 1],
+                    paste0(hivstatv2oooi[2, 2],
+                           " - ",
+                           hivstatv2oooi[2, 3]))
+HIVNegoooi <- cbind("HIV Neg",
                     hivstatv2oooi[1, 1],
                     paste0(hivstatv2oooi[1, 2],
                            " - ",
                            hivstatv2oooi[1, 3]))
-HIVNegoooi <- cbind("HIV Neg",
-                    hivstatoooi[1, 1],
-                    paste0(hivstatoooi[1, 2],
+HIVUnkoooi <- cbind("HIV Unk",
+                    hivstatv2oooi[3, 1],
+                    paste0(hivstatv2oooi[3, 2],
                            " - ",
-                           hivstatoooi[1, 3]))
+                           hivstatv2oooi[3, 3]))
 
 # Output table
 stable2 <- cbind(rbind(totalooai, blackooai, whiteooai, hispanicooai, otherooai,
@@ -1759,13 +1794,13 @@ stable2 <- cbind(rbind(totalooai, blackooai, whiteooai, hispanicooai, otherooai,
                        Westooai, Pacificooai, Mountainooai, Midwestooai, WNCooai, ENCooai,
                        Southooai, WSCooai, ESCooai, SAooai, Northeastooai, MAooai, NEooai, LCMooai, LFMooai, Mediumooai,
                        Smallooai, Microooai, Noncoreooai,
-                       HIVPosooai, HIVNegooai),
+                       HIVNegooai, HIVPosooai, HIVUnkooai),
                  rbind(totaloooi, blackoooi, whiteoooi, hispanicoooi, otheroooi,
                        fifteen24oooi, twentyfive34oooi, thirtyfive44oooi, fortyfive54oooi, fiftyfive65oooi,
                        Westoooi, Pacificoooi, Mountainoooi, Midwestoooi, WNCoooi, ENCoooi,
                        Southoooi, WSCoooi, ESCoooi, SAoooi, Northeastoooi, MAoooi, NEoooi, LCMoooi, LFMoooi, Mediumoooi,
                        Smalloooi, Microoooi, Noncoreoooi,
-                       HIVPosoooi, HIVNegoooi))
+                       HIVNegoooi, HIVPosoooi, HIVUnkoooi))
 colnames(stable2) <- c("Category", "AI  Mean", "AI CI", "Category", "OI Mean", "OI CI")
 write.csv(stable2, file = "Output/stable2.csv")
 
@@ -2035,57 +2070,81 @@ fiftyfive65 <- cbind("55-65",
 
 # HIV Status
 HIVPos <- cbind("HIV Pos",
-                paste0(nrow(extant[which(extant$hiv == 1), ]),
+                paste0(nrow(extant[which(extant$hiv == "Positive"), ]),
                        " (",
-                       round(100 * nrow(extant[which(extant$hiv == 1), ]) /
+                       round(100 * nrow(extant[which(extant$hiv == "Positive"), ]) /
                                nrow(extant), 1), ")"),
 
-                round(mean(aimain$duration[which(aimain$hiv == 1)], na.rm = TRUE), 1),
-                paste0(round(sd(aimain$duration[which(aimain$hiv == 1)], na.rm = TRUE), 1),
+                round(mean(aimain$duration[which(aimain$hiv == "Positive")], na.rm = TRUE), 1),
+                paste0(round(sd(aimain$duration[which(aimain$hiv == "Positive")], na.rm = TRUE), 1),
                        ", ",
-                       round(median(aimain$duration[which(aimain$hiv == 1)], na.rm = TRUE), 1)),
-                round(mean(aicas$duration[which(aicas$hiv == 1)], na.rm = TRUE), 1),
-                paste0(round(sd(aicas$duration[which(aicas$hiv == 1)], na.rm = TRUE), 1),
+                       round(median(aimain$duration[which(aimain$hiv == "Positive")], na.rm = TRUE), 1)),
+                round(mean(aicas$duration[which(aicas$hiv == "Positive")], na.rm = TRUE), 1),
+                paste0(round(sd(aicas$duration[which(aicas$hiv == "Positive")], na.rm = TRUE), 1),
                        ", ",
-                       round(median(aicas$duration[which(aicas$hiv == 1)], na.rm = TRUE), 1)),
-                round(mean(oimain$duration[oimain$hiv == 1], na.rm = TRUE), 1),
-                paste0(round(sd(oimain$duration[oimain$hiv == 1], na.rm = TRUE), 1),
+                       round(median(aicas$duration[which(aicas$hiv == "Positive")], na.rm = TRUE), 1)),
+                round(mean(oimain$duration[oimain$hiv == "Positive"], na.rm = TRUE), 1),
+                paste0(round(sd(oimain$duration[oimain$hiv == "Positive"], na.rm = TRUE), 1),
                        ", ",
-                       round(median(oimain$duration[oimain$hiv == 1], na.rm = TRUE), 1)),
+                       round(median(oimain$duration[oimain$hiv == "Positive"], na.rm = TRUE), 1)),
 
-                round(mean(oicas$duration[oicas$hiv == 1], na.rm = TRUE), 1),
-                paste0(round(sd(oicas$duration[oicas$hiv == 1], na.rm = TRUE), 1),
+                round(mean(oicas$duration[oicas$hiv == "Positive"], na.rm = TRUE), 1),
+                paste0(round(sd(oicas$duration[oicas$hiv == "Positive"], na.rm = TRUE), 1),
                        ", ",
-                       round(median(oicas$duration[oicas$hiv == 1], na.rm = TRUE), 1)))
+                       round(median(oicas$duration[oicas$hiv == "Positive"], na.rm = TRUE), 1)))
 
 HIVNeg <- cbind("HIV Neg",
-                paste0(nrow(extant[which(extant$hiv == 0), ]),
+                paste0(nrow(extant[which(extant$hiv == "Negative"), ]),
                        " (",
-                       round(100 * nrow(extant[which(extant$hiv == 0), ]) /
+                       round(100 * nrow(extant[which(extant$hiv == "Negative"), ]) /
                                nrow(extant), 1), ")"),
 
-                round(mean(aimain$duration[which(aimain$hiv == 0)], na.rm = TRUE), 1),
-                paste0(round(sd(aimain$duration[which(aimain$hiv == 0)], na.rm = TRUE), 1),
+                round(mean(aimain$duration[which(aimain$hiv == "Negative")], na.rm = TRUE), 1),
+                paste0(round(sd(aimain$duration[which(aimain$hiv == "Negative")], na.rm = TRUE), 1),
                        ", ",
-                       round(median(aimain$duration[which(aimain$hiv == 0)], na.rm = TRUE), 1)),
-                round(mean(aicas$duration[which(aicas$hiv == 0)], na.rm = TRUE), 1),
-                paste0(round(sd(aicas$duration[which(aicas$hiv == 0)], na.rm = TRUE), 1),
+                       round(median(aimain$duration[which(aimain$hiv == "Negative")], na.rm = TRUE), 1)),
+                round(mean(aicas$duration[which(aicas$hiv == "Negative")], na.rm = TRUE), 1),
+                paste0(round(sd(aicas$duration[which(aicas$hiv == "Negative")], na.rm = TRUE), 1),
                        ", ",
-                       round(median(aicas$duration[which(aicas$hiv == 0)], na.rm = TRUE), 1)),
-                round(mean(oimain$duration[oimain$hiv == 0], na.rm = TRUE), 1),
-                paste0(round(sd(oimain$duration[oimain$hiv == 0], na.rm = TRUE), 1),
+                       round(median(aicas$duration[which(aicas$hiv == "Negative")], na.rm = TRUE), 1)),
+                round(mean(oimain$duration[oimain$hiv == "Negative"], na.rm = TRUE), 1),
+                paste0(round(sd(oimain$duration[oimain$hiv == "Negative"], na.rm = TRUE), 1),
                        ", ",
-                       round(median(oimain$duration[oimain$hiv == 0], na.rm = TRUE), 1)),
+                       round(median(oimain$duration[oimain$hiv == "Negative"], na.rm = TRUE), 1)),
 
-                round(mean(oicas$duration[oicas$hiv == 0], na.rm = TRUE), 1),
-                paste0(round(sd(oicas$duration[oicas$hiv == 0], na.rm = TRUE), 1),
+                round(mean(oicas$duration[oicas$hiv == "Negative"], na.rm = TRUE), 1),
+                paste0(round(sd(oicas$duration[oicas$hiv == "Negative"], na.rm = TRUE), 1),
                        ", ",
-                       round(median(oicas$duration[oicas$hiv == 0], na.rm = TRUE), 1)))
+                       round(median(oicas$duration[oicas$hiv == "Negative"], na.rm = TRUE), 1)))
+
+HIVUnk <- cbind("HIV Unk",
+                paste0(nrow(extant[which(extant$hiv == "Unknown"), ]),
+                       " (",
+                       round(100 * nrow(extant[which(extant$hiv == "Unknown"), ]) /
+                               nrow(extant), 1), ")"),
+
+                round(mean(aimain$duration[which(aimain$hiv == "Unknown")], na.rm = TRUE), 1),
+                paste0(round(sd(aimain$duration[which(aimain$hiv == "Unknown")], na.rm = TRUE), 1),
+                       ", ",
+                       round(median(aimain$duration[which(aimain$hiv == "Unknown")], na.rm = TRUE), 1)),
+                round(mean(aicas$duration[which(aicas$hiv == "Unknown")], na.rm = TRUE), 1),
+                paste0(round(sd(aicas$duration[which(aicas$hiv == "Unknown")], na.rm = TRUE), 1),
+                       ", ",
+                       round(median(aicas$duration[which(aicas$hiv == "Unknown")], na.rm = TRUE), 1)),
+                round(mean(oimain$duration[oimain$hiv == "Unknown"], na.rm = TRUE), 1),
+                paste0(round(sd(oimain$duration[oimain$hiv == "Unknown"], na.rm = TRUE), 1),
+                       ", ",
+                       round(median(oimain$duration[oimain$hiv == "Unknown"], na.rm = TRUE), 1)),
+
+                round(mean(oicas$duration[oicas$hiv == "Unknown"], na.rm = TRUE), 1),
+                paste0(round(sd(oicas$duration[oicas$hiv == "Unknown"], na.rm = TRUE), 1),
+                       ", ",
+                       round(median(oicas$duration[oicas$hiv == "Unknown"], na.rm = TRUE), 1)))
 
 # Output table
 stable3 <- rbind(total, black, white, hispanic, other,
                  fifteen24, twentyfive34, thirtyfive44, fortyfive54, fiftyfive65,
-                 HIVNeg, HIVPos)
+                 HIVNeg, HIVPos, HIVUnk)
 colnames(stable3) <- c("Category", "N (%)", "AI Main Mean", "AI Main SD, Med",
                        "AI Cas Mean", "AI Cas SD, Med", "OI Main Mean", "OI Main SD, Med",
                        "OI Cas Mean", "OI Cas SD, Med")

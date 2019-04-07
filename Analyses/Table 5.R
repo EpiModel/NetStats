@@ -118,24 +118,30 @@ View(egorace)
 
 # HIV status
 tot2 <- artnetLong %>% count(hiv, partstatus)
-egohiv <- cbind(rbind(sum(artnet$hiv == 0),
-                      sum(artnet$hiv == 1)),
+egohiv <- cbind(rbind(sum(artnet$hiv == "Negative"),
+                      sum(artnet$hiv == "Positive"),
+                      sum(artnet$hiv == "Unknown")),
                 rbind(
-                  cbind(rbind(tot2$n[c(2)]),
-                        rbind(tot2$n[c(3)]),
-                        rbind(tot2$n[c(4)]),
-                        rbind(tot2$n[c(1)])),
-                  cbind(rbind(tot2$n[c(6)]),
-                        rbind(tot2$n[c(7)]),
-                        rbind(tot2$n[c(8)]),
-                        rbind(tot2$n[c(5)]))))
+                  cbind(rbind(tot2$n[c(2)]), # Neg-Neg
+                        rbind(tot2$n[c(3)]), # Neg-Pos
+                        rbind(tot2$n[c(4)]), # Neg-Unk
+                        rbind(tot2$n[c(1)])), #Neg-NA
+                  cbind(rbind(tot2$n[c(6)]), #Pos-Neg
+                        rbind(tot2$n[c(7)]), #Pos-Pos
+                        rbind(tot2$n[c(8)]), #Pos-Unk
+                        rbind(tot2$n[c(5)])),#Pos-NA
+                  cbind(rbind(tot2$n[c(10)]), #Unk-Neg
+                        rbind(tot2$n[c(11)]), #Unk-Pos
+                        rbind(tot2$n[c(12)]), #Unk-Unk
+                        rbind(tot2$n[c(9)])))) #Unk-NA
 colnames(egohiv) <- c("Ego N",
                       "Negative Part",
                       "Positive Part",
                       "Unknown Part",
                       "NA")
 rownames(egohiv) <- c("Negative Ego",
-                      "Positive Ego")
+                      "Positive Ego",
+                      "Unknown Ego")
 View(egohiv)
 
 write.csv(egorace, file = "Output/egorace.csv")
