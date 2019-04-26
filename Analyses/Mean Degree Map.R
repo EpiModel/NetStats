@@ -2,8 +2,9 @@
 rm(list = ls())
 library(zipcode)
 library(dplyr)
-#devtools::install_github('arilamstein/choroplethrZip@v1.3.0')
 library(choroplethrZip)
+library(choroplethr)
+library(choroplethrMaps)
 library(ggplot2)
 
 data(zipcode)
@@ -41,11 +42,113 @@ df_meandeg <- rename(df_meandeg, region = zip)
 
 # Note, this reflects ZCTAs, not ZIPs
 zip_choropleth(df_meandeg,
-               title      = "Mean Degree by ZIP Code",
-               legend     = "Mean Degree",
+               title = "Mean Degree by ZIP Code",
+               legend = "Mean Degree",
                num_colors = 1)
 
+##### State Choropleth
+artnet$statename <- rep(NA, nrow(artnet))
+artnet$statename[which(artnet$State == "AL")] <- "alabama"
+artnet$statename[which(artnet$State == "AK")] <- "alaska"
+artnet$statename[which(artnet$State == "AZ")] <- "arizona"
+artnet$statename[which(artnet$State == "AR")] <- "arkansas"
+artnet$statename[which(artnet$State == "CA")] <- "california"
+artnet$statename[which(artnet$State == "CO")] <- "colorado"
+artnet$statename[which(artnet$State == "CT")] <- "connecticut"
+artnet$statename[which(artnet$State == "DE")] <- "delaware"
+artnet$statename[which(artnet$State == "DC")] <- "district of columbia"
+artnet$statename[which(artnet$State == "FL")] <- "florida"
+artnet$statename[which(artnet$State == "GA")] <- "georgia"
+artnet$statename[which(artnet$State == "HI")] <- "hawaii"
+artnet$statename[which(artnet$State == "ID")] <- "idaho"
+artnet$statename[which(artnet$State == "IL")] <- "illinois"
+artnet$statename[which(artnet$State == "IN")] <- "indiana"
+artnet$statename[which(artnet$State == "IA")] <- "iowa"
+artnet$statename[which(artnet$State == "KS")] <- "kansas"
+artnet$statename[which(artnet$State == "KY")] <- "kentucky"
+artnet$statename[which(artnet$State == "LA")] <- "louisiana"
+artnet$statename[which(artnet$State == "ME")] <- "maine"
+artnet$statename[which(artnet$State == "MD")] <- "maryland"
+artnet$statename[which(artnet$State == "MA")] <- "massachusetts"
+artnet$statename[which(artnet$State == "MI")] <- "michigan"
+artnet$statename[which(artnet$State == "MN")] <- "minnesota"
+artnet$statename[which(artnet$State == "MS")] <- "mississippi"
+artnet$statename[which(artnet$State == "MO")] <- "missouri"
+artnet$statename[which(artnet$State == "MT")] <- "montana"
+artnet$statename[which(artnet$State == "NE")] <- "nebraska"
+artnet$statename[which(artnet$State == "ND")] <- "north dakota"
+artnet$statename[which(artnet$State == "NC")] <- "north carolina"
+artnet$statename[which(artnet$State == "NH")] <- "new hampshire"
+artnet$statename[which(artnet$State == "NJ")] <- "new jersey"
+artnet$statename[which(artnet$State == "NM")] <- "new mexico"
+artnet$statename[which(artnet$State == "NY")] <- "new york"
+artnet$statename[which(artnet$State == "NV")] <- "nevada"
+artnet$statename[which(artnet$State == "OH")] <- "ohio"
+artnet$statename[which(artnet$State == "OK")] <- "oklahoma"
+artnet$statename[which(artnet$State == "OR")] <- "oregon"
+artnet$statename[which(artnet$State == "PA")] <- "pennsylvania"
+artnet$statename[which(artnet$State == "RI")] <- "rhode island"
+artnet$statename[which(artnet$State == "SC")] <- "south carolina"
+artnet$statename[which(artnet$State == "SD")] <- "south dakota"
+artnet$statename[which(artnet$State == "TN")] <- "tennessee"
+artnet$statename[which(artnet$State == "TX")] <- "texas"
+artnet$statename[which(artnet$State == "UT")] <- "utah"
+artnet$statename[which(artnet$State == "VA")] <- "virginia"
+artnet$statename[which(artnet$State == "VT")] <- "vermont"
+artnet$statename[which(artnet$State == "WA")] <- "washington"
+artnet$statename[which(artnet$State == "WI")] <- "wisconsin"
+artnet$statename[which(artnet$State == "WV")] <- "west virginia"
+artnet$statename[which(artnet$State == "WY")] <- "wyoming"
 
+# Aggregate mean deg by State
+b <- aggregate(artnet$totdegree,
+               by = list(artnet$statename),
+               FUN = mean,
+               na.rm = TRUE)
+colnames(b) <- c("region", "value")
+b$region <- as.character(b$region) # 453 NaNs
+
+c <- StateChoropleth$new(b)
+c$title <- "Mean Degree by State"
+c$legend <- "Mean Degree"
+c$set_num_colors(1)
+c$set_zoom(NULL)
+c$show_labels <- FALSE
+without_abbr <- c$render()
+
+without_abbr + scale_fill_viridis()
+
+state_choropleth(b,
+                 title = "Mean Degree by State",
+                 legend = "Mean Degree",
+                 num_colors = 1)
+
+
+##### County Choropleth
+# Aggregate mean deg by State
+d <- aggregate(artnet$totdegree,
+               by = list(artnet$County_Name),
+               FUN = mean,
+               na.rm = TRUE)
+colnames(d) <- c("region", "value")
+d$region <- as.character(d$region) # 453 NaNs
+d$value[which(is.nan(d$value))] <- -1
+d$value[which(is.na(d$value))] <- -1
+
+e <- StateChoropleth$new(d)
+e$title <- "Mean Degree by county"
+e$legend <- "Mean Degree"
+e$set_num_colors(1)
+e$set_zoom(NULL)
+e$show_labels <- FALSE
+without_abbr <- e$render()
+
+without_abbr + scale_fill_viridis()
+
+county_choropleth(d,
+                 title = "Mean Degree by County",
+                 legend = "Mean Degree",
+                 num_colors = 1)
 # https://blog.revolutionanalytics.com/2015/04/exploring-san-francisco-with-choropleth.html
 # https://github.com/arilamstein/acs-zcta-explorer/blob/master/gen_graphs.R
 # https://github.com/arilamstein/choroplethrZip/blob/master/R/zip_choropleth.R
