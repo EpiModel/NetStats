@@ -1,4 +1,58 @@
-## STI Testing: ART-Net Data Map ##
+# Version 1---------------------
+rm(list = ls())
+library(zipcode)
+library(dplyr)
+#devtools::install_github('arilamstein/choroplethrZip@v1.3.0')
+library(choroplethrZip)
+library(ggplot2)
+
+data(zipcode)
+artnet <- readRDS("Output/artnet4shiny.rda")
+us <- map_data('state')
+
+# Clean ART-Net ZIPs
+artnet$ZIPCODE2 <- clean.zipcodes(artnet$ZIPCODE2)
+artnet <- rename(artnet, zip = ZIPCODE2)
+
+# Aggregate mean deg by ZIP
+a <- aggregate(artnet$totdegree,
+               by = list(artnet$zip),
+               FUN = mean,
+               na.rm = TRUE)
+colnames(a) <- c("region", "value")
+a$region <- as.character(a$region) # 453 NaNs
+
+# Merge with ZIP Code data file
+merged <- left_join(zipcode, a, by = c('zip' = 'region'))
+merged$value[which(is.nan(merged$value))] <- -1
+merged$value[which(is.na(merged$value))] <- -1
+
+# Cut down dataframe for ZIP Choro
+df_meandeg <- merged[, c("zip", "value")]
+
+# Rename column
+df_meandeg <- rename(df_meandeg, region = zip)
+
+# choro <- ZipChoropleth$new(df_meandeg)
+# choro$title <- "Mean Degree by ZIP Code"
+# choro$ggplot_scale <- scale_fill_discrete(name = "Mean Degree")
+# choro$set_zoom_zip(state_zoom="new york", county_zoom=NULL, msa_zoom=NULL, zip_zoom=NULL)
+# choro$render()
+
+# Note, this reflects ZCTAs, not ZIPs
+zip_choropleth(df_meandeg,
+               title      = "Mean Degree by ZIP Code",
+               legend     = "Mean Degree",
+               num_colors = 1)
+
+
+# https://blog.revolutionanalytics.com/2015/04/exploring-san-francisco-with-choropleth.html
+# https://github.com/arilamstein/acs-zcta-explorer/blob/master/gen_graphs.R
+# https://github.com/arilamstein/choroplethrZip/blob/master/R/zip_choropleth.R
+# https://arilamstein.com/creating-zip-code-choropleths-choroplethrzip/
+# https://arilamstein.com/documentation/choroplethrZip/reference/zip_choropleth.html
+
+## Other Efforts ---------------------------
 rm(list = ls())
 library(haven)
 library(Hmisc)
@@ -44,8 +98,26 @@ merged$meandeg[which(is.nan(merged$meandeg))] <- -1
 merged$meandeg[which(is.na(merged$meandeg))] <- -1
 merged <- ggplot2::fortify(merged, region = 'zip')
 
+zips.shape <- merge(zip.shape,
+                    merged,
+                    by.x = "ZCTA5CE10",
+                    by.y = "zip")
+
 
 # Spatial/mapping ---------------------
+
+ggplot() +
+
+  # plot counties (shade using "value" from prevalence data) and clinics (currently, all clinics)
+  ## can add to aes the option color (inside the ()) to color points by group (type of service)
+  geom_polygon(data = zips.shape,
+               aes(x = long,
+                   y = lat,
+                   group = group,
+                   fill = meandeg),
+               color = "gray78", size = .35)
+
+
 
 #to avoid upload error_FM - did not work, changed dsn and added 'layer':
 fortified.zip.shape <- fortify(zip.shape,
