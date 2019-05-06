@@ -2175,19 +2175,19 @@ summary(bothcas$duration)
 # duration ~ ego age
 # then duration ~ ego hiv + ego age
 all_age_model <- lm(duration ~ age, data = extant2)
-all_age <- round(cbind(exp(coef(all_age_model)), exp(confint(all_age_model))), 3)
+all_age <- round(cbind((coef(all_age_model)), (confint(all_age_model))), 3)
 all_agehiv_model <- lm(duration ~ age + hiv, data = extant2)
-all_agehiv <- round(cbind(exp(coef(all_agehiv_model)), exp(confint(all_agehiv_model))), 3)
+all_agehiv <- round(cbind((coef(all_agehiv_model)), (confint(all_agehiv_model))), 3)
 
 main_age_model <- lm(duration ~ age, data = bothmain)
-main_age <- round(cbind(exp(coef(main_age_model)), exp(confint(main_age_model))), 3)
+main_age <- round(cbind((coef(main_age_model)), (confint(main_age_model))), 3)
 main_agehiv_model <- lm(duration ~ age + hiv, data = bothmain)
-main_agehiv <- round(cbind(exp(coef(main_agehiv_model)), exp(confint(main_agehiv_model))), 3)
+main_agehiv <- round(cbind((coef(main_agehiv_model)), (confint(main_agehiv_model))), 3)
 
 cas_age_model <- lm(duration ~ age, data = bothcas)
-cas_age <- round(cbind(exp(coef(cas_age_model)), exp(confint(cas_age_model))), 3)
+cas_age <- round(cbind((coef(cas_age_model)), (confint(cas_age_model))), 3)
 cas_agehiv_model <- lm(duration ~ age + hiv, data = bothcas)
-cas_agehiv <- round(cbind(exp(coef(cas_agehiv_model)), exp(confint(cas_agehiv_model))), 3)
+cas_agehiv <- round(cbind((coef(cas_agehiv_model)), (confint(cas_agehiv_model))), 3)
 
 # Output table of coefficients
 allcoeffs <- as.data.frame(cbind(rbind("Age",
