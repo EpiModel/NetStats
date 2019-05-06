@@ -14,6 +14,8 @@ l$ongoing2 <- ifelse(l$ONGOING %in% c(88, 99), 0, l$ONGOING)
 l$ongoing2[which(is.na(l$ONGOING))] <- 0
 l$ONGOING <- NULL
 
+d <- artnet
+
 # Total
 df <- l %>%
   filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>% # filter activity type
@@ -35,17 +37,17 @@ df7 <- l %>%
 
 
 # Create merged dataframes
-artnet2 <- left_join(artnet, df, by = "AMIS_ID")
-artnet2 <- left_join(artnet2, df4, by = "AMIS_ID")
-artnet2 <- left_join(artnet2, df7, by = "AMIS_ID")
-table(artnet2$totdegree, useNA = "always")
-table(artnet2$maintotdegree, useNA = "always")
-table(artnet2$Castotdegree, useNA = "always")
+d <- left_join(d, df, by = "AMIS_ID")
+d <- left_join(d, df4, by = "AMIS_ID")
+d <- left_join(d, df7, by = "AMIS_ID")
+table(d$totdegree, useNA = "always")
+table(d$maintotdegree, useNA = "always")
+table(d$Castotdegree, useNA = "always")
 
 # If missing degree values, then set to 0
-artnet2$totdegree <- ifelse(is.na(artnet2$totdegree), 0, artnet2$totdegree)
-artnet2$maintotdegree <- ifelse(is.na(artnet2$maintotdegree), 0, artnet2$maintotdegree)
-artnet2$castotdegree <- ifelse(is.na(artnet2$castotdegree), 0, artnet2$castotdegree)
+d$totdegree <- ifelse(is.na(d$totdegree), 0, d$totdegree)
+d$maintotdegree <- ifelse(is.na(d$maintotdegree), 0, d$maintotdegree)
+d$castotdegree <- ifelse(is.na(d$castotdegree), 0, d$castotdegree)
 
 
 
@@ -98,11 +100,13 @@ df9 <- l %>%
 # Table 2 One-time -------------------
 
 # Survey question about one-time anal partners (no equivalent for oral partners)
-table(artnet2$M_MP12INSTANUM2, useNA = "always")
+table(d$M_MP12INSTANUM2, useNA = "always")
+table(d$cuml.pnum, useNA = "always")
 
-artnet2$oi.part <- rep(NA, nrow(artnet2))
-artnet2$oi.part <- artnet2$cuml.pnum - artnet2$ai.part
-artnet2$oi.part[artnet2$oi.part < 0] <- 0 # 1 person with -87
+d$oi.part <- rep(NA, nrow(d))
+d$oi.part <- d$cuml.pnum - d$ai.part
+d$oi.part[d$oi.part < 0] <- 0 # 1 person with -87
+table(d$oi.part, useNA = "always")
 
 # Create count variables for AI or OI
 d <- l %>%
@@ -114,10 +118,12 @@ d <- l %>%
   right_join(d, by = "AMIS_ID")
 d$count.mc.aioi.part <- ifelse(is.na(d$count.mc.aioi.part), 0, d$count.mc.aioi.part)
 d$count.mc.aioi.part
+summary(d$count.mc.aioi.part)
 d$count.oo.aioi.part <- d$cuml.pnum - d$count.mc.aioi.part
 d$count.oo.aioi.part <- pmax(0, d$count.oo.aioi.part)
 data.frame(d$cuml.pnum, d$count.mc.aioi.part, d$count.oo.aioi.part)
 summary(d$count.oo.aioi.part)
+table(d$count.oo.aioi.part)
 
 plot(density(d$count.oo.aioi.part, na.rm = TRUE, from = 0))
 plot(density(d$count.oo.aioi.part, na.rm = TRUE, from = 0), xlim = c(0, 100))
@@ -125,6 +131,8 @@ plot(density(d$count.oo.aioi.part, na.rm = TRUE, from = 0), xlim = c(0, 100))
 # weekly rate
 d$rate.oo.aioi.part <- d$count.oo.aioi.part/52
 d$rate.oo.aioi.part
+summary(d$rate.oo.aioi.part)
+
 
 # Create count variables for AI
 d2 <- l %>%
@@ -148,6 +156,8 @@ plot(density(d2$count.oo.ai.part, na.rm = TRUE, from = 0), xlim = c(0, 100))
 # weekly rate
 d2$rate.oo.ai.part <- d2$count.oo.ai.part/52
 d2$rate.oo.ai.part
+summary(d2$rate.oo.ai.part)
+
 
 # Create count variables for OI
 d3 <- l %>%
