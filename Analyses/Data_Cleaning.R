@@ -325,7 +325,7 @@ amis$hiv <- "Negative"
 amis$hiv[amis$RCNTRSLT %in% c(3, 4, 7, 9)] <- "Unknown"
 amis$hiv[is.nan(amis$RCNTRSLT) | is.nan(amis$EVERTEST) | amis$EVERTEST %in% c(0, 7, 9)] <- "Unknown"
 amis$hiv[amis$RCNTRSLT == 2 | amis$EVRPOS == 1] <- "Positive"
-table(amis$hiv)
+table(amis$hiv, useNA = "always")
 
 ## Age cat
 amis$age.cat <- rep(NA, nrow(amis))

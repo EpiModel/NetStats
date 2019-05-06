@@ -20,11 +20,11 @@ source("Analyses/Table 5.R", echo = TRUE)
 ## Supplementary Tables
 source("Analyses/Supp Tables.R", echo = TRUE)
 
-## Figure
-source("Analyses/Figure.R", echo = TRUE)
-
-## Create Shiny
+## Create Shiny Dataset
 source("Analyses/Create Shiny.R", echo = TRUE)
+
+## Figures
+source("Analyses/Figures.R", echo = TRUE)
 
 ## Run PrEP eligibility analysis
 source("Analyses/PrEP_Eligibility_Analysis.R", echo = TRUE)

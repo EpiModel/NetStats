@@ -35,7 +35,7 @@ artnet2$prepind_sti <- rep(0, nrow(artnet))
 artnet2$prepind_any <- rep(0, nrow(artnet))
 
 # Denominator: not known to be positive
-sum(artnet$hiv == 0)
+sum(artnet2$hivstatus == "Negative") #3726
 
 # artnetLong$part6mo <- table(difftime(artnetLong$SUB_DATE, artnetLong$p_end.date) > 182)
 
@@ -62,32 +62,38 @@ artnet2$age.cat[which(artnet2$age >= 18 & artnet2$age < 25)] <- "18-24"
 
 # Subsetting to factors ------------------------------------------
 # Condition 1: Age > 18
-adults <- as.numeric(artnet2[which(artnet2$age >= 18), "AMIS_ID"]) #2141 men
+adults <- as.numeric(artnet2[which(artnet2$age >= 18), "AMIS_ID"]) #4759 men
 artnet2$prep_adult[which(artnet2$AMIS_ID %in% adults)] <- 1
 
 # Condition 2: HIV-negative man
-negativeids <- as.numeric(artnet2[which(artnet2$hiv == 0), "AMIS_ID"]) # 1951 men
+negativeids <- as.numeric(artnet2[which(artnet2$hivstatus == "Negative"), "AMIS_ID"]) # 3726 men
 artnet2$prep_hiv[which(artnet2$AMIS_ID %in% negativeids)] <- 1
 
 # Condition 3: IDs of those who had a male partner
-twelvemonthids <- as.numeric(unique(artnetLong[which(difftime(artnetLong$SUB_DATE, artnetLong$end.date, units = "days") <= 365), "AMIS_ID"]))
+twelvemonthids <- as.numeric(unique(artnetLong[which(difftime(artnetLong$SUB_DATE,
+                                                              artnetLong$end.date,
+                                                              units = "days") <= 365),
+                                               "AMIS_ID"])) #4596 men
 artnet2$prep_part12mo[which(artnet2$AMIS_ID %in% twelvemonthids)] <- 1
 
-sixmonthids <- as.numeric(unique(artnetLong[which(difftime(artnetLong$SUB_DATE, artnetLong$end.date, units = "days") <= 182), "AMIS_ID"]))
+sixmonthids <- as.numeric(unique(artnetLong[which(difftime(artnetLong$SUB_DATE,
+                                                           artnetLong$end.date,
+                                                           units = "days") <= 182),
+                                            "AMIS_ID"])) #4435 men
 artnet2$prep_part6mo[which(artnet2$AMIS_ID %in% sixmonthids)] <- 1
 
 # Condition 4: Not in monogamous partnership with recently tested, HIV-negative man
 ### Version A: More than one ongoing partner
-gt2partids <- as.numeric(unique(artnet$AMIS_ID[which(artnet$totdegree > 1)])) #608 men with >1 partners
+gt2partids <- as.numeric(unique(artnet2$AMIS_ID[which(artnet2$totdegree > 1)])) #1290 men with >1 partners
 
 ### Version B: Partner number = 1 and partner is not negative
-onepartids <- as.numeric(unique(artnet$AMIS_ID[which(artnet$totdegree == 1)])) #933 men with one partner
+onepartids <- as.numeric(unique(artnet2$AMIS_ID[which(artnet2$totdegree == 1)])) #2182 men with one partner
 onepartids2 <- as.numeric(unique(artnetLong[which((artnetLong$AMIS_ID %in% onepartids) &
                        (artnetLong$partstatus == "Unknown" |
                           artnetLong$partstatus == "Positive" |
-                          is.na(artnetLong$partstatus))), "AMIS_ID"])) # 446 men with one partner who is not HIV-negative
+                          is.na(artnetLong$partstatus))), "AMIS_ID"])) # 1004 men with one partner who is not HIV-negative
 ### Combine Version A and B
-partners <- unique(c(gt2partids, onepartids2)) # 1054 men not in monog
+partners <- unique(c(gt2partids, onepartids2)) # 2294 men not in monog
 artnet2$prep_nonmonog[which(artnet2$AMIS_ID %in% partners)] <- 1
 
 #TODO: Check condom-protected values
@@ -98,17 +104,19 @@ df <- artnetLong %>%
   filter(anal.acts.week > 0) %>%
   filter(anal.acts.week.cp < anal.acts.week) %>% # Changed to CP acts
   group_by(AMIS_ID)
-cai <- as.numeric(unique(df$AMIS_ID)) #739 men who meet other criteria
+cai <- as.numeric(unique(df$AMIS_ID)) #2224 men who meet other criteria
 artnet2$prep_uai[which(artnet2$AMIS_ID %in% cai)] <- 1
 
 # Recent STI
-recentsti <- unique(as.numeric(artnet2$AMIS_ID[which(artnet2$BSTIA == 1 | artnet2$BSTIB == 1 | artnet2$BSTIC == 1)])) #260 men
+recentsti <- unique(as.numeric(artnet2$AMIS_ID[which(artnet2$BSTIA == 1 |
+                                                       artnet2$BSTIB == 1 |
+                                                       artnet2$BSTIC == 1)])) #567 men
 artnet2$prep_sti[which(artnet2$AMIS_ID %in% recentsti)] <- 1
 
 # Common factors
 # Changed to negative men
 # prepeligv1 <- intersect(adults, negativeids) # men >18 and negative
-prepeligv1 <- negativeids # negative men
+prepeligv1 <- negativeids # 3726 negative men
 
 # Vectors of people
 prepeligv212mo <- intersect(prepeligv1, twelvemonthids) # men, negative, and active in last 6 months # equiv to CDC denominator

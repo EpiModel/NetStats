@@ -1,11 +1,179 @@
-## ART-Net Study 2018   ##
-## Figure Script        ##
-## 2018-09-25           ##
-##
+## ART-Net Study 2019       ##
+## Figures                  ##
+## 2019-05-06               ##
+
+# Supp Figure 1: OO Density ---------
+# Load packages
+rm(list = ls())
+library(dplyr)
+library(tidyr)
+library(readxl)
+library(MASS)
+library(ggplot2)
+
+# Read in cleaning and datasets
+## Data Cleaning/Management Script
+source("Analyses/Data_Cleaning.R", echo = FALSE)
+
+# Create mean degree variable
+l <- artnetLong
+l$ONGOING <- as.numeric(l$ONGOING)
+l$ongoing2 <- ifelse(l$ONGOING %in% c(88, 99), 0, l$ONGOING)
+l$ongoing2[which(is.na(l$ONGOING))] <- 0
+l$ONGOING <- NULL
+
+# Total
+df <- l %>%
+  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
+  filter(ptype %in% 1:2) %>%
+  # filter(ptype %in% 1) %>% # filter partnership type
+  group_by(AMIS_ID) %>%
+  summarise(totdegree = sum(ongoing2))
+df4 <- l %>%
+  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
+  filter(ptype == 1) %>%
+  # filter(ptype %in% 1) %>% # filter partnership type
+  group_by(AMIS_ID) %>%
+  summarise(maintotdegree = sum(ongoing2))
+df7 <- l %>%
+  filter(RAI == 1 | IAI == 1 | ROI == 1 | IOI == 1) %>%
+  # filter(RAI == 1 | IAI == 1) %>% # filter activity type
+  filter(ptype == 2) %>%
+  # filter(ptype %in% 1) %>% # filter partnership type
+  group_by(AMIS_ID) %>%
+  summarise(castotdegree = sum(ongoing2))
+
+# Create merged dataframes
+artnet2 <- left_join(artnet, df, by = "AMIS_ID")
+artnet2 <- left_join(artnet2, df4, by = "AMIS_ID")
+artnet2 <- left_join(artnet2, df7, by = "AMIS_ID")
+
+# Calculate rate of one-offs
+# Create OI partners variable
+artnet2$oi.part <- rep(NA, nrow(artnet2))
+artnet2$oi.part <- artnet2$cuml.pnum - artnet2$ai.part
+artnet2$oi.part[artnet2$oi.part < 0] <- 0 # 1 person with -87
+
+# Create count variables for AI or OI
+d <- artnet2
+d <- l %>%
+  filter(ROI == 1 | IOI == 1 | RAI == 1 | IAI == 1) %>%
+  filter(ptype %in% 1:2) %>%
+  group_by(AMIS_ID) %>%
+  count() %>%
+  rename(count.mc.aioi.part = n) %>%
+  right_join(d, by = "AMIS_ID")
+d$count.mc.aioi.part <- ifelse(is.na(d$count.mc.aioi.part), 0, d$count.mc.aioi.part)
+d$count.mc.aioi.part
+d$count.oo.aioi.part <- d$cuml.pnum - d$count.mc.aioi.part
+d$count.oo.aioi.part <- pmax(0, d$count.oo.aioi.part)
+data.frame(d$cuml.pnum, d$count.mc.aioi.part, d$count.oo.aioi.part)
+summary(d$count.oo.aioi.part)
+
+plot(density(d$count.oo.aioi.part, na.rm = TRUE, from = 0))
+plot(density(d$count.oo.aioi.part, na.rm = TRUE, from = 0), xlim = c(0, 100))
+
+# weekly rate
+d$rate.oo.aioi.part <- d$count.oo.aioi.part/52
+d$rate.oo.aioi.part
+
+# Create count variables for AI
+d2 <- l %>%
+  filter(RAI == 1 | IAI == 1) %>%
+  filter(ptype %in% 1:2) %>%
+  group_by(AMIS_ID) %>%
+  count() %>%
+  rename(count.mc.ai.part = n) %>%
+  right_join(d, by = "AMIS_ID")
+d2$count.mc.ai.part <- ifelse(is.na(d2$count.mc.ai.part), 0, d2$count.mc.ai.part)
+d2$count.mc.ai.part
+
+d2$count.oo.ai.part <- d2$ai.part - d2$count.mc.ai.part
+d2$count.oo.ai.part <- pmax(0, d2$count.oo.ai.part)
+data.frame(d2$ai.part, d2$count.mc.ai.part, d2$count.oo.ai.part)
+summary(d2$count.oo.ai.part)
+
+plot(density(d2$count.oo.ai.part, na.rm = TRUE, from = 0))
+plot(density(d2$count.oo.ai.part, na.rm = TRUE, from = 0), xlim = c(0, 100))
+
+# weekly rate
+d2$rate.oo.ai.part <- d2$count.oo.ai.part/52
+d2$rate.oo.ai.part
+
+# Create count variables for OI
+d3 <- l %>%
+  filter(ROI == 1 | IOI == 1) %>%
+  filter(ptype %in% 1:2) %>%
+  group_by(AMIS_ID) %>%
+  count() %>%
+  rename(count.mc.oi.part = n) %>%
+  right_join(d, by = "AMIS_ID")
+d3$count.mc.oi.part <- ifelse(is.na(d3$count.mc.oi.part), 0, d3$count.mc.oi.part)
+d3$count.mc.oi.part
+
+d3$count.oo.oi.part <- d3$oi.part - d3$count.mc.oi.part
+d3$count.oo.oi.part <- pmax(0, d3$count.oo.oi.part)
+data.frame(d3$oi.part, d3$count.mc.oi.part, d3$count.oo.oi.part)
+summary(d3$count.oo.oi.part)
+
+plot(density(d3$count.oo.oi.part, na.rm = TRUE, from = 0))
+plot(density(d3$count.oo.oi.part, na.rm = TRUE, from = 0), xlim = c(0, 100))
+
+# weekly rate
+d3$rate.oo.oi.part <- d3$count.oo.oi.part/52
+d3$rate.oo.oi.part
+
+# Reduce new datasets to relevant data
+da <- d[, c("AMIS_ID", "count.oo.aioi.part", "rate.oo.aioi.part")]
+db <- d2[, c("AMIS_ID", "count.oo.ai.part", "rate.oo.ai.part")]
+dc <- d3[, c("AMIS_ID", "count.oo.oi.part", "rate.oo.oi.part")]
+
+# Create merged dataframes
+artnet2 <- left_join(artnet2, da, by = "AMIS_ID")
+artnet2 <- left_join(artnet2, db, by = "AMIS_ID")
+artnet2 <- left_join(artnet2, dc, by = "AMIS_ID")
+
+artnet2$oo.aioi.per.year <- artnet2$rate.oo.aioi.part * 52
+artnet2$oo.ai.per.year <- artnet2$rate.oo.ai.part * 52
+artnet2$oo.oi.per.year <- artnet2$rate.oo.oi.part * 52
+
+artnet2$MSM <- rep("MSM", nrow(artnet2))
+
+# Density curve - Number of Partners
+ggplot(artnet2, aes(x = oo.aioi.per.year, fill = MSM)) +
+  geom_density() +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  ylab("Density") +
+  xlab("Annual One-Time Partners") +
+  ggtitle("Density of One-Time Partners") +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none")
+
+# Density curve of Rate
+ggplot(artnet2, aes(x = rate.oo.aioi.part, fill = MSM)) +
+  geom_density() +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  ylab("Density") +
+  xlab("Weekly One-Time Partner Rate") +
+  ggtitle("Density of One-Time Partners") +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none")
+
+
+
+
+# Graphical abstract ---------------------
 ## https://stats.idre.ucla.edu/r/dae/poisson-regression/
 ## https://www.theanalysisfactor.com/generalized-linear-models-in-r-part-6-poisson-regression-count-variables/
 
-# Read in data and packages ---------------------------------------
 # Data
 rm(list = ls())
 p <- readRDS("Shiny Output/artnet4shiny.rda")
@@ -18,7 +186,7 @@ library(MASS)
 library(sandwich)
 library(data.table)
 
-# NetParams version -------------------------------------
+# NetParams version
 # acts/per week/per partnership for main and casual partnerships
 # fx of: partnership duration,
 #        age of each partner (might take sqrt of sum)
@@ -140,8 +308,8 @@ cas <- glm(castotdegree ~ age + sqrt(age) ,# + cuml.pnum,
 # dfcas <- as.data.frame(round(cbind(exp(coef(cas)), rbind(exp(confint(cas)))), 3))
 
 pred <- data.frame(pshort, predtot = total$fitted.values,
-                      predmain = main$fitted.values,
-                      predcas = cas$fitted.values)
+                   predmain = main$fitted.values,
+                   predcas = cas$fitted.values)
 
 dftot <- as.data.frame(round(cbind(coef(total), rbind(confint(total))), 3))
 dfmain <- as.data.frame(round(cbind(coef(main), rbind(confint(main))), 3))
@@ -293,7 +461,7 @@ ggplot(newdata2, aes(math, DaysAbsent)) +
 
 p <- within(p, {
   prog <- factor(prog, levels = 1:3, labels = c("General", "Academic",
-                                            "Vocational"))
+                                                "Vocational"))
   id <- factor(id)
 })
 summary(p)
@@ -354,3 +522,4 @@ predProbs <- predict(total, data.frame(y = seq(min(ages), max(ages),
                                                length.out = 100)),
                      type = "response")
 lines(seq(min(y), max(y), length.out = 100), predProbs, col = 2, lwd = 2)
+
