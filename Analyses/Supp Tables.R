@@ -2172,48 +2172,55 @@ summary(bothmain$duration)
 summary(bothcas$duration)
 
 # Linear model
-# duration ~ ego age
+# duration ~ ego hiv
 # then duration ~ ego hiv + ego age
-all_age_model <- lm(duration ~ age, data = extant2)
-all_age <- round(cbind((coef(all_age_model)), (confint(all_age_model))), 3)
+all_hiv_model <- lm(duration ~ hiv, data = extant2)
+all_hiv <- round(cbind((coef(all_hiv_model)), (confint(all_hiv_model))), 3)
 all_agehiv_model <- lm(duration ~ age + hiv, data = extant2)
 all_agehiv <- round(cbind((coef(all_agehiv_model)), (confint(all_agehiv_model))), 3)
 
-main_age_model <- lm(duration ~ age, data = bothmain)
-main_age <- round(cbind((coef(main_age_model)), (confint(main_age_model))), 3)
+main_hiv_model <- lm(duration ~ hiv, data = bothmain)
+main_hiv <- round(cbind((coef(main_hiv_model)), (confint(main_hiv_model))), 3)
 main_agehiv_model <- lm(duration ~ age + hiv, data = bothmain)
 main_agehiv <- round(cbind((coef(main_agehiv_model)), (confint(main_agehiv_model))), 3)
 
-cas_age_model <- lm(duration ~ age, data = bothcas)
-cas_age <- round(cbind((coef(cas_age_model)), (confint(cas_age_model))), 3)
+cas_hiv_model <- lm(duration ~ hiv, data = bothcas)
+cas_hiv <- round(cbind((coef(cas_hiv_model)), (confint(cas_hiv_model))), 3)
 cas_agehiv_model <- lm(duration ~ age + hiv, data = bothcas)
 cas_agehiv <- round(cbind((coef(cas_agehiv_model)), (confint(cas_agehiv_model))), 3)
 
 # Output table of coefficients
-allcoeffs <- as.data.frame(cbind(rbind("Age",
-                          "HIV Positive",
-                          "HIV-Unknown"),
-                    rbind(all_age[2, 1],
-                          NA,
-                          NA),
-                    rbind(all_agehiv[2, 1],
-                          all_agehiv[3, 1],
-                          all_agehiv[4, 1]),
-                   rbind(main_age[2, 1],
-                         NA,
-                         NA),
-                   rbind(main_agehiv[2, 1],
-                         main_agehiv[3, 1],
-                         main_agehiv[4, 1]),
-                   rbind(cas_age[2, 1],
-                         NA,
-                         NA),
-                   rbind(cas_agehiv[2, 1],
-                         cas_agehiv[3, 1],
-                         cas_agehiv[4, 1])))
-colnames(allcoeffs) <- c("Variable", "Age Only (All)", "Age + HIV (All)",
-                         "Age Only (Main)", "Age + HIV (Main)",
-                         "Age Only (Cas)", "Age + HIV (Cas)")
+allcoeffs <- as.data.frame(cbind(rbind("Intercept",
+                                       "HIV Positive",
+                                       "HIV-Unknown",
+                                       "Age"),
+                                 rbind(all_hiv[1, 1],
+                                       all_hiv[2, 1],
+                                       all_hiv[3, 1],
+                                       NA),
+                                 rbind(all_agehiv[1, 1],
+                                       all_agehiv[2, 1],
+                                       all_agehiv[3, 1],
+                                       all_agehiv[4, 1]),
+                                 rbind(main_hiv[1, 1],
+                                       main_hiv[2, 1],
+                                       main_hiv[3, 1],
+                                       NA),
+                                 rbind(main_agehiv[1, 1],
+                                       main_agehiv[2, 1],
+                                       main_agehiv[3, 1],
+                                       main_agehiv[4, 1]),
+                                 rbind(cas_hiv[1, 1],
+                                       cas_hiv[2, 1],
+                                       cas_hiv[3, 1],
+                                       NA),
+                                 rbind(cas_agehiv[1, 1],
+                                       cas_agehiv[2, 1],
+                                       cas_agehiv[3, 1],
+                                       cas_agehiv[4, 1])))
+colnames(allcoeffs) <- c("Variable", "HIV Only (All)", "Age + HIV (All)",
+                         "HIV Only (Main)", "Age + HIV (Main)",
+                         "HIV Only (Cas)", "Age + HIV (Cas)")
 View(allcoeffs)
 
 # Prediction
