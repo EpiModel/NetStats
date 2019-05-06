@@ -2149,3 +2149,198 @@ colnames(stable3) <- c("Category", "N (%)", "AI Main Mean", "AI Main SD, Med",
                        "AI Cas Mean", "AI Cas SD, Med", "OI Main Mean", "OI Main SD, Med",
                        "OI Cas Mean", "OI Cas SD, Med")
 write.csv(stable3, file = "Output/stable3.csv")
+
+
+# Supp Table 4 - Duration of HIV controlling for age --------------
+rm(list = ls())
+library(dplyr)
+library(tidyr)
+library(readxl)
+library(MASS)
+library(gridExtra)
+
+## Data Cleaning/Management Script
+source("Analyses/Data_Cleaning.R", echo = FALSE)
+
+extant <- artnetLong[which(artnetLong$ONGOING == 1 & artnetLong$duration < 2150 & artnetLong$ptype %in% c(1, 2)), ]
+extant2 <- extant[which(extant$RAI == 1 | extant$IAI == 1 | extant$ROI == 1 | extant$IOI == 1), ]
+bothmain <- extant2[which(extant2$ptype == 1), ]
+bothcas <- extant2[which(extant2$ptype == 2), ]
+
+summary(extant2$duration)
+summary(bothmain$duration)
+summary(bothcas$duration)
+
+# Linear model
+# duration ~ ego age
+# then duration ~ ego hiv + ego age
+all_age_model <- lm(duration ~ age, data = extant2)
+all_age <- round(cbind(exp(coef(all_age_model)), exp(confint(all_age_model))), 3)
+all_agehiv_model <- lm(duration ~ age + hiv, data = extant2)
+all_agehiv <- round(cbind(exp(coef(all_agehiv_model)), exp(confint(all_agehiv_model))), 3)
+
+main_age_model <- lm(duration ~ age, data = bothmain)
+main_age <- round(cbind(exp(coef(main_age_model)), exp(confint(main_age_model))), 3)
+main_agehiv_model <- lm(duration ~ age + hiv, data = bothmain)
+main_agehiv <- round(cbind(exp(coef(main_agehiv_model)), exp(confint(main_agehiv_model))), 3)
+
+cas_age_model <- lm(duration ~ age, data = bothcas)
+cas_age <- round(cbind(exp(coef(cas_age_model)), exp(confint(cas_age_model))), 3)
+cas_agehiv_model <- lm(duration ~ age + hiv, data = bothcas)
+cas_agehiv <- round(cbind(exp(coef(cas_agehiv_model)), exp(confint(cas_agehiv_model))), 3)
+
+# Output table of coefficients
+allcoeffs <- as.data.frame(cbind(rbind("Age",
+                          "HIV Positive",
+                          "HIV-Unknown"),
+                    rbind(all_age[2, 1],
+                          NA,
+                          NA),
+                    rbind(all_agehiv[2, 1],
+                          all_agehiv[3, 1],
+                          all_agehiv[4, 1]),
+                   rbind(main_age[2, 1],
+                         NA,
+                         NA),
+                   rbind(main_agehiv[2, 1],
+                         main_agehiv[3, 1],
+                         main_agehiv[4, 1]),
+                   rbind(cas_age[2, 1],
+                         NA,
+                         NA),
+                   rbind(cas_agehiv[2, 1],
+                         cas_agehiv[3, 1],
+                         cas_agehiv[4, 1])))
+colnames(allcoeffs) <- c("Variable", "Age Only (All)", "Age + HIV (All)",
+                         "Age Only (Main)", "Age + HIV (Main)",
+                         "Age Only (Cas)", "Age + HIV (Cas)")
+View(allcoeffs)
+
+# Prediction
+new.df <- data.frame(age = seq(15, 65, by = 5))
+new.df2 <- data.frame(age = c(15, 15, 15, 20, 20, 20, 25, 25, 25, 30, 30, 30,
+                             35, 35, 35, 40, 40, 40, 45, 45, 45, 50, 50, 50,
+                             55, 55, 55, 60, 60, 60, 65, 65, 65),
+                     hiv = as.character(rep(c("Negative", "Positive", "Unknown"), 11)))
+new.df2$hiv <- as.character(new.df2$hiv)
+df <- cbind(new.df, predict(all_age_model, new.df, interval = "confidence"))
+df_hiv <- cbind(new.df2, predict(all_agehiv_model, new.df2, interval = "confidence"))
+colnames(df) <- c("Age", "Duration", "Lower", "Upper")
+colnames(df_hiv) <- c("Age", "HIV", "Duration", "Lower", "Upper")
+
+p1 <- ggplot(df, aes(x = Age, y = Duration)) +
+  geom_line() +
+  geom_point() +
+  ggtitle("Duration Adjusted for Age") +
+  theme_bw()
+p2 <- ggplot(df_hiv, aes(x = Age, y = Duration, group = HIV, colour = HIV)) +
+  geom_line() +
+  geom_point() +
+  ggtitle("Duration Adjusted for Age and HIV Status") +
+  theme_bw()
+grid.arrange(p1, p2)
+#
+# # Total number of ongoing partnerships
+# total <- cbind("Total", paste0(nrow(extant), " (", 100 * nrow(extant) / nrow(extant), ")"),
+#
+#                round(mean(aimain$duration, na.rm = TRUE), 1),
+#                paste0(round(sd(aimain$duration, na.rm = TRUE), 1),
+#                       ", ",
+#                       round(median(aimain$duration, na.rm = TRUE), 1)),
+#
+#                round(mean(aicas$duration, na.rm = TRUE), 1),
+#                paste0(round(sd(aicas$duration, na.rm = TRUE), 1),
+#                       ", ",
+#                       round(median(aicas$duration, na.rm = TRUE), 1)),
+#
+#                round(mean(oimain$duration, na.rm = TRUE), 1),
+#                paste0(round(sd(oimain$duration, na.rm = TRUE), 1),
+#                       ", ",
+#                       round(median(oimain$duration, na.rm = TRUE), 1)),
+#
+#                round(mean(oicas$duration, na.rm = TRUE), 1),
+#                paste0(round(sd(oicas$duration, na.rm = TRUE), 1),
+#                       ", ",
+#                       round(median(oicas$duration, na.rm = TRUE), 1)))
+#
+# # HIV Status
+# HIVPos <- cbind("HIV Pos",
+#                 paste0(nrow(extant[which(extant$hiv == "Positive"), ]),
+#                        " (",
+#                        round(100 * nrow(extant[which(extant$hiv == "Positive"), ]) /
+#                                nrow(extant), 1), ")"),
+#
+#                 round(mean(aimain$duration[which(aimain$hiv == "Positive")], na.rm = TRUE), 1),
+#                 paste0(round(sd(aimain$duration[which(aimain$hiv == "Positive")], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(aimain$duration[which(aimain$hiv == "Positive")], na.rm = TRUE), 1)),
+#                 round(mean(aicas$duration[which(aicas$hiv == "Positive")], na.rm = TRUE), 1),
+#                 paste0(round(sd(aicas$duration[which(aicas$hiv == "Positive")], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(aicas$duration[which(aicas$hiv == "Positive")], na.rm = TRUE), 1)),
+#                 round(mean(oimain$duration[oimain$hiv == "Positive"], na.rm = TRUE), 1),
+#                 paste0(round(sd(oimain$duration[oimain$hiv == "Positive"], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(oimain$duration[oimain$hiv == "Positive"], na.rm = TRUE), 1)),
+#
+#                 round(mean(oicas$duration[oicas$hiv == "Positive"], na.rm = TRUE), 1),
+#                 paste0(round(sd(oicas$duration[oicas$hiv == "Positive"], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(oicas$duration[oicas$hiv == "Positive"], na.rm = TRUE), 1)))
+#
+# HIVNeg <- cbind("HIV Neg",
+#                 paste0(nrow(extant[which(extant$hiv == "Negative"), ]),
+#                        " (",
+#                        round(100 * nrow(extant[which(extant$hiv == "Negative"), ]) /
+#                                nrow(extant), 1), ")"),
+#
+#                 round(mean(aimain$duration[which(aimain$hiv == "Negative")], na.rm = TRUE), 1),
+#                 paste0(round(sd(aimain$duration[which(aimain$hiv == "Negative")], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(aimain$duration[which(aimain$hiv == "Negative")], na.rm = TRUE), 1)),
+#                 round(mean(aicas$duration[which(aicas$hiv == "Negative")], na.rm = TRUE), 1),
+#                 paste0(round(sd(aicas$duration[which(aicas$hiv == "Negative")], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(aicas$duration[which(aicas$hiv == "Negative")], na.rm = TRUE), 1)),
+#                 round(mean(oimain$duration[oimain$hiv == "Negative"], na.rm = TRUE), 1),
+#                 paste0(round(sd(oimain$duration[oimain$hiv == "Negative"], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(oimain$duration[oimain$hiv == "Negative"], na.rm = TRUE), 1)),
+#
+#                 round(mean(oicas$duration[oicas$hiv == "Negative"], na.rm = TRUE), 1),
+#                 paste0(round(sd(oicas$duration[oicas$hiv == "Negative"], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(oicas$duration[oicas$hiv == "Negative"], na.rm = TRUE), 1)))
+#
+# HIVUnk <- cbind("HIV Unk",
+#                 paste0(nrow(extant[which(extant$hiv == "Unknown"), ]),
+#                        " (",
+#                        round(100 * nrow(extant[which(extant$hiv == "Unknown"), ]) /
+#                                nrow(extant), 1), ")"),
+#
+#                 round(mean(aimain$duration[which(aimain$hiv == "Unknown")], na.rm = TRUE), 1),
+#                 paste0(round(sd(aimain$duration[which(aimain$hiv == "Unknown")], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(aimain$duration[which(aimain$hiv == "Unknown")], na.rm = TRUE), 1)),
+#                 round(mean(aicas$duration[which(aicas$hiv == "Unknown")], na.rm = TRUE), 1),
+#                 paste0(round(sd(aicas$duration[which(aicas$hiv == "Unknown")], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(aicas$duration[which(aicas$hiv == "Unknown")], na.rm = TRUE), 1)),
+#                 round(mean(oimain$duration[oimain$hiv == "Unknown"], na.rm = TRUE), 1),
+#                 paste0(round(sd(oimain$duration[oimain$hiv == "Unknown"], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(oimain$duration[oimain$hiv == "Unknown"], na.rm = TRUE), 1)),
+#
+#                 round(mean(oicas$duration[oicas$hiv == "Unknown"], na.rm = TRUE), 1),
+#                 paste0(round(sd(oicas$duration[oicas$hiv == "Unknown"], na.rm = TRUE), 1),
+#                        ", ",
+#                        round(median(oicas$duration[oicas$hiv == "Unknown"], na.rm = TRUE), 1)))
+#
+# # Output table
+# stable4 <- rbind(total, black, white, hispanic, other,
+#                  fifteen24, twentyfive34, thirtyfive44, fortyfive54, fiftyfive65,
+#                  HIVNeg, HIVPos, HIVUnk)
+# colnames(stable4) <- c("Category", "N (%)", "AI Main Mean", "AI Main SD, Med",
+#                        "AI Cas Mean", "AI Cas SD, Med", "OI Main Mean", "OI Main SD, Med",
+#                        "OI Cas Mean", "OI Cas SD, Med")
+# write.csv(stable4, file = "Output/stable4.csv")
