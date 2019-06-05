@@ -1401,3 +1401,51 @@ rownames(Indications) <- c("All", "White", "Black", "Hisp", "Other",
                            "O 15-17", "O 18-24", "O 25-34", "O 35-44", "O 45-54", "O 55-65")
 
 write.csv(Indications, file = "Output/PrEPElig.csv")
+
+
+# PrEP Uptake Analysis -------------------------------
+# Ever taken PrEP (PREP_REVISED)
+# Current PREP Use (artnetPREP_CURRENT)
+
+table(artnet2$hivstatus, artnet2$PREP_REVISED, useNA = "always")
+table(artnet2$hivstatus, artnet2$PREP_REVISED, useNA = "always")
+table(artnet2$hivstatus, artnet2$artnetPREP_CURRENT, useNA = "always")
+
+# Sexually active HIV negative denominator
+prepdenom <- which(artnet2$prep_hiv == 1 & artnet2$prep_part12mo == 1) #3511
+prepdenom <- artnet2[prepdenom, ]
+table(prepdenom$PREP_REVISED, useNA = "always") #360 NA
+
+# PrEP-eligible denominator
+prepeligdenom <- which(artnet2$prepind_any == 1) #1194
+prepeligdenom <- artnet2[prepeligdenom, ]
+table(prepeligdenom$PREP_REVISED, useNA = "always") #88 NA
+
+# Outputs
+# % of people in PrEP denom who have ever taken PrEP
+everprep1 <- prepdenom[which(prepdenom$PREP_REVISED == 1), ]
+nrow(everprep1) # 813
+
+# % of people in PrEP denom currently taking PrEP
+everprep2 <- prepdenom[which(prepdenom$artnetPREP_CURRENT == 1), ]
+nrow(everprep2) # 632
+
+# % of PrEP-eligible MSM who have ever taken PrEP
+everprep3 <- prepeligdenom[which(prepeligdenom$PREP_REVISED == 1), ]
+nrow(everprep3) # 457
+
+# % of PrEP-eligible MSM currently taking PrEP
+everprep4 <- prepeligdenom[which(prepeligdenom$artnetPREP_CURRENT == 1), ]
+nrow(everprep4) # 385
+
+uptake <- rbind(cbind(paste0(nrow(prepdenom), " (", round(100 * nrow(prepdenom) / nrow(prepdenom), 1), ")"),
+                      paste0(nrow(prepeligdenom), " (", round(100 * nrow(prepeligdenom) / nrow(prepeligdenom), 1)")")),
+                cbind(paste0(nrow(everprep1), " (", round(100 * nrow(everprep1) / nrow(prepdenom), 1)")"),
+                      paste0(nrow(everprep2), " (", round(100 * nrow(everprep2) / nrow(prepeligdenom), 1)")")),
+                cbind(paste0(nrow(everprep3), " (", round(100 * nrow(everprep3) / nrow(prepdenom), 1)")"),
+                      paste0(nrow(everprep4), " (", round(100 * nrow(everprep4) / nrow(prepeligdenom), 1)")")))
+colnames(uptake) <- c("PrEP Denom", "PrEP Eligible Denom")
+rownames(uptake) <- c("MSM Denominator", "Ever taken PrEP", "Currently using PrEP")
+
+View(uptake)
+write.csv(uptake, file = "Output/PrEPuptake.csv")
