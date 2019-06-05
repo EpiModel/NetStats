@@ -1426,24 +1426,24 @@ table(prepeligdenom$PREP_REVISED, useNA = "always") #88 NA
 everprep1 <- prepdenom[which(prepdenom$PREP_REVISED == 1), ]
 nrow(everprep1) # 813
 
-# % of people in PrEP denom currently taking PrEP
-everprep2 <- prepdenom[which(prepdenom$artnetPREP_CURRENT == 1), ]
-nrow(everprep2) # 632
-
 # % of PrEP-eligible MSM who have ever taken PrEP
-everprep3 <- prepeligdenom[which(prepeligdenom$PREP_REVISED == 1), ]
-nrow(everprep3) # 457
+everprep2 <- prepeligdenom[which(prepeligdenom$PREP_REVISED == 1), ]
+nrow(everprep2) # 457
+
+# % of people in PrEP denom currently taking PrEP
+everprep3 <- prepdenom[which(prepdenom$artnetPREP_CURRENT == 1), ]
+nrow(everprep3) # 632
 
 # % of PrEP-eligible MSM currently taking PrEP
 everprep4 <- prepeligdenom[which(prepeligdenom$artnetPREP_CURRENT == 1), ]
 nrow(everprep4) # 385
 
 uptake <- rbind(cbind(paste0(nrow(prepdenom), " (", round(100 * nrow(prepdenom) / nrow(prepdenom), 1), ")"),
-                      paste0(nrow(prepeligdenom), " (", round(100 * nrow(prepeligdenom) / nrow(prepeligdenom), 1)")")),
-                cbind(paste0(nrow(everprep1), " (", round(100 * nrow(everprep1) / nrow(prepdenom), 1)")"),
-                      paste0(nrow(everprep2), " (", round(100 * nrow(everprep2) / nrow(prepeligdenom), 1)")")),
-                cbind(paste0(nrow(everprep3), " (", round(100 * nrow(everprep3) / nrow(prepdenom), 1)")"),
-                      paste0(nrow(everprep4), " (", round(100 * nrow(everprep4) / nrow(prepeligdenom), 1)")")))
+                      paste0(nrow(prepeligdenom), " (", round(100 * nrow(prepeligdenom) / nrow(prepeligdenom), 1),")")),
+                cbind(paste0(nrow(everprep1), " (", round(100 * nrow(everprep1) / nrow(prepdenom), 1), ")"),
+                      paste0(nrow(everprep2), " (", round(100 * nrow(everprep2) / nrow(prepeligdenom), 1),")")),
+                cbind(paste0(nrow(everprep3), " (", round(100 * nrow(everprep3) / nrow(prepdenom), 1), ")"),
+                      paste0(nrow(everprep4), " (", round(100 * nrow(everprep4) / nrow(prepeligdenom), 1), ")")))
 colnames(uptake) <- c("PrEP Denom", "PrEP Eligible Denom")
 rownames(uptake) <- c("MSM Denominator", "Ever taken PrEP", "Currently using PrEP")
 
