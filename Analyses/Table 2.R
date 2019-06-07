@@ -52,7 +52,7 @@ artnet2 <- left_join(artnet2, df4, by = "AMIS_ID")
 artnet2 <- left_join(artnet2, df7, by = "AMIS_ID")
 table(artnet2$totdegree, useNA = "always")
 table(artnet2$maintotdegree, useNA = "always")
-table(artnet2$Castotdegree, useNA = "always")
+table(artnet2$castotdegree, useNA = "always")
 
 # If missing degree values, then set to 0
 artnet2$totdegree <- ifelse(is.na(artnet2$totdegree), 0, artnet2$totdegree)
