@@ -8,6 +8,12 @@
 # Data
 *.rda
 *.csv
+*.cpg
+*.dbf
+*.prj
+*.shp
+*.xml
+*.shx
 
 # Example code in package build process
 *-Ex.R
