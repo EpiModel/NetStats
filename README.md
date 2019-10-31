@@ -1,6 +1,6 @@
 # Egocentric Sexual Networks of Men Who Have Sex with Men in the United States: Results from the ARTnet Study
 
-This repository holds the source to code to reproduce the analysis of partnership network descriptive statistics - distribution and heterogeneity in network degree, assortative mixing, and partnership duration - in men who have sex with men in the United States.
+This repository holds the source code to reproduce the analysis of partnership network descriptive statistics - distribution and heterogeneity in network degree, assortative mixing, and partnership duration - from the ARTnet study of men who have sex with men in the United States.
 
 **Citation**
 >Weiss KM, Goodreau SM, Morris M, Prasad P, Ramaraju R, Sanchez T, Jenness SM. 
