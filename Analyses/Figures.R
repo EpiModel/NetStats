@@ -167,8 +167,42 @@ ggplot(artnet2, aes(x = rate.oo.aioi.part, fill = MSM)) +
         panel.grid.minor = element_blank(),
         legend.position = "none")
 
+ggplot(artnet2, aes(x = log(rate.oo.aioi.part))) +
+  geom_density(fill = "steelblue") +
+  ylab("Density") +
+  xlab("Weekly One-Time Partner Rate") +
+  ggtitle("Density of One-Time Partners") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  scale_y_continuous(trans = 'identity')
+
+ggplot(artnet2, aes(x = rate.oo.aioi.part)) +
+  stat_ecdf(geom = "step", pad = FALSE, fill = "steelblue") +
+  theme_minimal() +
+  ylab("Cumulative Density") +
+  xlab("Weekly One-Time Partner Rate")
+ggsave("analyses/SuppFig1.jpg", device = "jpeg", width = 8, height = 5, units = "in")
 
 
+# Density plot of partnership durations
+l$PartType <- ifelse(l$ptype == 1, "Main", "Casl")
+ggplot(l, aes(x = duration, fill = PartType)) +
+  geom_density(alpha = 0.3) +
+  ylab("Density") +
+  xlab("Weekly One-Time Partner Rate") +
+  theme_minimal()
+
+ggplot(l, aes(x = duration)) +
+  geom_density(alpha = 0.5, fill = "steelblue") +
+  facet_grid(cols = vars(PartType)) +
+  ylab("Density") +
+  xlab("Partnership Age in Weeks") +
+  theme_minimal()
+ggsave("analyses/SuppFig2.jpg", device = "jpeg", width = 8, height = 5, units = "in")
+
+table(l$duration)
+
+plot(density(l$duration, na.rm = TRUE, from = 0))
 
 # Graphical abstract ---------------------
 ## https://stats.idre.ucla.edu/r/dae/poisson-regression/

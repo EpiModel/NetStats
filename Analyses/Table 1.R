@@ -14,6 +14,18 @@ library(MASS)
 ## Data Cleaning/Management Script
 source("Analyses/Data_Cleaning.R", echo = FALSE)
 
+
+# Total past year partners
+
+nrow(artnet)
+names(artnet)
+table(artnet$M_MP12OANUM)
+summary(artnet$M_MP12OANUM)
+
+summary(artnet$cuml.pnum)
+summary(artnet$M_MP12ANUM2)
+summary(artnet$MMCONC)
+
 # Table 1 - Demographic Characteristics --------------
 
 # Total sample
